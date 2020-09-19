@@ -9,7 +9,9 @@ import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Objects;
+import java.util.RandomAccess;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -32,6 +34,8 @@ public class AudioRecorder {
         header[0] = 'R';header[1] = 'I';header[2] = 'F';header[3] = 'F';
 
         //4-7文件长度，小端
+        //Size是整个文件的长度减去ID和Size的长度
+        header[4] = 0;header[5] = 0;header[6] = 0;header[7] = 0;
 
         header[8] = 'W';header[9] = 'A';header[10] = 'V';header[11] = 'E';
 
@@ -50,10 +54,18 @@ public class AudioRecorder {
         header[25] = (byte) ((SAMPLE_RATE >> 8) & 0xff);
         header[26] = (byte) ((SAMPLE_RATE >> 16) & 0xff);
         header[27] = (byte) ((SAMPLE_RATE >> 24) & 0xff);
+
+        header[32] = (byte) (16 / 8);
+        header[33] = 0;
+
+        header[36] = 'd';header[37] = 'a';header[38] = 't';header[39] = 'a';
+
+        //音频长度
+        header[40] = 0;header[41] = 0;header[42] = 0;header[43] = 0;
     }
 
     private boolean recording = false;
-    private byte [] audioData;
+    private byte [] audioData = new byte[MIN_BUFFER_SIZE];
     private AudioRecord recorder = null;
     private String filename;
     private ExecutorService service = Executors.newSingleThreadExecutor();
@@ -67,15 +79,20 @@ public class AudioRecorder {
         filename = Objects.requireNonNull(context.getExternalCacheDir()).getAbsolutePath() + "/testAudio.wav";
     }
 
+    public boolean isRecording() {
+        return recording;
+    }
+
     public String getFilename() {
         return filename;
     }
 
-    public void startRecording() throws FileNotFoundException {
+    public void startRecording() throws IOException {
         recorder = new AudioRecord(SOURCE,SAMPLE_RATE,CHANNEL,FORMAT,MIN_BUFFER_SIZE);
         recording = true;
-        recorder.startRecording();
         bos = new BufferedOutputStream(new FileOutputStream(filename));
+        bos.write(header);
+        recorder.startRecording();
         Writer writer = new Writer();
         future = service.submit(writer);
     }
@@ -103,20 +120,37 @@ public class AudioRecorder {
     }
 
     class Writer implements Callable<Integer> {
+        RandomAccessFile raf = null;
+        long audio_length = 0;
+
         @Override
         public Integer call() throws Exception {
             try {
+                bos.write(header);
                 int length = 0;
                 while ((length = recorder.read(audioData, 0, audioData.length)) != -1) {
                     bos.write(audioData, 0, length);
                 }
+                bos.flush();
                 bos.close();
+                raf = new RandomAccessFile(filename,"rw");
+                write_length();
                 return 0;
             }
             catch (IOException e) {
                 e.printStackTrace();
                 return -1;
             }
+        }
+
+        public int write_length() throws IOException {
+            if(raf == null){
+                return -1;
+            }
+            raf.seek(4);
+            //TODO
+            raf.seek(40);
+            return 0;
         }
     }
 }
