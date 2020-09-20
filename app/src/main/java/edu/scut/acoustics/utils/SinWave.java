@@ -2,9 +2,10 @@ package edu.scut.acoustics.utils;
 
 public class SinWave {
     public final static double TWO_PI = 2 * Math.PI;
+    //采样率
     public final static int SAMPLE_RATE = 44100;
 
-    //初始40db
+    //正弦波振幅高度
     private double height;
     private int hz;
 
@@ -15,6 +16,10 @@ public class SinWave {
         height = Math.sqrt(temp);
     }
 
+    /**
+     *
+     * @param wave 输出的正弦波
+     */
     public void doFinal(float[] wave){
         double wave_length = ( 1.0 * SAMPLE_RATE ) / hz;
         for (int i = 0; i < wave.length; i++) {
@@ -31,6 +36,6 @@ public class SinWave {
         this.hz = hz;
         double temp = (double) db / 10;
         temp = Math.pow(10,temp) * 2;
-        height = Math.sqrt(temp);
+        height = Math.sqrt(temp) / 32768;
     }
 }

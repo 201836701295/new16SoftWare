@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+        System.out.println((float) Short.MAX_VALUE / ((int) Short.MAX_VALUE + 1));
     }
 
     @Test

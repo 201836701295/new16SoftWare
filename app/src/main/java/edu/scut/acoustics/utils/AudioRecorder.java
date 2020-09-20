@@ -27,7 +27,7 @@ public class AudioRecorder {
     public static final int BIT_DEPTH = 16;
     public static final int BYTE_RATE = BIT_DEPTH * SAMPLE_RATE / 8;
 
-    private static final byte header[] = new byte[44];
+    private static final byte[] header = new byte[44];
 
     //预先处理wav头
     static {
@@ -55,6 +55,11 @@ public class AudioRecorder {
         header[26] = (byte) ((SAMPLE_RATE >> 16) & 0xff);
         header[27] = (byte) ((SAMPLE_RATE >> 24) & 0xff);
 
+        header[28] = (byte) (BYTE_RATE & 0xff);
+        header[29] = (byte) ((BYTE_RATE >> 8) & 0xff);
+        header[30] = (byte) ((BYTE_RATE >> 16) & 0xff);
+        header[31] = (byte) ((BYTE_RATE >> 24) & 0xff);
+
         header[32] = (byte) (16 / 8);
         header[33] = 0;
 
@@ -70,12 +75,9 @@ public class AudioRecorder {
     private String filename;
     private ExecutorService service = Executors.newSingleThreadExecutor();
     private BufferedOutputStream bos = null;
-    private Context context;
     private Future<Integer> future = null;
 
     public AudioRecorder(Context context) {
-        this.context = context;
-        //TODO 获得Handler
         filename = Objects.requireNonNull(context.getExternalCacheDir()).getAbsolutePath() + "/testAudio.wav";
     }
 
@@ -87,12 +89,16 @@ public class AudioRecorder {
         return filename;
     }
 
-    public void startRecording() throws IOException {
+    public void start() throws IOException {
+        //创建录音机
         recorder = new AudioRecord(SOURCE,SAMPLE_RATE,CHANNEL,FORMAT,MIN_BUFFER_SIZE);
         recording = true;
+        //创建文件输出流
         bos = new BufferedOutputStream(new FileOutputStream(filename));
         bos.write(header);
+        //开始录音
         recorder.startRecording();
+        //创建写入线程
         Writer writer = new Writer();
         future = service.submit(writer);
     }
@@ -100,56 +106,72 @@ public class AudioRecorder {
     /**
      * 阻塞方法，需要AsyncTask来执行
      * 只有执行完，才允许UI界面的开始按钮可用
-     * @throws ExecutionException
-     * @throws InterruptedException
      */
-    public void stopRecording() throws ExecutionException, InterruptedException {
+    public void stop() throws ExecutionException, InterruptedException {
+        //停止录音
         recorder.stop();
         recording = false;
-        recorder.release();
-        recorder = null;
+        //等待写入线程结束
         future.get();
         future = null;
-    }
+        //释放录音机
+        recorder.release();
+        recorder = null;
 
-    public void release(){
-        if(recorder != null){
-            recorder.release();
-            recorder = null;
-        }
     }
 
     class Writer implements Callable<Integer> {
         RandomAccessFile raf = null;
+        //音频长度
         long audio_length = 0;
 
         @Override
         public Integer call() throws Exception {
             try {
+                //先写入wav文件头
                 bos.write(header);
                 int length = 0;
+                //写入音频数据到文件
                 while ((length = recorder.read(audioData, 0, audioData.length)) != -1) {
+                    audio_length += length;
                     bos.write(audioData, 0, length);
                 }
+                //关闭文件流
                 bos.flush();
                 bos.close();
+                //开启随机访问文件
                 raf = new RandomAccessFile(filename,"rw");
-                write_length();
-                return 0;
+                //写入文件长度、音频长度的信息
+                return write_length();
             }
             catch (IOException e) {
                 e.printStackTrace();
+                //如果出错返回-1
                 return -1;
             }
         }
 
         public int write_length() throws IOException {
+            //数据长度为
+            long data_length = audio_length + 36;
             if(raf == null){
                 return -1;
             }
+            //寻道到下标为4位置，写入数据长度
             raf.seek(4);
-            //TODO
+            raf.write((int) (data_length & 0xff));
+            raf.write((int) (data_length >> 8 & 0xff));
+            raf.write((int) (data_length >> 16 & 0xff));
+            raf.write((int) (data_length >> 24 & 0xff));
+            //寻道到下标为40位置，写入音频长度
             raf.seek(40);
+            raf.write((int) (audio_length & 0xff));
+            raf.write((int) (audio_length >> 8 & 0xff));
+            raf.write((int) (audio_length >> 16 & 0xff));
+            raf.write((int) (audio_length >> 24 & 0xff));
+            //关闭随机文件访问
+            raf.close();
+            raf = null;
             return 0;
         }
     }
