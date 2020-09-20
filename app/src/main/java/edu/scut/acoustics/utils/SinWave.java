@@ -1,5 +1,8 @@
 package edu.scut.acoustics.utils;
 
+/**
+ * 生产正弦波
+ */
 public class SinWave {
     public final static double TWO_PI = 2 * Math.PI;
     //采样率
@@ -9,6 +12,11 @@ public class SinWave {
     private double height;
     private int hz;
 
+    /**
+     *
+     * @param hz 频率
+     * @param db 分贝
+     */
     public SinWave(int hz, int db){
         this.hz = hz;
         double temp = (double) db / 10;
@@ -21,14 +29,16 @@ public class SinWave {
      * @param wave 输出的正弦波
      */
     public void doFinal(float[] wave){
+        //求波长
         double wave_length = ( 1.0 * SAMPLE_RATE ) / hz;
+
         for (int i = 0; i < wave.length; i++) {
             wave[i] = (float) (height * Math.sin(TWO_PI * (i % wave_length) / wave_length));
         }
     }
 
     /**
-     *
+     * 设置频率和音量
      * @param hz 频率
      * @param db 分贝
      */
