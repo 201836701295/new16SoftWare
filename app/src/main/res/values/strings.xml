@@ -3,4 +3,5 @@
     <string name="experiment">声学测试</string>
     <string name="noise_measurement">噪声测量</string>
     <string name="hearing_aid">助听测量</string>
+    <string name="skip">跳过</string>
 </resources>
