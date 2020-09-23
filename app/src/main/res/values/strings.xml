@@ -8,4 +8,7 @@
     <string name="right_ear">右耳</string>
     <string name="able_hear">听得到</string>
     <string name="unable_hear">听不到</string>
+    <string name="guidance">请将话筒靠近麦克风，点击下方播放按钮后进行播放样本音频，系统将会录下播放的音频，并生产卷积响应信号</string>
+    <string name="adjust">校准</string>
+    <string name="noise_measure">噪声测量</string>
 </resources>
