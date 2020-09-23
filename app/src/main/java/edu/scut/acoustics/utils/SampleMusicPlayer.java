@@ -29,6 +29,7 @@ public class SampleMusicPlayer {
     }
 
     public void stop() {
+        //audioTrack.setPlaybackPositionUpdateListener();
         audioTrack.stop();
         audioTrack.release();
         audioTrack = null;

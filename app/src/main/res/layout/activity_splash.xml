@@ -24,6 +24,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             tools:ignore="ContentDescription" />
 
+        <!--
         <Button
             android:id="@+id/skip"
             android:layout_width="60dp"
@@ -36,6 +37,7 @@
             android:textSize="15sp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
+            -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

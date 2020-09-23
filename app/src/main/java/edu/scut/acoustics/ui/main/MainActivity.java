@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         activityMainBinding.experiment.setOnClickListener(this);
-        activityMainBinding.hearingAid.setOnClickListener(this);
+        activityMainBinding.earTest.setOnClickListener(this);
         activityMainBinding.noiseMeasurement.setOnClickListener(this);
     }
 
@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.experiment:
                 start_experiment();
                 break;
-            case R.id.hearing_aid:
-                start_hearing_aid();
+            case R.id.ear_test:
+                start_ear_test();
                 break;
             case R.id.noise_measurement:
                 start_noise_measurement();
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public void start_hearing_aid(){
+    public void start_ear_test(){
 
     }
 

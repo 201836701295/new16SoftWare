@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/left_ear"
+        android:title="@string/left_ear"
+        android:icon="@drawable/ic_left_ear_24"/>
+
+    <item
+        android:id="@+id/right_ear"
+        android:title="@string/right_ear"
+        android:icon="@drawable/ic_right_ear_24"/>
+
+</menu>

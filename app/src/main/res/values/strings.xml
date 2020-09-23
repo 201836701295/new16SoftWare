@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">Acoustics</string>
-    <string name="experiment">声学测试</string>
-    <string name="noise_measurement">噪声测量</string>
-    <string name="hearing_aid">助听测量</string>
+    <string name="experiment">扬声器频率响应测量</string>
+    <string name="noise_measurement">噪声波测量与分析</string>
+    <string name="ear_test">听力测量</string>
     <string name="skip">跳过</string>
+    <string name="left_ear">左耳</string>
+    <string name="right_ear">右耳</string>
+    <string name="able_hear">听得到</string>
+    <string name="unable_hear">听不到</string>
 </resources>

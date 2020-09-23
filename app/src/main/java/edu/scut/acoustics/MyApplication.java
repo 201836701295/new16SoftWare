@@ -16,4 +16,8 @@ public class MyApplication extends Application {
         HeadsetReceiver headsetReceiver = new HeadsetReceiver();
         registerReceiver(headsetReceiver, intentFilter);
     }
+
+    public void initialize(){
+        //TODO 初始化
+    }
 }

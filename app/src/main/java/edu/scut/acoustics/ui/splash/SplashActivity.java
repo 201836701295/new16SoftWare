@@ -12,51 +12,33 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import java.util.Objects;
+
+import edu.scut.acoustics.MyApplication;
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.ActivitySplashBinding;
 import edu.scut.acoustics.ui.main.MainActivity;
 
-public class SplashActivity extends AppCompatActivity implements View.OnClickListener {
+public class SplashActivity extends AppCompatActivity{
     private Handler handler = new Handler();
-    private Runnable runnable = null;
-    private Button skip = null;
-    private CountDownTimer countDownTimer = new CountDownTimer(3200, 1000) {
-        @SuppressLint({"SetTextI18n", "DefaultLocale"})
-        @Override
-        public void onTick(long millisUntilFinished) {
-            skip.setText(getString(R.string.skip) + " " + String.format("%ds",millisUntilFinished/1000));
-        }
-
-        @SuppressLint({"SetTextI18n", "DefaultLocale"})
-        @Override
-        public void onFinish() {
-            skip.setText(getString(R.string.skip) + " " + String.format("%ds",0));
-        }
-    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //绑定页面
         ActivitySplashBinding activitySplashBinding = DataBindingUtil.setContentView(this, R.layout.activity_splash);
-        activitySplashBinding.skip.setOnClickListener(this);
-        skip = activitySplashBinding.skip;
-
-        handler.postDelayed(runnable = new Runnable() {
+        //隐藏ActionBar
+        Objects.requireNonNull(getActionBar()).hide();
+        //初始化
+        handler.post(new Runnable() {
             @Override
             public void run() {
+                MyApplication application = (MyApplication) getApplication();
+                application.initialize();
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 finish();
             }
-        },3200);
-        countDownTimer.start();
+        });
     }
 
-    @Override
-    public void onClick(View view) {
-        startActivity(new Intent(SplashActivity.this, MainActivity.class));
-        finish();
-        if(handler != null && runnable != null){
-            handler.removeCallbacks(runnable);
-        }
-    }
 }
