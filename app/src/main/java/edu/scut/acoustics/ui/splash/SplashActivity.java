@@ -28,9 +28,9 @@ public class SplashActivity extends AppCompatActivity{
         //绑定页面
         ActivitySplashBinding activitySplashBinding = DataBindingUtil.setContentView(this, R.layout.activity_splash);
         //隐藏ActionBar
-        Objects.requireNonNull(getActionBar()).hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         //初始化
-        handler.post(new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 MyApplication application = (MyApplication) getApplication();
@@ -38,7 +38,7 @@ public class SplashActivity extends AppCompatActivity{
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 finish();
             }
-        });
+        }, 1);
     }
 
 }
