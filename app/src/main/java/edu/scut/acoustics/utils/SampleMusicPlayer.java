@@ -14,7 +14,10 @@ public class SampleMusicPlayer implements AudioTrack.OnPlaybackPositionUpdateLis
     private int marker;
 
     public int write(short[] buffer, int offset, int length) {
-        return audioTrack.write(buffer, 0, buffer.length);
+        if(audioTrack != null){
+            return audioTrack.write(buffer, offset, length);
+        }
+        return -1;
     }
 
     public void setMarker(int marker) {
@@ -37,9 +40,10 @@ public class SampleMusicPlayer implements AudioTrack.OnPlaybackPositionUpdateLis
         int length = AudioTrack.getMinBufferSize(SinWave.SAMPLE_RATE, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
 
         audioTrack = new AudioTrack(attributes, format, length, AudioTrack.MODE_STREAM, AudioManager.AUDIO_SESSION_ID_GENERATE);
-        audioTrack.play();
         audioTrack.setNotificationMarkerPosition(marker);
         audioTrack.setPlaybackPositionUpdateListener(this);
+        audioTrack.play();
+
     }
 
     public void setOnFinishListener(OnFinishListener onFinishListener) {
@@ -47,10 +51,11 @@ public class SampleMusicPlayer implements AudioTrack.OnPlaybackPositionUpdateLis
     }
 
     private void stop() {
-        //audioTrack.setPlaybackPositionUpdateListener();
-        audioTrack.stop();
-        audioTrack.release();
-        audioTrack = null;
+        if(audioTrack != null){
+            audioTrack.stop();
+            audioTrack.release();
+            audioTrack = null;
+        }
     }
 
     @Override
