@@ -8,7 +8,7 @@ public class HeadsetReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.hasExtra("state")) {
-            MyApplication application = (MyApplication)context.getApplicationContext();
+            MyApplication application = (MyApplication) context.getApplicationContext();
             if (0 == intent.getIntExtra("state", 0)) {
                 //耳机未插入
                 application.have_headset = false;

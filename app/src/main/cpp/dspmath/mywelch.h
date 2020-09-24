@@ -15,7 +15,7 @@
 
 // Function Declarations
 extern void mywelch(const coder::array<float, 2U> &x, int N, int fs, coder::
-                    array<float, 2U> &pxx, coder::array<float, 1U> &f);
+array<float, 2U> &pxx, coder::array<float, 1U> &f);
 
 #endif
 

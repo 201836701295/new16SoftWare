@@ -30,24 +30,23 @@
 // Return Type  : void
 //
 void mywelch(const coder::array<float, 2U> &x, int N, int fs, coder::array<float,
-             2U> &pxx, coder::array<float, 1U> &f)
-{
-  int nx;
-  int k;
-  if (!isInitialized_dspmath) {
-    dspmath_initialize();
-  }
+        2U> &pxx, coder::array<float, 1U> &f) {
+    int nx;
+    int k;
+    if (!isInitialized_dspmath) {
+        dspmath_initialize();
+    }
 
-  welch(x, N, fs, pxx, f);
-  nx = pxx.size(0) * pxx.size(1);
-  for (k = 0; k < nx; k++) {
-    pxx[k] = std::log10(pxx[k]);
-  }
+    welch(x, N, fs, pxx, f);
+    nx = pxx.size(0) * pxx.size(1);
+    for (k = 0; k < nx; k++) {
+        pxx[k] = std::log10(pxx[k]);
+    }
 
-  nx = pxx.size(0) * pxx.size(1);
-  for (k = 0; k < nx; k++) {
-    pxx[k] = 10.0F * pxx[k];
-  }
+    nx = pxx.size(0) * pxx.size(1);
+    for (k = 0; k < nx; k++) {
+        pxx[k] = 10.0F * pxx[k];
+    }
 }
 
 //

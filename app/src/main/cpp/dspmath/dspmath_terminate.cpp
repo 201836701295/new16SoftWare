@@ -21,10 +21,9 @@
 // Arguments    : void
 // Return Type  : void
 //
-void dspmath_terminate()
-{
-  // (no terminate code required)
-  isInitialized_dspmath = false;
+void dspmath_terminate() {
+    // (no terminate code required)
+    isInitialized_dspmath = false;
 }
 
 //

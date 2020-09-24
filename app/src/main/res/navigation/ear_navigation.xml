@@ -9,12 +9,12 @@
         android:id="@+id/left_ear"
         android:name="edu.scut.acoustics.ui.ear_test.LeftEarFragment"
         android:label="@string/left_ear"
-        tools:layout="@layout/fragment_left_ear"/>
+        tools:layout="@layout/fragment_left_ear" />
 
     <fragment
         android:id="@+id/right_ear"
         android:name="edu.scut.acoustics.ui.ear_test.RightEarFragment"
         android:label="@string/right_ear"
-        tools:layout="@layout/fragment_right_ear"/>
+        tools:layout="@layout/fragment_right_ear" />
 
 </navigation>

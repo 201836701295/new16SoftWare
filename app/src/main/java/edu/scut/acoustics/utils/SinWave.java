@@ -13,24 +13,22 @@ public class SinWave {
     private int hz;
 
     /**
-     *
      * @param hz 频率
      * @param db 分贝
      */
-    public SinWave(int hz, int db){
+    public SinWave(int hz, int db) {
         this.hz = hz;
         double temp = (double) db / 10;
-        temp = Math.pow(10,temp) * 2;
+        temp = Math.pow(10, temp) * 2;
         height = Math.sqrt(temp);
     }
 
     /**
-     *
      * @param wave 输出的正弦波
      */
-    public void doFinal(float[] wave){
+    public void doFinal(float[] wave) {
         //求波长
-        double wave_length = ( 1.0 * SAMPLE_RATE ) / hz;
+        double wave_length = (1.0 * SAMPLE_RATE) / hz;
 
         for (int i = 0; i < wave.length; i++) {
             wave[i] = (float) (height * Math.sin(TWO_PI * (i % wave_length) / wave_length));
@@ -39,13 +37,14 @@ public class SinWave {
 
     /**
      * 设置频率和音量
+     *
      * @param hz 频率
      * @param db 分贝
      */
-    public void set(int hz, int db){
+    public void set(int hz, int db) {
         this.hz = hz;
         double temp = (double) db / 10;
-        temp = Math.pow(10,temp) * 2;
+        temp = Math.pow(10, temp) * 2;
         height = Math.sqrt(temp) / 32768;
     }
 }

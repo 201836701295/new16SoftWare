@@ -6,12 +6,10 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 
 import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Objects;
-import java.util.RandomAccess;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -23,7 +21,7 @@ public class AudioRecorder {
     public static final int SAMPLE_RATE = 44100;
     public static final int CHANNEL = AudioFormat.CHANNEL_IN_MONO;
     public static final int FORMAT = AudioFormat.ENCODING_PCM_16BIT;
-    public static final int MIN_BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE,CHANNEL,FORMAT) * 2;
+    public static final int MIN_BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL, FORMAT) * 2;
     public static final int BIT_DEPTH = 16;
     public static final int BYTE_RATE = BIT_DEPTH * SAMPLE_RATE / 8;
 
@@ -31,23 +29,40 @@ public class AudioRecorder {
 
     //预先处理wav头
     static {
-        header[0] = 'R';header[1] = 'I';header[2] = 'F';header[3] = 'F';
+        header[0] = 'R';
+        header[1] = 'I';
+        header[2] = 'F';
+        header[3] = 'F';
 
         //4-7文件长度，小端
         //Size是整个文件的长度减去ID和Size的长度
-        header[4] = 0;header[5] = 0;header[6] = 0;header[7] = 0;
+        header[4] = 0;
+        header[5] = 0;
+        header[6] = 0;
+        header[7] = 0;
 
-        header[8] = 'W';header[9] = 'A';header[10] = 'V';header[11] = 'E';
+        header[8] = 'W';
+        header[9] = 'A';
+        header[10] = 'V';
+        header[11] = 'E';
 
-        header[12] = 'f';header[13] = 'm';header[14] = 't';header[15] = ' ';
+        header[12] = 'f';
+        header[13] = 'm';
+        header[14] = 't';
+        header[15] = ' ';
 
-        header[16] = 16;header[17] = 0;header[18] = 0;header[19] = 0;
+        header[16] = 16;
+        header[17] = 0;
+        header[18] = 0;
+        header[19] = 0;
 
         //PCM格式
-        header[20] = 1;header[21] = 0;
+        header[20] = 1;
+        header[21] = 0;
 
         //通道数
-        header[22] = 1;header[23] = 0;
+        header[22] = 1;
+        header[23] = 0;
 
         //采样率
         header[24] = (byte) (SAMPLE_RATE & 0xff);
@@ -63,14 +78,20 @@ public class AudioRecorder {
         header[32] = (byte) (16 / 8);
         header[33] = 0;
 
-        header[36] = 'd';header[37] = 'a';header[38] = 't';header[39] = 'a';
+        header[36] = 'd';
+        header[37] = 'a';
+        header[38] = 't';
+        header[39] = 'a';
 
         //音频长度
-        header[40] = 0;header[41] = 0;header[42] = 0;header[43] = 0;
+        header[40] = 0;
+        header[41] = 0;
+        header[42] = 0;
+        header[43] = 0;
     }
 
     private boolean recording = false;
-    private byte [] audioData = new byte[MIN_BUFFER_SIZE];
+    private byte[] audioData = new byte[MIN_BUFFER_SIZE];
     private AudioRecord recorder = null;
     private String filename;
     private ExecutorService service = Executors.newSingleThreadExecutor();
@@ -91,7 +112,7 @@ public class AudioRecorder {
 
     public void start() throws IOException {
         //创建录音机
-        recorder = new AudioRecord(SOURCE,SAMPLE_RATE,CHANNEL,FORMAT,MIN_BUFFER_SIZE);
+        recorder = new AudioRecord(SOURCE, SAMPLE_RATE, CHANNEL, FORMAT, MIN_BUFFER_SIZE);
         recording = true;
         //创建文件输出流
         bos = new BufferedOutputStream(new FileOutputStream(filename));
@@ -140,11 +161,10 @@ public class AudioRecorder {
                 bos.flush();
                 bos.close();
                 //开启随机访问文件
-                raf = new RandomAccessFile(filename,"rw");
+                raf = new RandomAccessFile(filename, "rw");
                 //写入文件长度、音频长度的信息
                 return write_length();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
                 //如果出错返回-1
                 return -1;
@@ -154,7 +174,7 @@ public class AudioRecorder {
         public int write_length() throws IOException {
             //数据长度为
             long data_length = audio_length + 36;
-            if(raf == null){
+            if (raf == null) {
                 return -1;
             }
             //寻道到下标为4位置，写入数据长度

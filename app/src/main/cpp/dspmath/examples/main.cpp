@@ -43,13 +43,21 @@
 
 // Function Declarations
 static coder::array<creal32_T, 2U> argInit_1xUnbounded_creal32_T();
+
 static coder::array<float, 2U> argInit_1xUnbounded_real32_T();
+
 static creal32_T argInit_creal32_T();
+
 static int argInit_int32_T();
+
 static float argInit_real32_T();
+
 static void main_mconv();
+
 static void main_mfft();
+
 static void main_mifft();
+
 static void main_mywelch();
 
 // Function Definitions
@@ -58,151 +66,142 @@ static void main_mywelch();
 // Arguments    : void
 // Return Type  : coder::array<creal32_T, 2U>
 //
-static coder::array<creal32_T, 2U> argInit_1xUnbounded_creal32_T()
-{
-  coder::array<creal32_T, 2U> result;
+static coder::array<creal32_T, 2U> argInit_1xUnbounded_creal32_T() {
+    coder::array<creal32_T, 2U> result;
 
-  // Set the size of the array.
-  // Change this size to the value that the application requires.
-  result.set_size(1, 2);
+    // Set the size of the array.
+    // Change this size to the value that the application requires.
+    result.set_size(1, 2);
 
-  // Loop over the array to initialize each element.
-  for (int idx1 = 0; idx1 < result.size(1); idx1++) {
-    // Set the value of the array element.
-    // Change this value to the value that the application requires.
-    result[idx1] = argInit_creal32_T();
-  }
+    // Loop over the array to initialize each element.
+    for (int idx1 = 0; idx1 < result.size(1); idx1++) {
+        // Set the value of the array element.
+        // Change this value to the value that the application requires.
+        result[idx1] = argInit_creal32_T();
+    }
 
-  return result;
+    return result;
 }
 
 //
 // Arguments    : void
 // Return Type  : coder::array<float, 2U>
 //
-static coder::array<float, 2U> argInit_1xUnbounded_real32_T()
-{
-  coder::array<float, 2U> result;
+static coder::array<float, 2U> argInit_1xUnbounded_real32_T() {
+    coder::array<float, 2U> result;
 
-  // Set the size of the array.
-  // Change this size to the value that the application requires.
-  result.set_size(1, 2);
+    // Set the size of the array.
+    // Change this size to the value that the application requires.
+    result.set_size(1, 2);
 
-  // Loop over the array to initialize each element.
-  for (int idx1 = 0; idx1 < result.size(1); idx1++) {
-    // Set the value of the array element.
-    // Change this value to the value that the application requires.
-    result[idx1] = argInit_real32_T();
-  }
+    // Loop over the array to initialize each element.
+    for (int idx1 = 0; idx1 < result.size(1); idx1++) {
+        // Set the value of the array element.
+        // Change this value to the value that the application requires.
+        result[idx1] = argInit_real32_T();
+    }
 
-  return result;
+    return result;
 }
 
 //
 // Arguments    : void
 // Return Type  : creal32_T
 //
-static creal32_T argInit_creal32_T()
-{
-  creal32_T result;
-  float re_tmp;
+static creal32_T argInit_creal32_T() {
+    creal32_T result;
+    float re_tmp;
 
-  // Set the value of the complex variable.
-  // Change this value to the value that the application requires.
-  re_tmp = argInit_real32_T();
-  result.re = re_tmp;
-  result.im = re_tmp;
-  return result;
+    // Set the value of the complex variable.
+    // Change this value to the value that the application requires.
+    re_tmp = argInit_real32_T();
+    result.re = re_tmp;
+    result.im = re_tmp;
+    return result;
 }
 
 //
 // Arguments    : void
 // Return Type  : int
 //
-static int argInit_int32_T()
-{
-  return 0;
+static int argInit_int32_T() {
+    return 0;
 }
 
 //
 // Arguments    : void
 // Return Type  : float
 //
-static float argInit_real32_T()
-{
-  return 0.0F;
+static float argInit_real32_T() {
+    return 0.0F;
 }
 
 //
 // Arguments    : void
 // Return Type  : void
 //
-static void main_mconv()
-{
-  coder::array<float, 2U> a_tmp;
-  coder::array<creal32_T, 2U> c;
+static void main_mconv() {
+    coder::array<float, 2U> a_tmp;
+    coder::array<creal32_T, 2U> c;
 
-  // Initialize function 'mconv' input arguments.
-  // Initialize function input argument 'a'.
-  a_tmp = argInit_1xUnbounded_real32_T();
+    // Initialize function 'mconv' input arguments.
+    // Initialize function input argument 'a'.
+    a_tmp = argInit_1xUnbounded_real32_T();
 
-  // Initialize function input argument 'b'.
-  // Call the entry-point 'mconv'.
-  mconv(a_tmp, a_tmp, argInit_int32_T(), c);
+    // Initialize function input argument 'b'.
+    // Call the entry-point 'mconv'.
+    mconv(a_tmp, a_tmp, argInit_int32_T(), c);
 }
 
 //
 // Arguments    : void
 // Return Type  : void
 //
-static void main_mfft()
-{
-  coder::array<float, 2U> X;
-  coder::array<creal32_T, 2U> F;
+static void main_mfft() {
+    coder::array<float, 2U> X;
+    coder::array<creal32_T, 2U> F;
 
-  // Initialize function 'mfft' input arguments.
-  // Initialize function input argument 'X'.
-  X = argInit_1xUnbounded_real32_T();
+    // Initialize function 'mfft' input arguments.
+    // Initialize function input argument 'X'.
+    X = argInit_1xUnbounded_real32_T();
 
-  // Call the entry-point 'mfft'.
-  mfft(X, argInit_int32_T(), F);
+    // Call the entry-point 'mfft'.
+    mfft(X, argInit_int32_T(), F);
 }
 
 //
 // Arguments    : void
 // Return Type  : void
 //
-static void main_mifft()
-{
-  coder::array<creal32_T, 2U> F;
-  coder::array<creal32_T, 2U> X;
+static void main_mifft() {
+    coder::array<creal32_T, 2U> F;
+    coder::array<creal32_T, 2U> X;
 
-  // Initialize function 'mifft' input arguments.
-  // Initialize function input argument 'F'.
-  F = argInit_1xUnbounded_creal32_T();
+    // Initialize function 'mifft' input arguments.
+    // Initialize function input argument 'F'.
+    F = argInit_1xUnbounded_creal32_T();
 
-  // Call the entry-point 'mifft'.
-  mifft(F, argInit_int32_T(), X);
+    // Call the entry-point 'mifft'.
+    mifft(F, argInit_int32_T(), X);
 }
 
 //
 // Arguments    : void
 // Return Type  : void
 //
-static void main_mywelch()
-{
-  coder::array<float, 2U> x;
-  int N_tmp;
-  coder::array<float, 2U> pxx;
-  coder::array<float, 1U> f;
+static void main_mywelch() {
+    coder::array<float, 2U> x;
+    int N_tmp;
+    coder::array<float, 2U> pxx;
+    coder::array<float, 1U> f;
 
-  // Initialize function 'mywelch' input arguments.
-  // Initialize function input argument 'x'.
-  x = argInit_1xUnbounded_real32_T();
-  N_tmp = argInit_int32_T();
+    // Initialize function 'mywelch' input arguments.
+    // Initialize function input argument 'x'.
+    x = argInit_1xUnbounded_real32_T();
+    N_tmp = argInit_int32_T();
 
-  // Call the entry-point 'mywelch'.
-  mywelch(x, N_tmp, N_tmp, pxx, f);
+    // Call the entry-point 'mywelch'.
+    mywelch(x, N_tmp, N_tmp, pxx, f);
 }
 
 //
@@ -210,20 +209,19 @@ static void main_mywelch()
 //                const char * const argv[]
 // Return Type  : int
 //
-int main(int, const char * const [])
-{
-  // The initialize function is being called automatically from your entry-point function. So, a call to initialize is not included here. 
-  // Invoke the entry-point functions.
-  // You can call entry-point functions multiple times.
-  main_mconv();
-  main_mfft();
-  main_mifft();
-  main_mywelch();
+int main(int, const char *const[]) {
+    // The initialize function is being called automatically from your entry-point function. So, a call to initialize is not included here.
+    // Invoke the entry-point functions.
+    // You can call entry-point functions multiple times.
+    main_mconv();
+    main_mfft();
+    main_mifft();
+    main_mywelch();
 
-  // Terminate the application.
-  // You do not need to do this more than one time.
-  dspmath_terminate();
-  return 0;
+    // Terminate the application.
+    // You do not need to do this more than one time.
+    dspmath_terminate();
+    return 0;
 }
 
 //

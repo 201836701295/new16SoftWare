@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -19,8 +18,8 @@ public class EarTestActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityEarTestBinding earTestBinding = DataBindingUtil.setContentView(this, R.layout.activity_ear_test);
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.left_ear,R.id.right_ear).build();
-        NavController navController = Navigation.findNavController(this,R.id.fragment);
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.left_ear, R.id.right_ear).build();
+        NavController navController = Navigation.findNavController(this, R.id.fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(earTestBinding.navigation, navController);
     }

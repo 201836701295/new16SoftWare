@@ -17,7 +17,7 @@ public class LeftEarFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentLeftEarBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_left_ear,container,false);
+        FragmentLeftEarBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_left_ear, container, false);
         return binding.getRoot();
     }
 }

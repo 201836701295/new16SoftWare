@@ -4,17 +4,14 @@ import android.media.AudioAttributes;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
-import android.os.Build;
 
-import androidx.annotation.RequiresApi;
-
-public class SampleMusicPlayer implements AudioTrack.OnPlaybackPositionUpdateListener{
+public class SampleMusicPlayer implements AudioTrack.OnPlaybackPositionUpdateListener {
     private AudioTrack audioTrack = null;
     private OnFinishListener onFinishListener;
     private int marker;
 
     public int write(short[] buffer, int offset, int length) {
-        if(audioTrack != null){
+        if (audioTrack != null) {
             return audioTrack.write(buffer, offset, length);
         }
         return -1;
@@ -25,7 +22,7 @@ public class SampleMusicPlayer implements AudioTrack.OnPlaybackPositionUpdateLis
     }
 
     public void play() {
-        if(audioTrack != null){
+        if (audioTrack != null) {
             audioTrack.pause();
             audioTrack.flush();
             audioTrack.release();
@@ -51,7 +48,7 @@ public class SampleMusicPlayer implements AudioTrack.OnPlaybackPositionUpdateLis
     }
 
     private void stop() {
-        if(audioTrack != null){
+        if (audioTrack != null) {
             audioTrack.stop();
             audioTrack.release();
             audioTrack = null;
@@ -60,7 +57,7 @@ public class SampleMusicPlayer implements AudioTrack.OnPlaybackPositionUpdateLis
 
     @Override
     public void onMarkerReached(AudioTrack audioTrack) {
-        if(onFinishListener != null){
+        if (onFinishListener != null) {
             onFinishListener.OnFinish();
         }
         stop();

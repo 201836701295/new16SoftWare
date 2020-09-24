@@ -17,7 +17,7 @@ public class OutcomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FramentOutcomeBinding binding = DataBindingUtil.inflate(inflater, R.layout.frament_outcome,container,false);
+        FramentOutcomeBinding binding = DataBindingUtil.inflate(inflater, R.layout.frament_outcome, container, false);
         return binding.getRoot();
     }
 }

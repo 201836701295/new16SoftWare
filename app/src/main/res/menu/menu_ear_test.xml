@@ -3,12 +3,12 @@
 
     <item
         android:id="@+id/left_ear"
-        android:title="@string/left_ear"
-        android:icon="@drawable/ic_left_ear_24"/>
+        android:icon="@drawable/ic_left_ear_24"
+        android:title="@string/left_ear" />
 
     <item
         android:id="@+id/right_ear"
-        android:title="@string/right_ear"
-        android:icon="@drawable/ic_right_ear_24"/>
+        android:icon="@drawable/ic_right_ear_24"
+        android:title="@string/right_ear" />
 
 </menu>

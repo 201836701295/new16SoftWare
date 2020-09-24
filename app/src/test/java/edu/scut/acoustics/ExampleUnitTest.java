@@ -6,8 +6,6 @@ import java.nio.charset.StandardCharsets;
 
 import edu.scut.acoustics.utils.SinWave;
 
-import static org.junit.Assert.*;
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -20,21 +18,21 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void audio(){
+    public void audio() {
         int length = SinWave.SAMPLE_RATE * 100;
         System.out.println(length);
         float[] data = new float[length];
-        int[] freq_list = {250,500,1000,2000,4000,8000};
-        int[] db_list = {0,5,10,15,20,25,30,35,40,45,50,55,60,65,70};
-        SinWave sinWave = new SinWave(25,40);
+        int[] freq_list = {250, 500, 1000, 2000, 4000, 8000};
+        int[] db_list = {0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70};
+        SinWave sinWave = new SinWave(25, 40);
 
-        for(int f : freq_list){
+        for (int f : freq_list) {
             System.out.println(f + "hz: ");
-            for(int d : db_list){
-                sinWave.set(f,d);
+            for (int d : db_list) {
+                sinWave.set(f, d);
                 sinWave.doFinal(data);
                 double sum = 0;
-                for (float v: data) {
+                for (float v : data) {
                     sum += (double) v * v;
                 }
                 sum /= data.length;
@@ -46,7 +44,7 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void mirro(){
+    public void mirro() {
         String vec = "M17,20 c-0.29,0 -0.56,-0.06 -0.76,-0.15\n" +
                 "       -0.71,-0.37 -1.21,-0.88 -1.71,-2.38\n" +
                 "        -0.51,-1.56 -1.47,-2.29 -2.39,-3\n" +
@@ -58,11 +56,11 @@ public class ExampleUnitTest {
 
         byte[] bytes = vec.getBytes(StandardCharsets.US_ASCII);
 
-        for(int i = 0; i < bytes.length; ++i){
-            if(bytes[i] == ' ' || bytes[i] == '\n'){
+        for (int i = 0; i < bytes.length; ++i) {
+            if (bytes[i] == ' ' || bytes[i] == '\n') {
                 continue;
             }
-            switch (bytes[i]){
+            switch (bytes[i]) {
                 case 'M':
 
             }

@@ -1,8 +1,5 @@
 package edu.scut.acoustics.utils;
 
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaExtractor;
-
 import java.io.BufferedInputStream;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -20,6 +17,7 @@ public class AudioDecoder {
 
     /**
      * 16位简陋wav解码器
+     *
      * @param fd
      * @throws IOException
      */
@@ -34,11 +32,11 @@ public class AudioDecoder {
         int temp1, temp2;
         for (int i = 0; i < length; i++) {
             temp1 = bis.read();
-            if(temp1 < 0){
+            if (temp1 < 0) {
                 return i;
             }
             temp2 = bis.read();
-            if(temp2 < 0){
+            if (temp2 < 0) {
                 return i;
             }
             data[i] = (short) (temp1 | (temp2 << 8));

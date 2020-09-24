@@ -15,9 +15,9 @@
 
 // Function Declarations
 extern void computepsd(const coder::array<float, 2U> &Sxx1, const coder::array<
-  double, 2U> &w2, const char range[8], double nfft, double Fs, coder::array<
-  float, 2U> &varargout_1, coder::array<double, 1U> &varargout_2, char
-  varargout_3_data[], int varargout_3_size[2]);
+        double, 2U> &w2, const char range[8], double nfft, double Fs, coder::array<
+        float, 2U> &varargout_1, coder::array<double, 1U> &varargout_2, char
+                       varargout_3_data[], int varargout_3_size[2]);
 
 #endif
 

@@ -15,7 +15,7 @@
 
 // Function Declarations
 extern void mconv(const coder::array<float, 2U> &a, const coder::array<float, 2U>
-                  &b, int n, coder::array<creal32_T, 2U> &c);
+&b, int n, coder::array<creal32_T, 2U> &c);
 
 #endif
 

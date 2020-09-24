@@ -21,10 +21,9 @@
 // Arguments    : void
 // Return Type  : void
 //
-void dspmath_initialize()
-{
-  rt_InitInfAndNaN();
-  isInitialized_dspmath = true;
+void dspmath_initialize() {
+    rt_InitInfAndNaN();
+    isInitialized_dspmath = true;
 }
 
 //

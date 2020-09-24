@@ -15,7 +15,7 @@
 
 // Function Declarations
 extern void mfft(const coder::array<float, 2U> &X, int N, coder::array<creal32_T,
-                 2U> &F);
+        2U> &F);
 
 #endif
 

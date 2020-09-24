@@ -15,8 +15,8 @@
 
 // Function Declarations
 extern void welch(const coder::array<float, 2U> &x, int varargin_3, int
-                  varargin_4, coder::array<float, 2U> &varargout_1, coder::array<
-                  float, 1U> &varargout_2);
+varargin_4, coder::array<float, 2U> &varargout_1, coder::array<
+        float, 1U> &varargout_2);
 
 #endif
 

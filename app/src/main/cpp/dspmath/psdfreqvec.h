@@ -15,7 +15,7 @@
 
 // Function Declarations
 extern void psdfreqvec(double varargin_2, double varargin_4, coder::array<double,
-  1U> &w);
+        1U> &w);
 
 #endif
 

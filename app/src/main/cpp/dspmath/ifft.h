@@ -15,7 +15,7 @@
 
 // Function Declarations
 extern void ifft(const coder::array<creal32_T, 2U> &x, int varargin_1, coder::
-                 array<creal32_T, 2U> &y);
+array<creal32_T, 2U> &y);
 
 #endif
 

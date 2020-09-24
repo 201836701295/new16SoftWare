@@ -11,28 +11,28 @@
         android:orientation="vertical">
 
         <TextView
-            android:text="这是波形1"
-            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:text="这是波形1" />
 
         <TextView
-            android:text="这是波形2"
-            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:text="这是波形2" />
 
         <TextView
-            android:text="卷积后波形"
-            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:text="卷积后波形" />
 
         <TextView
-            android:text="功率谱"
-            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:text="功率谱" />
 
     </LinearLayout>
 </layout>

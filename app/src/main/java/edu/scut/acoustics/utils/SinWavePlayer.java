@@ -5,9 +5,9 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 
-public class SinWavePlayer implements AudioTrack.OnPlaybackPositionUpdateListener{
+public class SinWavePlayer implements AudioTrack.OnPlaybackPositionUpdateListener {
     //各个频率，250hz到8000hz，倍频
-    public static final int[] FREQUENTS = {250,500,1000,2000,4000,8000};
+    public static final int[] FREQUENTS = {250, 500, 1000, 2000, 4000, 8000};
     //音量级
     public static final int[] DBS = new int[]{0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85};
     //pcm_float格式的音频数据，0.5秒的音频
@@ -18,21 +18,22 @@ public class SinWavePlayer implements AudioTrack.OnPlaybackPositionUpdateListene
     private SinWave sinWave;
 
     public SinWavePlayer() {
-        sinWave = new SinWave(250,0);
+        sinWave = new SinWave(250, 0);
     }
 
     /**
      * 耗时操作
-     * @param hz 频率
-     * @param db 音量
+     *
+     * @param hz      频率
+     * @param db      音量
      * @param channel 左右声道 AudioFormat::CHANNEL_OUT_FRONT_LEFT CHANNEL_OUT_FRONT_RIGHT CHANNEL_OUT_STEREO
      */
-    public void set(int hz, int db, int channel){
+    public void set(int hz, int db, int channel) {
         //生成正弦波
-        sinWave.set(hz,db);
+        sinWave.set(hz, db);
         sinWave.doFinal(pcm_data);
         //TODO 设置播放声道
-        if(audioTrack != null){
+        if (audioTrack != null) {
             audioTrack.pause();
             audioTrack.flush();
             audioTrack.release();
@@ -48,14 +49,14 @@ public class SinWavePlayer implements AudioTrack.OnPlaybackPositionUpdateListene
 
         audioTrack = new AudioTrack(attributes, format, pcm_data.length * Float.BYTES, AudioTrack.MODE_STATIC, AudioManager.AUDIO_SESSION_ID_GENERATE);
         audioTrack.flush();
-        audioTrack.write(pcm_data,0,pcm_data.length,AudioTrack.WRITE_BLOCKING);
+        audioTrack.write(pcm_data, 0, pcm_data.length, AudioTrack.WRITE_BLOCKING);
     }
 
     /**
      * 播放音频
      */
-    public void play(){
-        if(audioTrack != null){
+    public void play() {
+        if (audioTrack != null) {
             audioTrack.flush();
             audioTrack.setNotificationMarkerPosition(pcm_data.length);
             audioTrack.setPlaybackPositionUpdateListener(this);
@@ -63,7 +64,7 @@ public class SinWavePlayer implements AudioTrack.OnPlaybackPositionUpdateListene
         }
     }
 
-    private void stop(){
+    private void stop() {
         audioTrack.stop();
         audioTrack.release();
         audioTrack = null;

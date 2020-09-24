@@ -15,9 +15,10 @@
 
 // Function Declarations
 extern void b_fft(const coder::array<float, 1U> &x, double varargin_1, coder::
-                  array<creal32_T, 1U> &y);
+array<creal32_T, 1U> &y);
+
 extern void fft(const coder::array<float, 2U> &x, int varargin_1, coder::array<
-                creal32_T, 2U> &y);
+        creal32_T, 2U> &y);
 
 #endif
 

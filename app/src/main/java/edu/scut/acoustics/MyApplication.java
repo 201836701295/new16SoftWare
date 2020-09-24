@@ -5,7 +5,6 @@ import android.content.IntentFilter;
 import android.content.res.AssetFileDescriptor;
 
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 public class MyApplication extends Application {
@@ -33,29 +32,29 @@ public class MyApplication extends Application {
         AssetFileDescriptor sampleSignalAFD = getResources().openRawResourceFd(R.raw.sample_signal);
         BufferedInputStream isbis = new BufferedInputStream(inverseSignalAFD.createInputStream());
         BufferedInputStream ssbis = new BufferedInputStream(sampleSignalAFD.createInputStream());
-        for(int i = 0; i < 44; ++i){
+        for (int i = 0; i < 44; ++i) {
             isbis.read();
             ssbis.read();
         }
-        for(int i = 0; i < inverseSignal.length; ++i){
+        for (int i = 0; i < inverseSignal.length; ++i) {
 
             temp = isbis.read();
             temp |= (isbis.read() << 8);
             inverseSignal[i] = temp;
         }
-        try{
+        try {
             isbis.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        for(int i = 0; i < sampleSignal.length; ++i){
+        for (int i = 0; i < sampleSignal.length; ++i) {
             temp = ssbis.read();
             temp |= (ssbis.read() << 8);
             sampleSignal[i] = (short) temp;
         }
-        try{
+        try {
             ssbis.close();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

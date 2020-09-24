@@ -16,11 +16,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="30sp"
             android:padding="10dp"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="30sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="左右耳" />
 
         <TextView
@@ -28,51 +28,51 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            tools:text="当前频率\n1000Hz"
             android:textSize="20sp"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/volume"
             app:layout_constraintTop_toBottomOf="@id/ear"
-            app:layout_constraintRight_toLeftOf="@id/volume" />
+            tools:text="当前频率\n1000Hz" />
 
         <TextView
             android:id="@+id/volume"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            tools:text="当前分贝\n40Db"
             android:textSize="20sp"
+            app:layout_constraintLeft_toRightOf="@id/frequent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ear"
-            app:layout_constraintLeft_toRightOf="@id/frequent" />
+            tools:text="当前分贝\n40Db" />
 
         <ImageButton
             android:id="@+id/play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:src="@drawable/ic_baseline_play_arrow_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/unable_hear"
             app:layout_constraintRight_toLeftOf="@id/able_hear"
-            android:layout_marginBottom="10dp"
             tools:ignore="ContentDescription" />
 
         <Button
             android:id="@+id/unable_hear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:text="@string/unable_hear"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginBottom="10dp" />
+            app:layout_constraintLeft_toLeftOf="parent" />
 
         <Button
             android:id="@+id/able_hear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:text="@string/able_hear"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginBottom="10dp" />
+            app:layout_constraintRight_toRightOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

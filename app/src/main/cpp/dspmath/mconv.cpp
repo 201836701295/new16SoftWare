@@ -27,26 +27,25 @@
 // Return Type  : void
 //
 void mconv(const coder::array<float, 2U> &a, const coder::array<float, 2U> &b,
-           int n, coder::array<creal32_T, 2U> &c)
-{
-  coder::array<creal32_T, 2U> Fa;
-  coder::array<creal32_T, 2U> Fb;
-  coder::array<creal32_T, 2U> b_Fa;
-  int loop_ub;
-  if (!isInitialized_dspmath) {
-    dspmath_initialize();
-  }
+           int n, coder::array<creal32_T, 2U> &c) {
+    coder::array<creal32_T, 2U> Fa;
+    coder::array<creal32_T, 2U> Fb;
+    coder::array<creal32_T, 2U> b_Fa;
+    int loop_ub;
+    if (!isInitialized_dspmath) {
+        dspmath_initialize();
+    }
 
-  fft(a, n, Fa);
-  fft(b, n, Fb);
-  b_Fa.set_size(1, Fa.size(1));
-  loop_ub = Fa.size(0) * Fa.size(1);
-  for (int i = 0; i < loop_ub; i++) {
-    b_Fa[i].re = Fa[i].re * Fb[i].re - Fa[i].im * Fb[i].im;
-    b_Fa[i].im = Fa[i].re * Fb[i].im + Fa[i].im * Fb[i].re;
-  }
+    fft(a, n, Fa);
+    fft(b, n, Fb);
+    b_Fa.set_size(1, Fa.size(1));
+    loop_ub = Fa.size(0) * Fa.size(1);
+    for (int i = 0; i < loop_ub; i++) {
+        b_Fa[i].re = Fa[i].re * Fb[i].re - Fa[i].im * Fb[i].im;
+        b_Fa[i].im = Fa[i].re * Fb[i].im + Fa[i].im * Fb[i].re;
+    }
 
-  ifft(b_Fa, n, c);
+    ifft(b_Fa, n, c);
 }
 
 //

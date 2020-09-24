@@ -38,8 +38,8 @@
    thus a separate check for _MSC_VER below.
  */
 #if defined(__APPLE_CC__) \
-    || (defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)) \
-    || (defined(_MSC_VER) && (_MSC_VER >= 1900))
+ || (defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)) \
+ || (defined(_MSC_VER) && (_MSC_VER >= 1900))
 #ifndef tmwtypes_do_not_include_stdbool
 #include <stdbool.h>
 #endif
@@ -57,7 +57,9 @@
 
 #ifndef __MWERKS__
 # ifdef __STDC__
+
 #  include <float.h>
+
 # else
 #  ifndef FLT_MANT_DIG
 #   define FLT_MANT_DIG 24
@@ -86,14 +88,14 @@
  * not allow defines to be specified, at the command line, with spaces in them.
  */
 
-typedef unsigned char       uchar_T;
-typedef unsigned short      ushort_T;
-typedef unsigned long       ulong_T;
+typedef unsigned char uchar_T;
+typedef unsigned short ushort_T;
+typedef unsigned long ulong_T;
 
 #if (defined(_MSC_VER) && _MSC_VER >= 1500)      \
-    || defined(__x86_64__) || defined(__LP64__)  \
-    || defined(__LCC64__)
-    
+ || defined(__x86_64__) || defined(__LP64__)  \
+ || defined(__LCC64__)
+
 typedef unsigned long long  ulonglong_T;
 #endif
 
@@ -132,11 +134,11 @@ typedef unsigned long long  ulonglong_T;
  */
 
 #ifndef TMW_BITS_PER_INT
-# if   INT_MAX  == 0x7FL
+# if   INT_MAX == 0x7FL
 #  define TMW_BITS_PER_INT 8
-# elif INT_MAX  == 0x7FFFL
+# elif INT_MAX == 0x7FFFL
 #  define TMW_BITS_PER_INT 16
-# elif INT_MAX  == 0x7FFFFFFFL
+# elif INT_MAX == 0x7FFFFFFFL
 #  define TMW_BITS_PER_INT 32
 # else
 #  define TMW_BITS_PER_INT -1
@@ -144,11 +146,11 @@ typedef unsigned long long  ulonglong_T;
 #endif
 
 #ifndef TMW_BITS_PER_LONG
-# if   LONG_MAX  == 0x7FL
+# if   LONG_MAX == 0x7FL
 #  define TMW_BITS_PER_LONG 8
-# elif LONG_MAX  == 0x7FFFL
+# elif LONG_MAX == 0x7FFFL
 #  define TMW_BITS_PER_LONG 16
-# elif LONG_MAX  == 0x7FFFFFFFL
+# elif LONG_MAX == 0x7FFFFFFFL
 #  define TMW_BITS_PER_LONG 32
 # else
 #  define TMW_BITS_PER_LONG -1
@@ -156,11 +158,11 @@ typedef unsigned long long  ulonglong_T;
 #endif
 
 #ifndef TMW_BITS_PER_SHRT
-# if   SHRT_MAX  == 0x7FL
+# if   SHRT_MAX == 0x7FL
 #  define TMW_BITS_PER_SHRT 8
-# elif SHRT_MAX  == 0x7FFFL
+# elif SHRT_MAX == 0x7FFFL
 #  define TMW_BITS_PER_SHRT 16
-# elif SHRT_MAX  == 0x7FFFFFFFL
+# elif SHRT_MAX == 0x7FFFFFFFL
 #  define TMW_BITS_PER_SHRT 32
 # else
 #  define TMW_BITS_PER_SHRT -1
@@ -168,9 +170,9 @@ typedef unsigned long long  ulonglong_T;
 #endif
 
 #ifndef TMW_BITS_PER_SCHAR
-# if   SCHAR_MAX  == 0x7FL
+# if   SCHAR_MAX == 0x7FL
 #  define TMW_BITS_PER_SCHAR 8
-# elif SCHAR_MAX  == 0x7FFFL
+# elif SCHAR_MAX == 0x7FFFL
 #  define TMW_BITS_PER_SCHAR 16
 # elif SCHAR_MAX  == 0x7FFFFFFFL
 #  define TMW_BITS_PER_SCHAR 32
@@ -208,80 +210,80 @@ typedef unsigned long long  ulonglong_T;
 #ifndef INT8_T
 # if   defined(MW_LIBTOOLING)
 #  define INT8_T  int8_t
-# elif TMW_BITS_PER_INT   == 8
+# elif TMW_BITS_PER_INT == 8
 #  define  INT8_T int
-# elif TMW_BITS_PER_LONG  == 8
+# elif TMW_BITS_PER_LONG == 8
 #  define  INT8_T long
 # elif TMW_BITS_PER_SCHAR == 8
 #  define  INT8_T signed char
-# elif TMW_BITS_PER_SHRT  == 8
+# elif TMW_BITS_PER_SHRT == 8
 #  define  INT8_T short
 # endif
 #endif
 #ifdef INT8_T
- typedef INT8_T int8_T;
+typedef INT8_T int8_T;
 #endif
 
 #ifndef UINT8_T
 # if   defined(MW_LIBTOOLING)
 #  define  UINT8_T uint8_t
-# elif   TMW_BITS_PER_INT   == 8
+# elif   TMW_BITS_PER_INT == 8
 #  define  UINT8_T unsigned int
-# elif TMW_BITS_PER_LONG  == 8
+# elif TMW_BITS_PER_LONG == 8
 #  define  UINT8_T unsigned long
 # elif TMW_BITS_PER_SCHAR == 8
 #  define  UINT8_T unsigned char
-# elif TMW_BITS_PER_SHRT  == 8
+# elif TMW_BITS_PER_SHRT == 8
 #  define  UINT8_T unsigned short
 # endif
 #endif
 #ifdef UINT8_T
- typedef UINT8_T uint8_T;
+typedef UINT8_T uint8_T;
 #endif
 
 
 #ifndef INT16_T
 # if   defined(MW_LIBTOOLING)
 #  define  INT16_T int16_t
-# elif   TMW_BITS_PER_INT   == 16
+# elif   TMW_BITS_PER_INT == 16
 #  define  INT16_T int
-# elif TMW_BITS_PER_LONG  == 16
+# elif TMW_BITS_PER_LONG == 16
 #  define  INT16_T long
 # elif TMW_BITS_PER_SCHAR == 16
 #  define  INT16_T signed char
-# elif TMW_BITS_PER_SHRT  == 16
+# elif TMW_BITS_PER_SHRT == 16
 #  define  INT16_T short
 # endif
 #endif
 #ifdef INT16_T
- typedef INT16_T int16_T;
+typedef INT16_T int16_T;
 #endif
 
 
 #ifndef UINT16_T
 # if   defined(MW_LIBTOOLING)
 #  define  UINT16_T uint16_t
-# elif TMW_BITS_PER_INT   == 16
+# elif TMW_BITS_PER_INT == 16
 #  define  UINT16_T unsigned int
-# elif TMW_BITS_PER_LONG  == 16
+# elif TMW_BITS_PER_LONG == 16
 #  define  UINT16_T unsigned long
 # elif TMW_BITS_PER_SCHAR == 16
 #  define  UINT16_T unsigned char
-# elif TMW_BITS_PER_SHRT  == 16
+# elif TMW_BITS_PER_SHRT == 16
 #  define  UINT16_T unsigned short
 # endif
 #endif
 #ifdef UINT16_T
- typedef UINT16_T uint16_T;
+typedef UINT16_T uint16_T;
 #endif
 
 
 #ifndef INT32_T
 # if   defined(MW_LIBTOOLING)
 #  define  INT32_T int32_t
-# elif TMW_BITS_PER_INT   == 32
+# elif TMW_BITS_PER_INT == 32
 #  define  INT32_T int
-# elif TMW_BITS_PER_LONG  == 32
+# elif TMW_BITS_PER_LONG == 32
 #  define  INT32_T long
 # elif TMW_BITS_PER_SCHAR == 32
 #  define  INT32_T signed char
@@ -290,16 +292,16 @@ typedef unsigned long long  ulonglong_T;
 # endif
 #endif
 #ifdef INT32_T
- typedef INT32_T int32_T;
+typedef INT32_T int32_T;
 #endif
 
 
 #ifndef UINT32_T
 # if   defined(MW_LIBTOOLING)
 #  define  UINT32_T uint32_t
-# elif TMW_BITS_PER_INT   == 32
+# elif TMW_BITS_PER_INT == 32
 #  define  UINT32_T unsigned int
-# elif TMW_BITS_PER_LONG  == 32
+# elif TMW_BITS_PER_LONG == 32
 #  define  UINT32_T unsigned long
 # elif TMW_BITS_PER_SCHAR == 32
 #   define UINT32_T unsigned char
@@ -308,7 +310,7 @@ typedef unsigned long long  ulonglong_T;
 # endif
 #endif
 #ifdef UINT32_T
- typedef UINT32_T uint32_T;
+typedef UINT32_T uint32_T;
 #endif
 
 /* The following is used to emulate smaller integer types when only
@@ -321,11 +323,11 @@ typedef unsigned long long  ulonglong_T;
 #ifndef INT8_T
 # ifdef INT16_T
 #  define INT8_T INT16_T
-   typedef INT8_T int8_T;
+typedef INT8_T int8_T;
 # else
 #  ifdef INT32_T
 #   define INT8_T INT32_T
-    typedef INT8_T int8_T;
+ typedef INT8_T int8_T;
 #  endif
 # endif
 #endif
@@ -333,11 +335,11 @@ typedef unsigned long long  ulonglong_T;
 #ifndef UINT8_T
 # ifdef UINT16_T
 #   define UINT8_T UINT16_T
-    typedef UINT8_T uint8_T;
+typedef UINT8_T uint8_T;
 # else
 #  ifdef UINT32_T
 #   define UINT8_T UINT32_T
-    typedef UINT8_T uint8_T;
+typedef UINT8_T uint8_T;
 #  endif
 # endif
 #endif
@@ -345,14 +347,14 @@ typedef unsigned long long  ulonglong_T;
 #ifndef INT16_T
 # ifdef INT32_T
 #   define INT16_T INT32_T
-    typedef INT16_T int16_T;
+typedef INT16_T int16_T;
 # endif
 #endif
 
 #ifndef UINT16_T
 # ifdef UINT32_T
 #   define UINT16_T UINT32_T
-    typedef UINT16_T uint16_T;
+typedef UINT16_T uint16_T;
 # endif
 #endif
 
@@ -369,7 +371,7 @@ typedef unsigned long long  ulonglong_T;
 # endif
 #endif
 #ifdef REAL32_T
- typedef REAL32_T real32_T;
+typedef REAL32_T real32_T;
 #endif
 
 
@@ -383,7 +385,7 @@ typedef unsigned long long  ulonglong_T;
 # endif
 #endif
 #ifdef REAL64_T
- typedef REAL64_T real64_T;
+typedef REAL64_T real64_T;
 #endif
 
 #endif /* NO_FLOATS*/
@@ -418,7 +420,7 @@ typedef unsigned long long  ulonglong_T;
 #  if defined(__LP64__) && !defined(INT_TYPE_64_IS_LONG)
 #    define INT_TYPE_64_IS_LONG
 #  endif
-# elif (defined(__x86_64__) || defined(__LP64__))&& !defined(__MINGW64__) 
+# elif (defined(__x86_64__) || defined(__LP64__)) && !defined(__MINGW64__)
 #  ifndef INT64_T
 #   define INT64_T long
 #  endif
@@ -459,24 +461,24 @@ typedef unsigned long long  ulonglong_T;
 
 #if defined(INT64_T)
 # if defined(__GNUC__) && \
-    ((__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ >=9)))
-  __extension__
+    ((__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ >= 9)))
+__extension__
 # endif
- typedef INT64_T int64_T;
+typedef INT64_T int64_T;
 #endif
 
 #if defined(_WIN64) || (defined(__APPLE__) && defined(__LP64__)) \
-                    || defined(__x86_64__) \
-                    || defined(__LP64__)
+ || defined(__x86_64__) \
+ || defined(__LP64__)
 #  define INT_TYPE_64_IS_SUPPORTED
 #endif
 
 #if defined(UINT64_T)
 # if defined(__GNUC__) && \
-    ((__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ >=9)))
-  __extension__
+    ((__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ >= 9)))
+__extension__
 # endif
- typedef UINT64_T uint64_T;
+typedef UINT64_T uint64_T;
 #endif
 
 /*===========================================================================*
@@ -484,7 +486,7 @@ typedef unsigned long long  ulonglong_T;
  *===========================================================================*/
 
 #ifndef FMT_SIZE_T
-#  if (defined( __GNUC__ ) || defined(_STDC_C99))&& !defined(__MINGW64__)
+#  if (defined( __GNUC__ ) || defined(_STDC_C99)) && !defined(__MINGW64__)
 #    define FMT_SIZE_T "z"
 #  elif defined (__WATCOMC__)
 #    define FMT_SIZE_T "l"
@@ -532,7 +534,7 @@ typedef unsigned long long  ulonglong_T;
 # endif
 #endif
 #ifdef REAL_T
- typedef REAL_T real_T;
+typedef REAL_T real_T;
 #endif
 
 #ifndef TIME_T
@@ -541,7 +543,7 @@ typedef unsigned long long  ulonglong_T;
 # endif
 #endif
 #ifdef TIME_T
- typedef TIME_T time_T;
+typedef TIME_T time_T;
 #endif
 
 #endif /* NO_FLOATS */
@@ -587,27 +589,27 @@ typedef BYTE_T byte_T;
 
 #ifndef CREAL32_T
 #  ifdef REAL32_T
-    typedef struct {
-      real32_T re, im;
-    } creal32_T;
+typedef struct {
+    real32_T re, im;
+} creal32_T;
 #    define CREAL32_T creal32_T
 #  endif
 #endif
 
 #ifndef CREAL64_T
 #  ifdef REAL64_T
-    typedef struct {
-      real64_T re, im;
-    } creal64_T;
+typedef struct {
+    real64_T re, im;
+} creal64_T;
 #    define CREAL64_T creal64_T
 #  endif
 #endif
 
 #ifndef CREAL_T
 #  ifdef REAL_T
-    typedef struct {
-      real_T re, im;
-    } creal_T;
+typedef struct {
+    real_T re, im;
+} creal_T;
 #    define CREAL_T creal_T
 #  endif
 #endif
@@ -616,72 +618,72 @@ typedef BYTE_T byte_T;
 
 #ifndef CINT8_T
 #  ifdef INT8_T
-    typedef struct {
-      int8_T re, im;
-    } cint8_T;
+typedef struct {
+    int8_T re, im;
+} cint8_T;
 #    define CINT8_T cint8_T
 #  endif
 #endif
 
 #ifndef CUINT8_T
 #  ifdef UINT8_T
-    typedef struct {
-      uint8_T re, im;
-    } cuint8_T;
+typedef struct {
+    uint8_T re, im;
+} cuint8_T;
 #    define CUINT8_T cuint8_T
 #  endif
 #endif
 
 #ifndef CINT16_T
 #  ifdef INT16_T
-    typedef struct {
-      int16_T re, im;
-    } cint16_T;
+typedef struct {
+    int16_T re, im;
+} cint16_T;
 #    define CINT16_T cint16_T
 #  endif
 #endif
 
 #ifndef CUINT16_T
 #  ifdef UINT16_T
-    typedef struct {
-      uint16_T re, im;
-    } cuint16_T;
+typedef struct {
+    uint16_T re, im;
+} cuint16_T;
 #    define CUINT16_T cuint16_T
 #  endif
 #endif
 
 #ifndef CINT32_T
 #  ifdef INT32_T
-    typedef struct {
-      int32_T re, im;
-    } cint32_T;
+typedef struct {
+    int32_T re, im;
+} cint32_T;
 #    define CINT32_T cint32_T
 #  endif
 #endif
 
 #ifndef CUINT32_T
 #  ifdef UINT32_T
-    typedef struct {
-      uint32_T re, im;
-    } cuint32_T;
+typedef struct {
+    uint32_T re, im;
+} cuint32_T;
 #    define CUINT32_T cuint32_T
 #  endif
 #endif
 
 #ifndef CINT64_T
 #  ifdef INT64_T
-    typedef struct {
-      int64_T re, im;
-    } cint64_T;
+typedef struct {
+    int64_T re, im;
+} cint64_T;
 #    define CINT64_T cint64_T
 #  endif
 #endif
 
 #ifndef CUINT64_T
 #  ifdef UINT64_T
-    typedef struct {
-      uint64_T re, im;
-    } cuint64_T;
+typedef struct {
+    uint64_T re, im;
+} cuint64_T;
 #    define CUINT64_T cuint64_T
 #  endif
 #endif
@@ -696,20 +698,20 @@ typedef BYTE_T byte_T;
 #define  MIN_int8_T      ((int8_T)(-128))           /* -128 */
 #define  MAX_uint8_T     ((uint8_T)(255))           /* 255  */
 #define  MIN_uint8_T     ((uint8_T)(0))
-                           
+
 #define  MAX_int16_T     ((int16_T)(32767))         /* 32767 */
 #define  MIN_int16_T     ((int16_T)(-32768))        /* -32768 */
 #define  MAX_uint16_T    ((uint16_T)(65535))        /* 65535 */
 #define  MIN_uint16_T    ((uint16_T)(0))
-                           
+
 #define  MAX_int32_T     ((int32_T)(2147483647))    /* 2147483647  */
 #define  MIN_int32_T     ((int32_T)(-2147483647-1)) /* -2147483648 */
 #define  MAX_uint32_T    ((uint32_T)(0xFFFFFFFFU))  /* 4294967295  */
 #define  MIN_uint32_T    ((uint32_T)(0))
 
 #if defined(_MSC_VER) || (defined(__BORLANDC__) && __BORLANDC__ >= 0x530) \
-                      || (defined(__WATCOMC__)  && __WATCOMC__  >= 1100) \
-                      || defined(__LCC64__)
+ || (defined(__WATCOMC__) && __WATCOMC__ >= 1100) \
+ || defined(__LCC64__)
 #  ifdef INT64_T
 #    define  MAX_int64_T     ((int64_T)(9223372036854775807LL))
 #    define  MIN_int64_T     ((int64_T)(-9223372036854775807LL-1LL))
@@ -831,21 +833,21 @@ typedef int mwSize;
 typedef int mwIndex;
 typedef int mwSignedIndex;
 #else
-typedef size_t    mwSize;         /* unsigned pointer-width integer */
-typedef size_t    mwIndex;        /* unsigned pointer-width integer */
+typedef size_t mwSize;         /* unsigned pointer-width integer */
+typedef size_t mwIndex;        /* unsigned pointer-width integer */
 typedef ptrdiff_t mwSignedIndex;  /* a signed pointer-width integer */
 #endif
 
-                                  /* for the individual dim */
+/* for the individual dim */
 #ifndef SLSIZE_SLINDEX
-  #define SLSIZE_SLINDEX
-  #ifdef INT_TYPE_64_IS_SUPPORTED
-    typedef int64_T SLIndex;
-    typedef int64_T SLSize;
-  #else
-    typedef int SLIndex;
-    typedef int SLSize;
-  #endif
+#define SLSIZE_SLINDEX
+#ifdef INT_TYPE_64_IS_SUPPORTED
+typedef int64_T SLIndex;
+typedef int64_T SLSize;
+#else
+typedef int SLIndex;
+typedef int SLSize;
+#endif
 #endif
 
 /* for the total size */

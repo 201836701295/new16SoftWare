@@ -25,13 +25,12 @@
 // Return Type  : void
 //
 void mfft(const coder::array<float, 2U> &X, int N, coder::array<creal32_T, 2U>
-          &F)
-{
-  if (!isInitialized_dspmath) {
-    dspmath_initialize();
-  }
+&F) {
+    if (!isInitialized_dspmath) {
+        dspmath_initialize();
+    }
 
-  fft(X, N, F);
+    fft(X, N, F);
 }
 
 //

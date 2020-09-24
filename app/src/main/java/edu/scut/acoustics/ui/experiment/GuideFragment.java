@@ -17,7 +17,7 @@ public class GuideFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentGuideBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_guide,container,false);
+        FragmentGuideBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_guide, container, false);
         return binding.getRoot();
     }
 }

@@ -15,7 +15,7 @@
 
 // Function Declarations
 extern void mifft(const coder::array<creal32_T, 2U> &F, int N, coder::array<
-                  creal32_T, 2U> &X);
+        creal32_T, 2U> &X);
 
 #endif
 
