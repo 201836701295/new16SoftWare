@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import java.io.IOException;
 import java.util.Objects;
 
 import edu.scut.acoustics.MyApplication;
@@ -29,16 +30,26 @@ public class SplashActivity extends AppCompatActivity{
         ActivitySplashBinding activitySplashBinding = DataBindingUtil.setContentView(this, R.layout.activity_splash);
         //隐藏ActionBar
         Objects.requireNonNull(getSupportActionBar()).hide();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                finish();
+            }
+        },1500);
+
         //初始化
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 MyApplication application = (MyApplication) getApplication();
-                application.initialize();
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                finish();
+                try {
+                    application.initialize();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }, 1);
+        }, 10);
     }
 
 }

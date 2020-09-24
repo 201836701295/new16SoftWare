@@ -23,11 +23,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.main.MainActivity">
+        <activity android:name=".ui.main.MainActivity"/>
 
-        </activity>
+        <activity android:name=".ui.experiment.ExperimentActivity"/>
 
+        <activity android:name=".ui.noise_measurement.NoiseMeasurementActivity"/>
 
+        <activity android:name=".ui.ear_test.EarTestActivity"/>
 
     </application>
 

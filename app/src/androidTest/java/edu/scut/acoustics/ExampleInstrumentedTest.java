@@ -2,6 +2,8 @@ package edu.scut.acoustics;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.media.AudioFormat;
+import android.media.AudioTrack;
 import android.media.MediaCodec;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
@@ -16,6 +18,8 @@ import org.junit.runner.RunWith;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
+
+import edu.scut.acoustics.utils.SinWave;
 
 import static org.junit.Assert.*;
 
@@ -54,5 +58,11 @@ public class ExampleInstrumentedTest {
         assert mediaDecode != null;
         mediaDecode.start();
 
+    }
+
+    @Test
+    public void test(){
+        int length = AudioTrack.getMinBufferSize(SinWave.SAMPLE_RATE, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
+        Log.d("TAG", "test: " + length);
     }
 }

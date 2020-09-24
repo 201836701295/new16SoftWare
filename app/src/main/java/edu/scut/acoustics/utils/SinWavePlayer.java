@@ -5,7 +5,7 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 
-public class SinWavePlayer {
+public class SinWavePlayer implements AudioTrack.OnPlaybackPositionUpdateListener{
     //各个频率，250hz到8000hz，倍频
     public static final int[] FREQUENTS = {250,500,1000,2000,4000,8000};
     //音量级
@@ -33,6 +33,8 @@ public class SinWavePlayer {
         sinWave.doFinal(pcm_data);
         //TODO 设置播放声道
         if(audioTrack != null){
+            audioTrack.pause();
+            audioTrack.flush();
             audioTrack.release();
             audioTrack = null;
         }
@@ -54,13 +56,26 @@ public class SinWavePlayer {
      */
     public void play(){
         if(audioTrack != null){
+            audioTrack.flush();
+            audioTrack.setNotificationMarkerPosition(pcm_data.length);
+            audioTrack.setPlaybackPositionUpdateListener(this);
             audioTrack.play();
         }
     }
 
-    public void stop(){
+    private void stop(){
         audioTrack.stop();
         audioTrack.release();
         audioTrack = null;
+    }
+
+    @Override
+    public void onMarkerReached(AudioTrack audioTrack) {
+
+    }
+
+    @Override
+    public void onPeriodicNotification(AudioTrack audioTrack) {
+        stop();
     }
 }

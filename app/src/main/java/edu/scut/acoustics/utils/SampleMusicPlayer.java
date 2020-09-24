@@ -8,14 +8,26 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-public class SampleMusicPlayer {
+public class SampleMusicPlayer implements AudioTrack.OnPlaybackPositionUpdateListener{
     private AudioTrack audioTrack = null;
+    private OnFinishListener onFinishListener;
+    private int marker;
 
     public int write(short[] buffer, int offset, int length) {
         return audioTrack.write(buffer, 0, buffer.length);
     }
 
+    public void setMarker(int marker) {
+        this.marker = marker;
+    }
+
     public void play() {
+        if(audioTrack != null){
+            audioTrack.pause();
+            audioTrack.flush();
+            audioTrack.release();
+            audioTrack = null;
+        }
         AudioAttributes.Builder attributeBuilder = new AudioAttributes.Builder();
         AudioAttributes attributes = attributeBuilder.setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build();
 
@@ -26,14 +38,36 @@ public class SampleMusicPlayer {
 
         audioTrack = new AudioTrack(attributes, format, length, AudioTrack.MODE_STREAM, AudioManager.AUDIO_SESSION_ID_GENERATE);
         audioTrack.play();
+        audioTrack.setNotificationMarkerPosition(marker);
+        audioTrack.setPlaybackPositionUpdateListener(this);
     }
 
-    public void stop() {
+    public void setOnFinishListener(OnFinishListener onFinishListener) {
+        this.onFinishListener = onFinishListener;
+    }
+
+    private void stop() {
         //audioTrack.setPlaybackPositionUpdateListener();
         audioTrack.stop();
         audioTrack.release();
         audioTrack = null;
     }
 
+    @Override
+    public void onMarkerReached(AudioTrack audioTrack) {
+        if(onFinishListener != null){
+            onFinishListener.OnFinish();
+        }
+        stop();
+    }
+
+    @Override
+    public void onPeriodicNotification(AudioTrack audioTrack) {
+
+    }
+
+    public interface OnFinishListener {
+        void OnFinish();
+    }
 
 }
