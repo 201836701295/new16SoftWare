@@ -7,6 +7,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import java.util.Objects;
+
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.ActivityNoiseMeasurementBinding;
 
@@ -15,6 +17,7 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityNoiseMeasurementBinding activity = DataBindingUtil.setContentView(this, R.layout.activity_noise_measurement);
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
     }
 
 

@@ -10,7 +10,9 @@ import androidx.databinding.DataBindingUtil;
 
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.ActivityMainBinding;
+import edu.scut.acoustics.ui.ear_test.EarTestActivity;
 import edu.scut.acoustics.ui.experiment.ExperimentActivity;
+import edu.scut.acoustics.ui.noise_measurement.NoiseMeasurementActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,10 +45,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void start_ear_test() {
-
+        startActivity(new Intent(this, EarTestActivity.class));
     }
 
     public void start_noise_measurement() {
-
+        startActivity(new Intent(this, NoiseMeasurementActivity.class));
     }
 }
