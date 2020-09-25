@@ -1,13 +1,17 @@
 package edu.scut.acoustics;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.IntentFilter;
 import android.content.res.AssetFileDescriptor;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 
 public class MyApplication extends Application {
+    private static Toast toast;
+
     public float db_baseline = 0;
 
     public boolean have_headset = false;
@@ -22,6 +26,17 @@ public class MyApplication extends Application {
         intentFilter.addAction("android.intent.action.HEADSET_PLUG");
         HeadsetReceiver headsetReceiver = new HeadsetReceiver();
         registerReceiver(headsetReceiver, intentFilter);
+    }
+
+    @SuppressLint("ShowToast")
+    public void show_toast(String string){
+        if(toast == null){
+            toast = Toast.makeText(this,string, Toast.LENGTH_SHORT);
+        }
+        else {
+            toast.setText(string);
+        }
+        toast.show();
     }
 
     public void initialize() throws IOException {

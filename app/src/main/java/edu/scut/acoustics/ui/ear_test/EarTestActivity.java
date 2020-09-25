@@ -25,4 +25,9 @@ public class EarTestActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navigation, navController);
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }
