@@ -31,6 +31,7 @@ import edu.scut.acoustics.utils.AudioPlayer;
 import edu.scut.acoustics.utils.AudioRecorder;
 
 public class ExperimentActivity extends AppCompatActivity implements View.OnClickListener {
+    public String filename;
     private final static int PERMISSIONS = 1;
     private AudioRecorder recorder;
     private AudioPlayer player;
@@ -55,6 +56,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         recorder = new AudioRecorder(this);
         player = new AudioPlayer();
         device = new AudioDevice(getApplicationContext());
+        filename = recorder.getFilename();
 
     }
 

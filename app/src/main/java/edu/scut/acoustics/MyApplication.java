@@ -51,11 +51,11 @@ public class MyApplication extends Application {
             isbis.read();
             ssbis.read();
         }
+        final int SHORT_MAX = (int) Short.MAX_VALUE + 1;
         for (int i = 0; i < inverseSignal.length; ++i) {
-
             temp = isbis.read();
             temp |= (isbis.read() << 8);
-            inverseSignal[i] = temp;
+            inverseSignal[i] = (float) temp / SHORT_MAX;
         }
         try {
             isbis.close();

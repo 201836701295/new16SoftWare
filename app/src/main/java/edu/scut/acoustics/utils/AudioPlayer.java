@@ -40,9 +40,11 @@ public class AudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
 
     public void stop(){
         listener = null;
-        player.stop();
-        player.release();
-        player = null;
+        if(player != null) {
+            player.stop();
+            player.release();
+            player = null;
+        }
     }
 
     public void play(AssetFileDescriptor assetFileDescriptor) throws IOException {

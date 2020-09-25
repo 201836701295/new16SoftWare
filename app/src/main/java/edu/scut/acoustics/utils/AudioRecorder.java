@@ -134,17 +134,18 @@ public class AudioRecorder {
      */
     public void stop() throws ExecutionException, InterruptedException {
         //停止录音
-        recorder.stop();
-        recording = false;
-
-        //等待写入线程结束
-        future.get();
-        future = null;
-
-        //释放录音机
-        recorder.release();
-        recorder = null;
-
+        if(recorder != null){
+            recorder.stop();
+            recording = false;
+            //等待写入线程结束
+            if(future != null){
+                future.get();
+                future = null;
+            }
+            //释放录音机
+            recorder.release();
+            recorder = null;
+        }
     }
 
     class Writer implements Callable<Integer> {
