@@ -7,6 +7,9 @@ import android.media.AudioTrack;
 import android.os.Handler;
 import android.util.Log;
 
+/**
+ * 不能用，要重写
+ */
 public class SampleMusicPlayer implements AudioTrack.OnPlaybackPositionUpdateListener {
     private AudioTrack audioTrack = null;
     private OnFinishListener onFinishListener;
