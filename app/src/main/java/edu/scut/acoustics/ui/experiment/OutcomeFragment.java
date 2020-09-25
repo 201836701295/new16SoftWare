@@ -79,6 +79,14 @@ public class OutcomeFragment extends Fragment {
                     }
                     DSPMath dspMath = new DSPMath();
                     dspMath.conv(recordData, inverseData, convolutionData);
+                    if(handler != null){
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+
+                            }
+                        });
+                    }
                 }
             }catch (Exception e){
                 e.printStackTrace();
