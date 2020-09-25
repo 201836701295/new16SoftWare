@@ -35,7 +35,7 @@ public class SplashActivity extends AppCompatActivity {
         }, 1500);
 
         //初始化
-        handler.postDelayed(new Runnable() {
+        new Thread(){
             @Override
             public void run() {
                 MyApplication application = (MyApplication) getApplication();
@@ -45,7 +45,7 @@ public class SplashActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        }, 10);
+        }.start();
     }
 
 }

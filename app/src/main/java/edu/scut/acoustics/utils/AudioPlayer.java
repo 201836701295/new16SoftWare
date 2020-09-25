@@ -3,6 +3,7 @@ package edu.scut.acoustics.utils;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -20,6 +21,7 @@ public class AudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
             listener.prepare_finished();
         }
         player.start();
+        Log.d("player start", "onPrepared: ");
     }
 
     @Override
@@ -44,11 +46,11 @@ public class AudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
         }
         player = new MediaPlayer();
         AudioAttributes.Builder builder = new AudioAttributes.Builder();
-        builder.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(AudioAttributes.USAGE_MEDIA)
-                .setFlags(AudioAttributes.FLAG_HW_AV_SYNC | AudioAttributes.FLAG_AUDIBILITY_ENFORCED);
+        builder.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(AudioAttributes.USAGE_MEDIA);
         player.setAudioAttributes(builder.build());
         player.setDataSource(assetFileDescriptor);
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
+        player.prepareAsync();
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.util.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -21,7 +22,7 @@ public class AudioRecorder {
     public static final int SAMPLE_RATE = 44100;
     public static final int CHANNEL = AudioFormat.CHANNEL_IN_MONO;
     public static final int FORMAT = AudioFormat.ENCODING_PCM_16BIT;
-    public static final int MIN_BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL, FORMAT) * 2;
+    public static final int MIN_BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL, FORMAT) * 8;
     public static final int BIT_DEPTH = 16;
     public static final int BYTE_RATE = BIT_DEPTH * SAMPLE_RATE / 8;
 
@@ -78,6 +79,9 @@ public class AudioRecorder {
         header[32] = (byte) (16 / 8);
         header[33] = 0;
 
+        header[34] = 16;
+        header[35] = 0;
+
         header[36] = 'd';
         header[37] = 'a';
         header[38] = 't';
@@ -132,9 +136,11 @@ public class AudioRecorder {
         //停止录音
         recorder.stop();
         recording = false;
+
         //等待写入线程结束
         future.get();
         future = null;
+
         //释放录音机
         recorder.release();
         recorder = null;
@@ -150,10 +156,11 @@ public class AudioRecorder {
         public Integer call() throws Exception {
             try {
                 //先写入wav文件头
-                bos.write(header);
+                bos.write(header, 0, header.length);
                 int length = 0;
                 //写入音频数据到文件
-                while ((length = recorder.read(audioData, 0, audioData.length)) != -1) {
+                while ((length = recorder.read(audioData, 0, audioData.length)) != 0) {
+                    bos.flush();
                     audio_length += length;
                     bos.write(audioData, 0, length);
                 }
@@ -192,6 +199,7 @@ public class AudioRecorder {
             //关闭随机文件访问
             raf.close();
             raf = null;
+            Log.d("recorder is finish", getFilename());
             return 0;
         }
     }

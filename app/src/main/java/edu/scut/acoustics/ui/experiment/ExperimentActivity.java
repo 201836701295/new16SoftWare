@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 
@@ -27,17 +26,16 @@ import java.util.concurrent.Executors;
 import edu.scut.acoustics.MyApplication;
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.ActivityExperimentBinding;
+import edu.scut.acoustics.utils.AudioPlayer;
 import edu.scut.acoustics.utils.AudioRecorder;
-import edu.scut.acoustics.utils.SampleMusicPlayer;
 
 public class ExperimentActivity extends AppCompatActivity implements View.OnClickListener {
+    private final static int PERMISSIONS = 1;
     private AudioRecorder recorder;
-    private SampleMusicPlayer player;
+    private AudioPlayer player;
     private ActivityExperimentBinding binding;
     private ExecutorService service = Executors.newCachedThreadPool();
-    private WriterTask writerTask = new WriterTask();
     private Handler handler = new Handler(Looper.getMainLooper());
-    private final static int PERMISSIONS = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,7 +51,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
 
         //初始化
         recorder = new AudioRecorder(this);
-        player = new SampleMusicPlayer();
+        player = new AudioPlayer();
 
     }
 
@@ -63,8 +61,8 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         handler.removeCallbacksAndMessages(null);
     }
 
-    private void permission(){
-        Vector<String> vector =new Vector<>();
+    private void permission() {
+        Vector<String> vector = new Vector<>();
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             vector.add(Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -87,10 +85,10 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == PERMISSIONS){
+        if (requestCode == PERMISSIONS) {
             for (int i : grantResults) {
-                if (i != PackageManager.PERMISSION_GRANTED){
-                    MyApplication application = (MyApplication)getApplication();
+                if (i != PackageManager.PERMISSION_GRANTED) {
+                    MyApplication application = (MyApplication) getApplication();
                     application.show_toast("你拒绝提供权限");
                     return;
                 }
@@ -99,97 +97,47 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void start_experiment(){
+    private void start_experiment() {
         binding.button.setEnabled(false);
-        try {
-            //启动录音
-            recorder.start();
-            //设置播放结束位置
-            MyApplication application = (MyApplication) getApplication();
-            player.setMarker(application.sampleSignal.length / 4);
-            //设置播放结束接口
-            player.setOnFinishListener(new SampleMusicPlayer.OnFinishListener() {
-                @Override
-                public void onFinish() {
-                    service.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                recorder.stop();
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        show_outcome();
-                                    }
-                                });
-                            } catch (ExecutionException | InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                    try {
-                        recorder.stop();
-                    } catch (ExecutionException | InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            },handler);
-            //开始播放
-            player.play();
-            //启动写入线程
-            service.execute(writerTask);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        /*
-        Runnable runnable = new Runnable() {
+        //设置播放事件接口
+        player.setListener(new AudioPlayer.Listener() {
             @Override
-            public void run() {
+            public void prepare_finished() {
                 try {
-                    //启动录音
                     recorder.start();
-                    //设置播放结束位置
-                    MyApplication application = (MyApplication) getApplication();
-                    player.setMarker(application.sampleSignal.length - 1);
-                    //设置播放结束接口
-                    player.setOnFinishListener(new SampleMusicPlayer.OnFinishListener() {
-                        @Override
-                        public void OnFinish() {
-                            service.execute(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        recorder.stop();
-                                        handler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                show_outcome();
-                                            }
-                                        });
-                                    } catch (ExecutionException | InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                            try {
-                                recorder.stop();
-                            } catch (ExecutionException | InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                    //开始播放
-                    player.play();
-                    //启动写入线程
-                    service.execute(writerTask);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-        };
-        service.execute(runnable);
 
-        */
+            @Override
+            public void media_finished() {
+                Log.d("call media_finished", "media_finished: ");
+                service.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            recorder.stop();
+                            Log.d("recorder stop", "media_finished: ");
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    show_outcome();
+                                }
+                            });
+                        } catch (ExecutionException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+        try {
+            //开始播放
+            player.play(getResources().openRawResourceFd(R.raw.sample_signal));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void show_outcome() {
@@ -204,21 +152,4 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         permission();
     }
 
-    //写入播放器线程
-    public class WriterTask implements Runnable {
-
-        @Override
-        public void run() {
-            MyApplication application = (MyApplication) getApplication();
-            short[] data = application.sampleSignal;
-            int offset = 0, temp;
-            while ((temp = player.write(data, offset, data.length - offset)) > 0) {
-                offset += temp;
-                if (offset == data.length) {
-                    break;
-                }
-            }
-            Log.d("WriterTask", "run: ");
-        }
-    }
 }
