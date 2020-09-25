@@ -9,7 +9,6 @@ public class AudioDevice {
 
     public AudioDevice(Context context) {
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-
     }
 
     public boolean have_headset() {

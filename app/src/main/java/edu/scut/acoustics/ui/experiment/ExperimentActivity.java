@@ -26,6 +26,7 @@ import java.util.concurrent.Executors;
 import edu.scut.acoustics.MyApplication;
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.ActivityExperimentBinding;
+import edu.scut.acoustics.utils.AudioDevice;
 import edu.scut.acoustics.utils.AudioPlayer;
 import edu.scut.acoustics.utils.AudioRecorder;
 
@@ -33,6 +34,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
     private final static int PERMISSIONS = 1;
     private AudioRecorder recorder;
     private AudioPlayer player;
+    private AudioDevice device;
     private ActivityExperimentBinding binding;
     private ExecutorService service = Executors.newCachedThreadPool();
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -52,7 +54,20 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         //初始化
         recorder = new AudioRecorder(this);
         player = new AudioPlayer();
+        device = new AudioDevice(getApplicationContext());
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        player.stop();
+        try {
+            recorder.stop();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        binding.button.setEnabled(true);
     }
 
     @Override
@@ -101,7 +116,10 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
 
     //开始实验
     private void start_experiment() {
+        //停用按钮
         binding.button.setEnabled(false);
+        //声音最大
+        device.setVolume(device.getMaxVolume());
         //设置播放事件接口
         player.setListener(new AudioPlayer.Listener() {
             //准备完成时调用

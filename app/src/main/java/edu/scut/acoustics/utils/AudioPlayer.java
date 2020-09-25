@@ -38,6 +38,13 @@ public class AudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
         void media_finished();
     }
 
+    public void stop(){
+        listener = null;
+        player.stop();
+        player.release();
+        player = null;
+    }
+
     public void play(AssetFileDescriptor assetFileDescriptor) throws IOException {
         if(player != null){
             player.stop();
