@@ -18,12 +18,11 @@ import edu.scut.acoustics.databinding.ActivityEarTestBinding;
 public class EarTestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        ActivityEarTestBinding earTestBinding = DataBindingUtil.setContentView(this, R.layout.activity_ear_test);
+        ActivityEarTestBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_ear_test);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.left_ear, R.id.right_ear).build();
         NavController navController = Navigation.findNavController(this, R.id.fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(earTestBinding.navigation, navController);
+        NavigationUI.setupWithNavController(binding.navigation, navController);
     }
 }
