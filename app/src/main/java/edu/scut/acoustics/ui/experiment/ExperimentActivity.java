@@ -61,6 +61,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         handler.removeCallbacksAndMessages(null);
     }
 
+    //检查权限并请求权限
     private void permission() {
         Vector<String> vector = new Vector<>();
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -83,6 +84,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         start_experiment();
     }
 
+    //检查权限申请情况
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PERMISSIONS) {
@@ -97,10 +99,12 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    //开始实验
     private void start_experiment() {
         binding.button.setEnabled(false);
         //设置播放事件接口
         player.setListener(new AudioPlayer.Listener() {
+            //准备完成时调用
             @Override
             public void prepare_finished() {
                 try {
@@ -110,6 +114,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
                 }
             }
 
+            //播放结束时调用
             @Override
             public void media_finished() {
                 Log.d("call media_finished", "media_finished: ");
@@ -122,6 +127,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
+                                    //显示实验结果
                                     show_outcome();
                                 }
                             });
@@ -140,6 +146,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    //显示结果
     public void show_outcome() {
         Fragment fragment = new OutcomeFragment();
         getSupportFragmentManager().beginTransaction().replace(binding.frame.getId(), fragment)
