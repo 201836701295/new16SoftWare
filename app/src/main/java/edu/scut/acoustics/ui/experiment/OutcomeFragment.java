@@ -63,15 +63,16 @@ public class OutcomeFragment extends Fragment {
     }
 
     public void drawChart(LineChart chart, float[] y){
+        final int dpp = 100;
         //图表初始化
         chart.getDescription().setEnabled(false);
         chart.setTouchEnabled(false);
         chart.setDrawGridBackground(false);
         chart.getAxisRight().setEnabled(false);
         //数据初始化
-        List<Entry> values = new ArrayList<>(y.length / 10 + 1);
+        List<Entry> values = new ArrayList<>(y.length / dpp + 1);
         float max = 0, temp, low, high;
-        for (int i = 0; i < y.length; i += 10) {
+        for (int i = 0; i < y.length; i += dpp) {
             low = y[i];
             high = y[i];
             for (int j = i, k = 0; j < y.length && k < 10; ++j, ++k) {
@@ -86,13 +87,13 @@ public class OutcomeFragment extends Fragment {
                     high = y[j];
                 }
             }
-            values.add(new Entry(i,low));
-            values.add(new Entry(i,high));
+            values.add(new Entry((float) i,high));
+            values.add(new Entry((float)i + 0.5f,low));
         }
         //坐标轴初始化
         XAxis xAxis = chart.getXAxis();
-        xAxis.setAxisMinimum(0);
-        xAxis.setAxisMaximum(y.length / 10 + 1);
+        //xAxis.setAxisMinimum(0);
+        //xAxis.setAxisMaximum((float) y.length / dpp + 0.5f);
         YAxis yAxis = chart.getAxisLeft();
         yAxis.setAxisMaximum(max);
         yAxis.setAxisMinimum(-max);
@@ -108,10 +109,10 @@ public class OutcomeFragment extends Fragment {
             chart.notifyDataSetChanged();
         }
         else {
-            set1 = new LineDataSet(values, "DataSet 1");
+            set1 = new LineDataSet(values, "");
             set1.setDrawIcons(false);
             set1.setColor(Color.BLACK);
-            set1.setLineWidth(0.2f);
+            set1.setLineWidth(0.1f);
             set1.setDrawCircles(false);
             set1.setDrawCircleHole(false);
             set1.setDrawFilled(false);
@@ -156,10 +157,10 @@ public class OutcomeFragment extends Fragment {
                         bis.read();
                     }
                     //读入音频数据，并转为float类型
-                    int temp;
+                    short temp;
                     final int SHORT_MAX = (int) Short.MAX_VALUE + 1;
                     for (int i = 0; i < recordData.length; i++) {
-                        temp = bis.read();
+                        temp = (short) bis.read();
                         temp |= bis.read() << 8;
                         recordData[i] = (float) temp / SHORT_MAX;
                     }
@@ -167,6 +168,15 @@ public class OutcomeFragment extends Fragment {
                     DSPMath dspMath = new DSPMath();
                     Log.d("process data", "run: ");
                     dspMath.conv(recordData, inverseData, convolutionData);
+                    if(handler != null){
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d("wave chart", "run: draw");
+                                drawChart(binding.frequencyChart,inverseData);
+                            }
+                        });
+                    }
                     if(handler != null){
                         handler.post(new Runnable() {
                             @Override

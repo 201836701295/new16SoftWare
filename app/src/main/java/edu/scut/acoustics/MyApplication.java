@@ -42,7 +42,7 @@ public class MyApplication extends Application {
     public void initialize() throws IOException {
         inverseSignal = new float[264600];
         sampleSignal = new short[529200];
-        int temp;
+        short temp;
         AssetFileDescriptor inverseSignalAFD = getResources().openRawResourceFd(R.raw.inverse_signal);
         AssetFileDescriptor sampleSignalAFD = getResources().openRawResourceFd(R.raw.sample_signal);
         BufferedInputStream isbis = new BufferedInputStream(inverseSignalAFD.createInputStream());
@@ -53,7 +53,7 @@ public class MyApplication extends Application {
         }
         final int SHORT_MAX = (int) Short.MAX_VALUE + 1;
         for (int i = 0; i < inverseSignal.length; ++i) {
-            temp = isbis.read();
+            temp = (short) isbis.read();
             temp |= (isbis.read() << 8);
             inverseSignal[i] = (float) temp / SHORT_MAX;
         }
@@ -63,9 +63,9 @@ public class MyApplication extends Application {
             e.printStackTrace();
         }
         for (int i = 0; i < sampleSignal.length; ++i) {
-            temp = ssbis.read();
+            temp = (short) ssbis.read();
             temp |= (ssbis.read() << 8);
-            sampleSignal[i] = (short) temp;
+            sampleSignal[i] = temp;
         }
         try {
             ssbis.close();
