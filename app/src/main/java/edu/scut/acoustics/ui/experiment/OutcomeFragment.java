@@ -65,7 +65,7 @@ public class OutcomeFragment extends Fragment {
     public void drawChart(LineChart chart, float[] y){
         //图表初始化
         chart.getDescription().setEnabled(false);
-        chart.setTouchEnabled(true);
+        chart.setTouchEnabled(false);
         chart.setDrawGridBackground(false);
         chart.getAxisRight().setEnabled(false);
         //数据初始化
@@ -163,6 +163,7 @@ public class OutcomeFragment extends Fragment {
                         temp |= bis.read() << 8;
                         recordData[i] = (float) temp / SHORT_MAX;
                     }
+                    //生产卷积信号
                     DSPMath dspMath = new DSPMath();
                     Log.d("process data", "run: ");
                     dspMath.conv(recordData, inverseData, convolutionData);
@@ -175,6 +176,8 @@ public class OutcomeFragment extends Fragment {
                             }
                         });
                     }
+
+
                 }
             }catch (Exception e){
                 e.printStackTrace();
