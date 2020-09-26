@@ -5,6 +5,8 @@ public class DSPMath {
         System.loadLibrary("native-lib");
     }
 
+    public native void phaseAndLength(float[] re, float[] im, float[] rad, float[] length);
+
     /**
      * @param x   输入信号
      * @param n   FFT长度

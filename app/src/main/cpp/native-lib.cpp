@@ -1,10 +1,12 @@
 #include <jni.h>
+#include <cmath>
 #include "dspmath/mconv.h"
 #include "dspmath/mfft.h"
 #include "dspmath/mifft.h"
 #include "dspmath/mywelch.h"
 
-extern "C" JNIEXPORT void JNICALL
+extern "C"
+JNIEXPORT void JNICALL
 Java_edu_scut_acoustics_utils_DSPMath_conv(JNIEnv *env, jobject, jfloatArray a,
                                            jfloatArray b, jfloatArray c) {
     const int n = env->GetArrayLength(c);
@@ -31,7 +33,8 @@ Java_edu_scut_acoustics_utils_DSPMath_conv(JNIEnv *env, jobject, jfloatArray a,
     env->ReleaseFloatArrayElements(c, arrc, JNI_OK);
 }
 
-extern "C" JNIEXPORT void JNICALL
+extern "C"
+JNIEXPORT void JNICALL
 Java_edu_scut_acoustics_utils_DSPMath_fft(JNIEnv *env, jobject /* this */, jfloatArray x, jint n,
                                           jfloatArray re, jfloatArray im) {
     //获得数组长度
@@ -63,7 +66,8 @@ Java_edu_scut_acoustics_utils_DSPMath_fft(JNIEnv *env, jobject /* this */, jfloa
     env->ReleaseFloatArrayElements(im, imarr, JNI_OK);
 }
 
-extern "C" JNIEXPORT void JNICALL
+extern "C"
+JNIEXPORT void JNICALL
 Java_edu_scut_acoustics_utils_DSPMath_ifft(JNIEnv *env, jobject /* this */, jfloatArray re,
                                            jfloatArray im, jint n, jfloatArray x) {
     const int xlength = env->GetArrayLength(x);
@@ -91,7 +95,8 @@ Java_edu_scut_acoustics_utils_DSPMath_ifft(JNIEnv *env, jobject /* this */, jflo
     env->ReleaseFloatArrayElements(x, arrX, JNI_OK);
 }
 
-extern "C" JNIEXPORT void JNICALL
+extern "C"
+JNIEXPORT void JNICALL
 Java_edu_scut_acoustics_utils_DSPMath_welch(JNIEnv *env, jobject /* this */, jfloatArray x, jint n,
                                             jint fs, jfloatArray pxx, jfloatArray f) {
     int xl = env->GetArrayLength(x);
@@ -120,4 +125,39 @@ Java_edu_scut_acoustics_utils_DSPMath_welch(JNIEnv *env, jobject /* this */, jfl
 
     env->ReleaseFloatArrayElements(pxx, parr, JNI_OK);
     env->ReleaseFloatArrayElements(f, farr, JNI_OK);
+}
+
+using std::min;
+using std::acos;
+extern "C"
+JNIEXPORT void JNICALL
+Java_edu_scut_acoustics_utils_DSPMath_phaseAndLength(JNIEnv *env, jobject, jfloatArray re,
+                                            jfloatArray im, jfloatArray rad, jfloatArray length) {
+    int rel = env->GetArrayLength(re);
+    int iml = env->GetArrayLength(im);
+    int ral = env->GetArrayLength(rad);
+    int lel = env->GetArrayLength(length);
+    int arrLength = min(min(min(rel,iml),ral),lel);
+
+    jfloat *reArr = env->GetFloatArrayElements(re, nullptr);
+    jfloat *imArr = env->GetFloatArrayElements(im, nullptr);
+    jfloat *radArr = env->GetFloatArrayElements(rad, nullptr);
+    jfloat *leArr = env->GetFloatArrayElements(length, nullptr);
+
+    jfloat TWO_PI = M_PI * 2;
+
+    for(int i = 0; i < arrLength; ++i){
+        leArr[i] = sqrt(reArr[i] * reArr[i] + imArr[i] * imArr[i]);
+        jfloat radius = acos(reArr[i] / leArr[i]);
+        if(imArr[i] >= 0){
+            radArr[i] = radius;
+        } else{
+            radArr[i] = TWO_PI - radius;
+        }
+    }
+
+    env->ReleaseFloatArrayElements(rad, radArr, JNI_OK);
+    env->ReleaseFloatArrayElements(length, leArr, JNI_OK);
+    env->ReleaseFloatArrayElements(re, reArr, JNI_ABORT);
+    env->ReleaseFloatArrayElements(im, imArr, JNI_ABORT);
 }
