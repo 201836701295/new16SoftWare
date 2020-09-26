@@ -18,4 +18,5 @@
     <string name="phase_chart">相位谱</string>
     <string name="frequency_chart">频率谱</string>
     <string name="power_chart">功率谱</string>
+    <string name="experiment_error">实验出错</string>
 </resources>

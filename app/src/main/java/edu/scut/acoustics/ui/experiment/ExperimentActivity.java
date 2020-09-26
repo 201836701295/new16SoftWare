@@ -1,6 +1,7 @@
 package edu.scut.acoustics.ui.experiment;
 
 import android.Manifest;
+import android.app.Application;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,7 +16,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Vector;
@@ -31,6 +37,8 @@ import edu.scut.acoustics.utils.AudioPlayer;
 import edu.scut.acoustics.utils.AudioRecorder;
 
 public class ExperimentActivity extends AppCompatActivity implements View.OnClickListener {
+    public static final int MAX_ENTRY = 3000;
+    private ChartRepository repository;
     public String filename;
     private final static int PERMISSIONS = 1;
     private AudioRecorder recorder;
@@ -39,6 +47,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
     private ActivityExperimentBinding binding;
     private ExecutorService service = Executors.newCachedThreadPool();
     private Handler handler = new Handler(Looper.getMainLooper());
+    private ChartViewModel viewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,7 +66,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         player = new AudioPlayer();
         device = new AudioDevice(getApplicationContext());
         filename = recorder.getFilename();
-
+        viewModel = new ViewModelProvider(this).get(ChartViewModel.class);
     }
 
     @Override
@@ -75,6 +84,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        service.shutdownNow();
         handler.removeCallbacksAndMessages(null);
     }
 
@@ -112,6 +122,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
                     return;
                 }
             }
+            //获得必要权限后启动实验
             start_experiment();
         }
     }
@@ -133,7 +144,6 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
                     e.printStackTrace();
                 }
             }
-
             //播放结束时调用
             @Override
             public void media_finished() {
@@ -143,6 +153,8 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
                     public void run() {
                         try {
                             recorder.stop();
+                            //数据处理
+                            data_process();
                             Log.d("recorder stop", "media_finished: ");
                             handler.post(new Runnable() {
                                 @Override
@@ -151,8 +163,17 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
                                     show_outcome();
                                 }
                             });
-                        } catch (ExecutionException | InterruptedException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //错误后UI更新
+                                    MyApplication application = (MyApplication)getApplication();
+                                    application.show_toast(getString(R.string.experiment_error));
+                                    binding.button.setEnabled(true);
+                                }
+                            });
                         }
                     }
                 });
@@ -164,6 +185,37 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    //数据处理
+    public void data_process() throws Exception {
+        MyApplication application = (MyApplication)getApplication();
+        File file = new File(recorder.getFilename());
+        FileInputStream fis = new FileInputStream(file);
+        //获得音频长度
+        int length = (int) ((fis.getChannel().size() - 44) / 2);
+        //创建数组
+        float[] recordData = new float[length];
+        BufferedInputStream bis = new BufferedInputStream(fis);
+        //跳过文件头
+        for (int i = 0; i < 44; i++) {
+            bis.read();
+        }
+        //读入音频数据，并转为float类型
+        short temp;
+        final int SHORT_MAX = (int) Short.MAX_VALUE + 1;
+        for (int i = 0; i < recordData.length; i++) {
+            temp = (short) bis.read();
+            temp |= bis.read() << 8;
+            recordData[i] = (float) temp / SHORT_MAX;
+        }
+        repository = new ChartRepository(application.inverseSignal,recordData);
+        repository.doFinal();
+        generate_chart();
+    }
+
+    //生成图表数据
+    public void generate_chart(){
     }
 
     //显示结果
