@@ -12,41 +12,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/convolution_wave" />
         
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/convolution_wave"
             android:layout_width="match_parent"
             android:layout_height="200dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/phase_chart" />
-
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/phase_chart"
             android:layout_width="match_parent"
             android:layout_height="200dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/frequency_chart" />
-
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/frequency_chart"
             android:layout_width="match_parent"
             android:layout_height="200dp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/power_chart" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/power_chart"

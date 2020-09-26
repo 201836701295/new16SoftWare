@@ -46,6 +46,7 @@ public class OutcomeFragment extends Fragment {
     private Handler handler = new Handler(Looper.getMainLooper());
     private float[] recordData;
     private float[] convolutionData;
+    private float[] tailoredData;
     private float[] inverseData;
 
 
@@ -62,8 +63,9 @@ public class OutcomeFragment extends Fragment {
         return binding.getRoot();
     }
 
-    public void drawChart(LineChart chart, float[] y){
-        final int dpp = 100;
+    public void drawChart(LineChart chart, float[] y, Float max, Float min, String label){
+        final int MAXPOINT = 3000;
+        final int dpp = y.length / MAXPOINT;
         //图表初始化
         chart.getDescription().setEnabled(false);
         chart.setTouchEnabled(false);
@@ -71,32 +73,52 @@ public class OutcomeFragment extends Fragment {
         chart.getAxisRight().setEnabled(false);
         //数据初始化
         List<Entry> values = new ArrayList<>(y.length / dpp + 1);
-        float max = 0, temp, low, high;
-        for (int i = 0; i < y.length; i += dpp) {
-            low = y[i];
-            high = y[i];
-            for (int j = i, k = 0; j < y.length && k < 10; ++j, ++k) {
-                temp = Math.abs(y[j]);
-                if(temp > max){
-                    max = temp;
+        //如果没有指定最大值和最小值时，将自动寻找
+        if(max == null || min == null){
+            max = 0f; min = 0f;
+            float low, high;
+            for (int i = 0; i < y.length; i += dpp) {
+                low = y[i];
+                high = y[i];
+                for (int j = i, k = 0; j < y.length && k < dpp; ++j, ++k) {
+                    if(y[j] > max){
+                        max = y[j];
+                    }
+                    if(y[j] < min){
+                        min = y[j];
+                    }
+                    if(y[j] < low){
+                        low = y[j];
+                    }
+                    if(y[j] > high){
+                        high = y[j];
+                    }
                 }
-                if(y[j] < low){
-                    low = y[j];
-                }
-                if(y[j] > high){
-                    high = y[j];
-                }
+                values.add(new Entry(i,low));
+                values.add(new Entry(i + (float)dpp / 2,high));
             }
-            values.add(new Entry((float) i,high));
-            values.add(new Entry((float)i + 0.5f,low));
+        }
+        else {
+            float low, high;
+            for (int i = 0; i < y.length; i += dpp) {
+                low = y[i];
+                high = y[i];
+                for (int j = i, k = 0; j < y.length && k < dpp; ++j, ++k) {
+                    if(y[j] < low){
+                        low = y[j];
+                    }
+                    if(y[j] > high){
+                        high = y[j];
+                    }
+                }
+                values.add(new Entry(i,low));
+                values.add(new Entry(i + (float)dpp / 2,high));
+            }
         }
         //坐标轴初始化
-        XAxis xAxis = chart.getXAxis();
-        //xAxis.setAxisMinimum(0);
-        //xAxis.setAxisMaximum((float) y.length / dpp + 0.5f);
         YAxis yAxis = chart.getAxisLeft();
         yAxis.setAxisMaximum(max);
-        yAxis.setAxisMinimum(-max);
+        yAxis.setAxisMinimum(min);
         //创建图表数据集
         LineDataSet set1;
         if (chart.getData() != null &&
@@ -109,7 +131,7 @@ public class OutcomeFragment extends Fragment {
             chart.notifyDataSetChanged();
         }
         else {
-            set1 = new LineDataSet(values, "");
+            set1 = new LineDataSet(values, label);
             set1.setDrawIcons(false);
             set1.setColor(Color.BLACK);
             set1.setLineWidth(0.1f);
@@ -117,12 +139,10 @@ public class OutcomeFragment extends Fragment {
             set1.setDrawCircleHole(false);
             set1.setDrawFilled(false);
             ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-            dataSets.add(set1); // add the data sets
+            dataSets.add(set1);
 
-            // create a data object with the data sets
             LineData data = new LineData(dataSets);
 
-            // set data
             chart.setData(data);
         }
         chart.animateX(1);
@@ -133,7 +153,31 @@ public class OutcomeFragment extends Fragment {
         Log.d("data load", "drawChart: ");
     }
 
-    public void drawChart(LineChart chart, float[] x, float[] y){
+    public void convolution_tailor(){
+        if(convolutionData != null){
+            int index = 0, lmost, rmost;
+            float max = 0, temp;
+            for (int i = 0; i < convolutionData.length; i++) {
+                temp = Math.abs(convolutionData[i]);
+                if(temp > max){
+                    max = temp;
+                    index = i;
+                }
+            }
+            lmost = (int) (index - 44100f * 0.01f);
+            rmost = (int) (index + 44100f * 0.05f);
+            if(lmost < 0){
+                lmost = 0;
+            }
+            if(rmost >= convolutionData.length){
+                rmost = convolutionData.length - 1;
+            }
+            tailoredData = new float[rmost - lmost + 1];
+            System.arraycopy(convolutionData, lmost, tailoredData, 0, rmost + 1 - lmost);
+        }
+    }
+
+    public void drawChart(LineChart chart, float[] x, float[] y, String label){
 
     }
 
@@ -168,21 +212,14 @@ public class OutcomeFragment extends Fragment {
                     DSPMath dspMath = new DSPMath();
                     Log.d("process data", "run: ");
                     dspMath.conv(recordData, inverseData, convolutionData);
+                    convolution_tailor();
                     if(handler != null){
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
                                 Log.d("wave chart", "run: draw");
-                                drawChart(binding.frequencyChart,inverseData);
-                            }
-                        });
-                    }
-                    if(handler != null){
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.d("wave chart", "run: draw");
-                                drawChart(binding.convolutionWave,convolutionData);
+                                drawChart(binding.convolutionWave,tailoredData,null,null,
+                                        getResources().getString(R.string.convolution_wave));
                             }
                         });
                     }
