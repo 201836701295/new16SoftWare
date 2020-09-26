@@ -65,7 +65,10 @@ public class OutcomeFragment extends Fragment {
 
     public void drawChart(LineChart chart, float[] y, Float max, Float min, String label){
         final int MAXPOINT = 3000;
-        final int dpp = y.length / MAXPOINT;
+        int dpp = y.length / MAXPOINT;
+        if(dpp == 0){
+            dpp = 1;
+        }
         //图表初始化
         chart.getDescription().setEnabled(false);
         chart.setTouchEnabled(false);
