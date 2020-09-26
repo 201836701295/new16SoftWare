@@ -1,8 +1,10 @@
 package edu.scut.acoustics.ui.experiment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,17 +14,28 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IFillFormatter;
+import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
 import edu.scut.acoustics.MyApplication;
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.FramentOutcomeBinding;
 import edu.scut.acoustics.utils.DSPMath;
 
-import com.github.mikephil.charting.*;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,6 +48,7 @@ public class OutcomeFragment extends Fragment {
     private float[] convolutionData;
     private float[] inverseData;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,10 +57,82 @@ public class OutcomeFragment extends Fragment {
         MyApplication application = (MyApplication) requireActivity().getApplication();
         inverseData = application.inverseSignal;
         filename = activity.filename;
+        DataProcess process = new DataProcess();
+        service.submit(process);
         return binding.getRoot();
     }
 
-    public void draw_chart(){
+    public void drawChart(LineChart chart, float[] y){
+        //图表初始化
+        chart.getDescription().setEnabled(false);
+        chart.setTouchEnabled(true);
+        chart.setDrawGridBackground(false);
+        chart.getAxisRight().setEnabled(false);
+        //数据初始化
+        List<Entry> values = new ArrayList<>(y.length / 10 + 1);
+        float max = 0, temp, low, high;
+        for (int i = 0; i < y.length; i += 10) {
+            low = y[i];
+            high = y[i];
+            for (int j = i, k = 0; j < y.length && k < 10; ++j, ++k) {
+                temp = Math.abs(y[j]);
+                if(temp > max){
+                    max = temp;
+                }
+                if(y[j] < low){
+                    low = y[j];
+                }
+                if(y[j] > high){
+                    high = y[j];
+                }
+            }
+            values.add(new Entry(i,low));
+            values.add(new Entry(i,high));
+        }
+        //坐标轴初始化
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setAxisMinimum(0);
+        xAxis.setAxisMaximum(y.length / 10 + 1);
+        YAxis yAxis = chart.getAxisLeft();
+        yAxis.setAxisMaximum(max);
+        yAxis.setAxisMinimum(-max);
+        //创建图表数据集
+        LineDataSet set1;
+        if (chart.getData() != null &&
+                chart.getData().getDataSetCount() > 0) {
+            //已有数据集，通知重画
+            set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+            set1.setValues(values);
+            set1.notifyDataSetChanged();
+            chart.getData().notifyDataChanged();
+            chart.notifyDataSetChanged();
+        }
+        else {
+            set1 = new LineDataSet(values, "DataSet 1");
+            set1.setDrawIcons(false);
+            set1.setColor(Color.BLACK);
+            set1.setLineWidth(0.2f);
+            set1.setDrawCircles(false);
+            set1.setDrawCircleHole(false);
+            set1.setDrawFilled(false);
+            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+            dataSets.add(set1); // add the data sets
+
+            // create a data object with the data sets
+            LineData data = new LineData(dataSets);
+
+            // set data
+            chart.setData(data);
+        }
+        chart.animateX(1);
+        Legend l = chart.getLegend();
+
+        // draw legend entries as lines
+        l.setForm(Legend.LegendForm.LINE);
+        Log.d("data load", "drawChart: ");
+    }
+
+    public void drawChart(LineChart chart, float[] x, float[] y){
 
     }
 
@@ -78,12 +164,14 @@ public class OutcomeFragment extends Fragment {
                         recordData[i] = (float) temp / SHORT_MAX;
                     }
                     DSPMath dspMath = new DSPMath();
+                    Log.d("process data", "run: ");
                     dspMath.conv(recordData, inverseData, convolutionData);
                     if(handler != null){
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-
+                                Log.d("wave chart", "run: draw");
+                                drawChart(binding.convolutionWave,convolutionData);
                             }
                         });
                     }
