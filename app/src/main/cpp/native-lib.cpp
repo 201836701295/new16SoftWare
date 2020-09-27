@@ -1,9 +1,14 @@
 #include <jni.h>
 #include <cmath>
+#include <string>
+#include <sstream>
 #include "dspmath/mconv.h"
 #include "dspmath/mfft.h"
 #include "dspmath/mifft.h"
 #include "dspmath/mywelch.h"
+#include <android/log.h>
+#define LOG_TAG  "C_TAG"
+#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -95,6 +100,8 @@ Java_edu_scut_acoustics_utils_DSPMath_ifft(JNIEnv *env, jobject /* this */, jflo
     env->ReleaseFloatArrayElements(x, arrX, JNI_OK);
 }
 
+using std::string;
+using std::stringstream;
 extern "C"
 JNIEXPORT void JNICALL
 Java_edu_scut_acoustics_utils_DSPMath_welch(JNIEnv *env, jobject /* this */, jfloatArray x, jint n,
@@ -110,6 +117,11 @@ Java_edu_scut_acoustics_utils_DSPMath_welch(JNIEnv *env, jobject /* this */, jfl
     X.set(xarr, 1, xl);
 
     mywelch(X, n, fs, PXX, F);
+
+    string text1 = "PXX length";
+    string text2 = "F length";
+    LOGD("PXX length=%d",PXX.size(1));
+    LOGD("F length=%d",F.size(1));
 
     env->ReleaseFloatArrayElements(x, xarr, JNI_ABORT);
 

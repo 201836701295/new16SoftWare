@@ -209,7 +209,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
             temp |= bis.read() << 8;
             recordData[i] = (float) temp / SHORT_MAX;
         }
-        repository = new ChartRepository(application.inverseSignal,recordData);
+        repository = new ChartRepository(getApplicationContext(),application.inverseSignal,recordData);
         repository.doFinal();
         generate_chart();
     }

@@ -1,8 +1,21 @@
 package edu.scut.acoustics.ui.experiment;
 
+import android.content.Context;
+import android.graphics.Color;
+
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.scut.acoustics.R;
 import edu.scut.acoustics.utils.DSPMath;
 
 public class ChartRepository {
+    public static final int MAX_ENTRY = 3000;
     private DSPMath dspMath = new DSPMath();
     private final float[] audioData1;
     private final float[] audioData2;
@@ -12,8 +25,22 @@ public class ChartRepository {
     private float[] imagine;
     private float[] length;
     private float[] phase;
+    private float[] power;
+    private float[] frequency;
+    private String waveLabel;
+    private String frequencyLabel;
+    private String phaseLabel;
+    private String powerLabel;
+    private ChartInformation waveChart;
+    private ChartInformation frequencyChart;
+    private ChartInformation phaseChart;
+    private ChartInformation powerChart;
 
-    public ChartRepository(float[] a1, float[] a2){
+    public ChartRepository(Context context, float[] a1, float[] a2){
+        waveLabel = context.getResources().getString(R.string.convolution_wave);
+        frequencyLabel = context.getResources().getString(R.string.frequency_chart);
+        phaseLabel = context.getResources().getString(R.string.phase_chart);
+        powerLabel = context.getResources().getString(R.string.power_chart);
         audioData1 = a1;
         audioData2 = a2;
     }
@@ -35,6 +62,7 @@ public class ChartRepository {
         phase = new float[tailorData.length];
         length = new float[tailorData.length];
         dspMath.phaseAndLength(real,imagine,phase,length);
+        produce_chart();
     }
 
     private void tailor(){
@@ -59,6 +87,72 @@ public class ChartRepository {
         System.arraycopy(convolutionData, lmost, tailorData, 0, rmost + 1 - lmost);
     }
 
+    private void produce_chart(){
+        wave_chart();
+        frequency_chart();
+        power_chart();
+        phase_chart();
+    }
+
+    private void wave_chart(){
+        waveChart = new ChartInformation();
+        waveChart.labelX = "单位/s";
+        waveChart.labelY = "";
+        waveChart.maxX = tailorData.length / 44100f;
+        waveChart.minX = 0;
+        waveChart.maxY = 0;
+        waveChart.minY = 0;
+
+        int dpp = tailorData.length / MAX_ENTRY;
+        if(dpp == 0){
+            dpp = 1;
+        }
+        List<Entry> values = new ArrayList<>(tailorData.length / dpp + 1);
+        float low, high;
+        for (int i = 0; i < tailorData.length; i += dpp) {
+            low = tailorData[i];
+            high = tailorData[i];
+            for (int j = i, k = 0; j < tailorData.length && k < dpp; ++j, ++k) {
+                if(tailorData[j] > waveChart.maxY){
+                    waveChart.maxY = tailorData[j];
+                }
+                if(tailorData[j] < waveChart.minY){
+                    waveChart.minY = tailorData[j];
+                }
+                if(tailorData[j] < low){
+                    low = tailorData[j];
+                }
+                if(tailorData[j] > high){
+                    high = tailorData[j];
+                }
+            }
+            values.add(new Entry(i / 44100f,low));
+            values.add(new Entry(i / 44100f,high));
+        }
+        LineDataSet set = new LineDataSet(values,waveLabel);
+        set.setDrawIcons(false);
+        set.setColor(Color.BLACK);
+        set.setLineWidth(0.1f);
+        set.setDrawCircles(false);
+        set.setDrawCircleHole(false);
+        set.setDrawFilled(false);
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set);
+        waveChart.lineData = new LineData(dataSets);
+    }
+
+    private void frequency_chart(){
+
+    }
+
+    private void power_chart(){
+
+    }
+
+    private void phase_chart(){
+
+    }
+
     public float[] getConvolutionData(){
         return convolutionData;
     }
@@ -71,7 +165,4 @@ public class ChartRepository {
         return phase;
     }
 
-    public float[] getLength() {
-        return length;
-    }
 }
