@@ -96,8 +96,8 @@ public class ChartRepository {
 
     private void wave_chart(){
         waveChart = new ChartInformation();
-        waveChart.labelX = "单位/s";
-        waveChart.labelY = "";
+        waveChart.labelX = "时间/s";
+        waveChart.labelY = "振幅";
         waveChart.maxX = tailorData.length / 44100f;
         waveChart.minX = 0;
         waveChart.maxY = 0;
@@ -142,7 +142,47 @@ public class ChartRepository {
     }
 
     private void frequency_chart(){
+        frequencyChart = new ChartInformation();
+        frequencyChart.labelX = "";
+        frequencyChart.labelY = "振幅";
+        frequencyChart.maxX = length.length;
+        frequencyChart.minX = 0;
+        frequencyChart.maxY = 0;
+        frequencyChart.minY = 0;
 
+        int dpp = length.length / MAX_ENTRY;
+        if(dpp == 0){
+            dpp = 1;
+        }
+        List<Entry> values = new ArrayList<>(length.length / dpp + 1);
+        float low, high;
+        for (int i = 0; i < length.length; i += dpp) {
+            low = length[i];
+            high = length[i];
+            for (int j = i, k = 0; j < length.length && k < dpp; ++j, ++k) {
+                if(length[j] > frequencyChart.maxY){
+                    frequencyChart.maxY = length[j];
+                }
+                if(length[j] < low){
+                    low = length[j];
+                }
+                if(length[j] > high){
+                    high = length[j];
+                }
+            }
+            values.add(new Entry(i ,low));
+            values.add(new Entry(i ,high));
+        }
+        LineDataSet set = new LineDataSet(values,frequencyLabel);
+        set.setDrawIcons(false);
+        set.setColor(Color.BLACK);
+        set.setLineWidth(0.1f);
+        set.setDrawCircles(false);
+        set.setDrawCircleHole(false);
+        set.setDrawFilled(false);
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set);
+        frequencyChart.lineData = new LineData(dataSets);
     }
 
     private void power_chart(){
@@ -150,19 +190,59 @@ public class ChartRepository {
     }
 
     private void phase_chart(){
+        phaseChart = new ChartInformation();
+        phaseChart.labelX = "";
+        phaseChart.labelY = "";
+        phaseChart.minX = 0;
+        phaseChart.maxX = phase.length;
+        phaseChart.maxY = (float) (Math.PI * 2);
+        phaseChart.minY = 0;
 
+        int dpp = phase.length / MAX_ENTRY;
+        if(dpp == 0){
+            dpp = 1;
+        }
+        List<Entry> values = new ArrayList<>(phase.length / dpp + 1);
+        float low, high;
+        for (int i = 0; i < phase.length; i += dpp) {
+            low = phase[i];
+            high = phase[i];
+            for (int j = i, k = 0; j < phase.length && k < dpp; ++j, ++k) {
+                if(phase[j] < low){
+                    low = phase[j];
+                }
+                if(phase[j] > high){
+                    high = phase[j];
+                }
+            }
+            values.add(new Entry(i ,low));
+            values.add(new Entry(i ,high));
+        }
+        LineDataSet set = new LineDataSet(values,phaseLabel);
+        set.setDrawIcons(false);
+        set.setColor(Color.BLACK);
+        set.setLineWidth(0.1f);
+        set.setDrawCircles(false);
+        set.setDrawCircleHole(false);
+        set.setDrawFilled(false);
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set);
+        phaseChart.lineData = new LineData(dataSets);
     }
 
-    public float[] getConvolutionData(){
-        return convolutionData;
+    public ChartInformation getWaveChart() {
+        return waveChart;
     }
 
-    public float[] getTailorData() throws Exception {
-        return tailorData;
+    public ChartInformation getFrequencyChart() {
+        return frequencyChart;
     }
 
-    public float[] getPhase() {
-        return phase;
+    public ChartInformation getPhaseChart() {
+        return phaseChart;
     }
 
+    public ChartInformation getPowerChart() {
+        return powerChart;
+    }
 }

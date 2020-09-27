@@ -37,9 +37,7 @@ import edu.scut.acoustics.utils.AudioPlayer;
 import edu.scut.acoustics.utils.AudioRecorder;
 
 public class ExperimentActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final int MAX_ENTRY = 3000;
     private ChartRepository repository;
-    public String filename;
     private final static int PERMISSIONS = 1;
     private AudioRecorder recorder;
     private AudioPlayer player;
@@ -65,7 +63,6 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         recorder = new AudioRecorder(this);
         player = new AudioPlayer();
         device = new AudioDevice(getApplicationContext());
-        filename = recorder.getFilename();
         viewModel = new ViewModelProvider(this).get(ChartViewModel.class);
     }
 
@@ -211,11 +208,10 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         }
         repository = new ChartRepository(getApplicationContext(),application.inverseSignal,recordData);
         repository.doFinal();
-        generate_chart();
-    }
-
-    //生成图表数据
-    public void generate_chart(){
+        viewModel.setFrequencyChart(repository.getFrequencyChart());
+        viewModel.setPhaseChart(repository.getPhaseChart());
+        viewModel.setWaveChart(repository.getWaveChart());
+        viewModel.setPowerChart(repository.getPowerChart());
     }
 
     //显示结果
