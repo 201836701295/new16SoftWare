@@ -17,9 +17,9 @@ import edu.scut.acoustics.utils.DSPMath;
 public class ChartRepository {
     //图表最大数据数
     public static final int MAX_ENTRY = 3000;
-    private DSPMath dspMath = new DSPMath();
     private final float[] audioData1;
     private final float[] audioData2;
+    private DSPMath dspMath = new DSPMath();
     private float[] convolutionData;
     private float[] tailorData;
     private float[] real;
@@ -37,7 +37,7 @@ public class ChartRepository {
     private ChartInformation phaseChart;
     private ChartInformation powerChart;
 
-    public ChartRepository(Context context, float[] a1, float[] a2){
+    public ChartRepository(Context context, float[] a1, float[] a2) {
         waveLabel = context.getResources().getString(R.string.convolution_wave);
         frequencyLabel = context.getResources().getString(R.string.frequency_chart);
         phaseLabel = context.getResources().getString(R.string.phase_chart);
@@ -47,7 +47,7 @@ public class ChartRepository {
     }
 
     public void doFinal() throws Exception {
-        if(audioData1 == null || audioData2 == null){
+        if (audioData1 == null || audioData2 == null) {
             throw new Exception("audio data not initialized");
         }
         //作卷积
@@ -58,27 +58,27 @@ public class ChartRepository {
         //作fft
         real = new float[tailorData.length];
         imagine = new float[tailorData.length];
-        dspMath.fft(tailorData,tailorData.length,real,imagine);
+        dspMath.fft(tailorData, tailorData.length, real, imagine);
         //作求模和相位
         phase = new float[tailorData.length];
         length = new float[tailorData.length];
-        dspMath.phaseAndLength(real,imagine,phase,length);
+        dspMath.phaseAndLength(real, imagine, phase, length);
         //求功率
-        power = new float[tailorData.length];
-        frequency = new float[tailorData.length];
-        dspMath.welch(tailorData,tailorData.length,44100,power,frequency);
+        power = new float[(tailorData.length + 1) / 2];
+        frequency = new float[(tailorData.length + 1) / 2];
+        dspMath.welch(tailorData, tailorData.length, 44100, power, frequency);
         //生成图像数据
         produce_chart();
     }
 
     //裁剪数据
-    private void tailor(){
+    private void tailor() {
         //index 峰值坐标 lmost裁剪数据左端 rmost 裁剪数据右端
         int index = 0, lmost, rmost;
         float max = 0, temp;
         for (int i = 0; i < convolutionData.length; i++) {
             temp = Math.abs(convolutionData[i]);
-            if(temp > max){
+            if (temp > max) {
                 max = temp;
                 index = i;
             }
@@ -87,10 +87,10 @@ public class ChartRepository {
         lmost = (int) (index - 44100 * 0.01f);
         rmost = (int) (index + 44100 * 0.05f);
         //检查是否超越边界
-        if(lmost < 0){
+        if (lmost < 0) {
             lmost = 0;
         }
-        if(rmost >= convolutionData.length){
+        if (rmost >= convolutionData.length) {
             rmost = convolutionData.length - 1;
         }
         //复制数据
@@ -99,7 +99,7 @@ public class ChartRepository {
     }
 
     //生成图表
-    private void produce_chart(){
+    private void produce_chart() {
         wave_chart();
         frequency_chart();
         power_chart();
@@ -107,7 +107,7 @@ public class ChartRepository {
     }
 
     //生成波形图表
-    private void wave_chart(){
+    private void wave_chart() {
         waveChart = new ChartInformation();
         //设置坐标轴标签
         waveChart.labelX = "时间/s";
@@ -119,7 +119,7 @@ public class ChartRepository {
         waveChart.minY = 0;
         //设置采样区间
         int dpp = tailorData.length / MAX_ENTRY;
-        if(dpp == 0){
+        if (dpp == 0) {
             dpp = 1;
         }
         //数据点数据
@@ -131,25 +131,25 @@ public class ChartRepository {
             high = tailorData[i];
             //更新Y轴范围，取区间最值
             for (int j = i, k = 0; j < tailorData.length && k < dpp; ++j, ++k) {
-                if(tailorData[j] > waveChart.maxY){
+                if (tailorData[j] > waveChart.maxY) {
                     waveChart.maxY = tailorData[j];
                 }
-                if(tailorData[j] < waveChart.minY){
+                if (tailorData[j] < waveChart.minY) {
                     waveChart.minY = tailorData[j];
                 }
-                if(tailorData[j] < low){
+                if (tailorData[j] < low) {
                     low = tailorData[j];
                 }
-                if(tailorData[j] > high){
+                if (tailorData[j] > high) {
                     high = tailorData[j];
                 }
             }
             //将最值采样
-            values.add(new Entry(i / 44100f,low));
-            values.add(new Entry(i / 44100f,high));
+            values.add(new Entry(i / 44100f, low));
+            values.add(new Entry(i / 44100f, high));
         }
         //设置图线绘制方法
-        LineDataSet set = new LineDataSet(values,waveLabel);
+        LineDataSet set = new LineDataSet(values, waveLabel);
         set.setDrawIcons(false);
         set.setColor(Color.BLACK);
         set.setLineWidth(0.1f);
@@ -161,7 +161,7 @@ public class ChartRepository {
         waveChart.lineData = new LineData(dataSets);
     }
 
-    private void frequency_chart(){
+    private void frequency_chart() {
         frequencyChart = new ChartInformation();
         frequencyChart.labelX = "";
         frequencyChart.labelY = "振幅";
@@ -171,7 +171,7 @@ public class ChartRepository {
         frequencyChart.minY = 0;
 
         int dpp = length.length / MAX_ENTRY;
-        if(dpp == 0){
+        if (dpp == 0) {
             dpp = 1;
         }
         List<Entry> values = new ArrayList<>(length.length / dpp + 1);
@@ -180,20 +180,20 @@ public class ChartRepository {
             low = length[i];
             high = length[i];
             for (int j = i, k = 0; j < length.length && k < dpp; ++j, ++k) {
-                if(length[j] > frequencyChart.maxY){
+                if (length[j] > frequencyChart.maxY) {
                     frequencyChart.maxY = length[j];
                 }
-                if(length[j] < low){
+                if (length[j] < low) {
                     low = length[j];
                 }
-                if(length[j] > high){
+                if (length[j] > high) {
                     high = length[j];
                 }
             }
-            values.add(new Entry(i ,low));
-            values.add(new Entry(i ,high));
+            values.add(new Entry(i, low));
+            values.add(new Entry(i, high));
         }
-        LineDataSet set = new LineDataSet(values,frequencyLabel);
+        LineDataSet set = new LineDataSet(values, frequencyLabel);
         set.setDrawIcons(false);
         set.setColor(Color.BLACK);
         set.setLineWidth(0.1f);
@@ -205,7 +205,7 @@ public class ChartRepository {
         frequencyChart.lineData = new LineData(dataSets);
     }
 
-    private void power_chart(){
+    private void power_chart() {
         powerChart = new ChartInformation();
         powerChart.labelX = "频率/Hz";
         powerChart.labelY = "功率";
@@ -215,7 +215,7 @@ public class ChartRepository {
         powerChart.minY = 0;
 
         int dpp = power.length / MAX_ENTRY;
-        if(dpp == 0){
+        if (dpp == 0) {
             dpp = 1;
         }
         List<Entry> values = new ArrayList<>(power.length / dpp + 1);
@@ -224,20 +224,20 @@ public class ChartRepository {
             low = power[i];
             high = power[i];
             for (int j = i, k = 0; j < power.length && k < dpp; ++j, ++k) {
-                if(power[j] > powerChart.maxY){
+                if (power[j] > powerChart.maxY) {
                     powerChart.maxY = power[j];
                 }
-                if(power[j] < low){
+                if (power[j] < low) {
                     low = power[j];
                 }
-                if(power[j] > high){
+                if (power[j] > high) {
                     high = power[j];
                 }
             }
-            values.add(new Entry(i ,low));
-            values.add(new Entry(i ,high));
+            values.add(new Entry(i, low));
+            values.add(new Entry(i, high));
         }
-        LineDataSet set = new LineDataSet(values,powerLabel);
+        LineDataSet set = new LineDataSet(values, powerLabel);
         set.setDrawIcons(false);
         set.setColor(Color.BLACK);
         set.setLineWidth(0.1f);
@@ -249,7 +249,7 @@ public class ChartRepository {
         powerChart.lineData = new LineData(dataSets);
     }
 
-    private void phase_chart(){
+    private void phase_chart() {
         phaseChart = new ChartInformation();
         phaseChart.labelX = "";
         phaseChart.labelY = "相位";
@@ -259,7 +259,7 @@ public class ChartRepository {
         phaseChart.minY = 0;
 
         int dpp = phase.length / MAX_ENTRY;
-        if(dpp == 0){
+        if (dpp == 0) {
             dpp = 1;
         }
         List<Entry> values = new ArrayList<>(phase.length / dpp + 1);
@@ -268,17 +268,17 @@ public class ChartRepository {
             low = phase[i];
             high = phase[i];
             for (int j = i, k = 0; j < phase.length && k < dpp; ++j, ++k) {
-                if(phase[j] < low){
+                if (phase[j] < low) {
                     low = phase[j];
                 }
-                if(phase[j] > high){
+                if (phase[j] > high) {
                     high = phase[j];
                 }
             }
-            values.add(new Entry(i ,low));
-            values.add(new Entry(i ,high));
+            values.add(new Entry(i, low));
+            values.add(new Entry(i, high));
         }
-        LineDataSet set = new LineDataSet(values,phaseLabel);
+        LineDataSet set = new LineDataSet(values, phaseLabel);
         set.setDrawIcons(false);
         set.setColor(Color.BLACK);
         set.setLineWidth(0.1f);

@@ -35,7 +35,7 @@ public class SplashActivity extends AppCompatActivity {
         }, 1500);
 
         //初始化
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 MyApplication application = (MyApplication) getApplication();

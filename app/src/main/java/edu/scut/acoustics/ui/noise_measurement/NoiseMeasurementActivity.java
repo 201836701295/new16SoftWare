@@ -13,10 +13,10 @@ import java.util.Objects;
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.ActivityNoiseMeasurementBinding;
 import edu.scut.acoustics.ui.adjust.AdjustActivity;
-import edu.scut.acoustics.ui.experiment.ExperimentActivity;
 
 public class NoiseMeasurementActivity extends AppCompatActivity implements View.OnClickListener {
     private ActivityNoiseMeasurementBinding binding;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,19 +27,19 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
 
     @Override
     public void onClick(View view) {
-        if(view.getId() == binding.adjust.getId()){
+        if (view.getId() == binding.adjust.getId()) {
             start_adjust();
         }
-        if(view.getId() == binding.refresh.getId()){
+        if (view.getId() == binding.refresh.getId()) {
             refresh();
         }
     }
 
-    public void start_adjust(){
+    public void start_adjust() {
         startActivity(new Intent(this, AdjustActivity.class));
     }
 
-    public void refresh(){
+    public void refresh() {
 
     }
 

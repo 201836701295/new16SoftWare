@@ -44,8 +44,8 @@ public class SampleMusicPlayer implements AudioTrack.OnPlaybackPositionUpdateLis
 
         audioTrack = new AudioTrack(attributes, format, length, AudioTrack.MODE_STREAM, AudioManager.AUDIO_SESSION_ID_GENERATE);
         audioTrack.setNotificationMarkerPosition(marker);
-        if(handler != null){
-            audioTrack.setPlaybackPositionUpdateListener(this,handler);
+        if (handler != null) {
+            audioTrack.setPlaybackPositionUpdateListener(this, handler);
         }
 
         Log.d("audioTrack", "play: " + marker);

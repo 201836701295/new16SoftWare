@@ -134,11 +134,11 @@ public class AudioRecorder {
      */
     public void stop() throws ExecutionException, InterruptedException {
         //停止录音
-        if(recorder != null){
+        if (recorder != null) {
             recorder.stop();
             recording = false;
             //等待写入线程结束
-            if(future != null){
+            if (future != null) {
                 future.get();
                 future = null;
             }

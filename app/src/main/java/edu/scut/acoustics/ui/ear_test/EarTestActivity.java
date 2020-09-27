@@ -10,8 +10,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import java.util.Objects;
-
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.ActivityEarTestBinding;
 

@@ -17,7 +17,7 @@ public class RightEarFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentRightEarBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_right_ear,container,false);
+        FragmentRightEarBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_right_ear, container, false);
         binding.earTest.ear.setText(R.string.right_ear);
         return binding.getRoot();
     }

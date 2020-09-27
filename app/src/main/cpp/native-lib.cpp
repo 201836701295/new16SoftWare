@@ -7,6 +7,7 @@
 #include "dspmath/mifft.h"
 #include "dspmath/mywelch.h"
 #include <android/log.h>
+
 #define LOG_TAG  "C_TAG"
 #define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 
@@ -120,8 +121,8 @@ Java_edu_scut_acoustics_utils_DSPMath_welch(JNIEnv *env, jobject /* this */, jfl
 
     string text1 = "PXX length";
     string text2 = "F length";
-    LOGD("PXX length=%d",PXX.size(1) * PXX.size(0));
-    LOGD("F length=%d",F.size(0));
+    LOGD("PXX length=%d", PXX.size(1) * PXX.size(0));
+    LOGD("F length=%d", F.size(0));
 
     env->ReleaseFloatArrayElements(x, xarr, JNI_ABORT);
 
@@ -144,12 +145,13 @@ using std::acos;
 extern "C"
 JNIEXPORT void JNICALL
 Java_edu_scut_acoustics_utils_DSPMath_phaseAndLength(JNIEnv *env, jobject, jfloatArray re,
-                                            jfloatArray im, jfloatArray rad, jfloatArray length) {
+                                                     jfloatArray im, jfloatArray rad,
+                                                     jfloatArray length) {
     int rel = env->GetArrayLength(re);
     int iml = env->GetArrayLength(im);
     int ral = env->GetArrayLength(rad);
     int lel = env->GetArrayLength(length);
-    int arrLength = min(min(min(rel,iml),ral),lel);
+    int arrLength = min(min(min(rel, iml), ral), lel);
 
     jfloat *reArr = env->GetFloatArrayElements(re, nullptr);
     jfloat *imArr = env->GetFloatArrayElements(im, nullptr);
@@ -158,12 +160,12 @@ Java_edu_scut_acoustics_utils_DSPMath_phaseAndLength(JNIEnv *env, jobject, jfloa
 
     jfloat TWO_PI = M_PI * 2;
 
-    for(int i = 0; i < arrLength; ++i){
+    for (int i = 0; i < arrLength; ++i) {
         leArr[i] = sqrt(reArr[i] * reArr[i] + imArr[i] * imArr[i]);
         jfloat radius = acos(reArr[i] / leArr[i]);
-        if(imArr[i] >= 0){
+        if (imArr[i] >= 0) {
             radArr[i] = radius;
-        } else{
+        } else {
             radArr[i] = TWO_PI - radius;
         }
     }

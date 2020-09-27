@@ -1,6 +1,7 @@
 package edu.scut.acoustics.ui.experiment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.FramentOutcomeBinding;
@@ -24,13 +26,14 @@ public class OutcomeFragment extends Fragment {
     private FramentOutcomeBinding binding;
     private ChartViewModel viewModel;
 
-    private void observeChart(LineChart chart, ChartInformation chartInformation){
+    private void observeChart(LineChart chart, ChartInformation chartInformation) {
         //图表初始化
         chart.getDescription().setEnabled(false);
         chart.setTouchEnabled(false);
         chart.setDrawGridBackground(false);
         chart.getAxisRight().setEnabled(false);
         //坐标轴初始化
+        Log.d("draw chart", "observeChart: ");
         YAxis yAxis = chart.getAxisLeft();
         yAxis.setAxisMaximum(chartInformation.maxY);
         yAxis.setAxisMinimum(chartInformation.minY);
@@ -38,7 +41,7 @@ public class OutcomeFragment extends Fragment {
         xAxis.setAxisMaximum(chartInformation.maxX);
         xAxis.setAxisMinimum(chartInformation.minX);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-
+        LineDataSet set1;
         chart.setData(chartInformation.lineData);
         chart.animateX(1);
         Legend l = chart.getLegend();
@@ -52,19 +55,21 @@ public class OutcomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //UI初始化
         binding = DataBindingUtil.inflate(inflater, R.layout.frament_outcome, container, false);
-        viewModel = new ViewModelProvider(this).get(ChartViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ChartViewModel.class);
         viewModel.getWaveChart().observe(getViewLifecycleOwner(), new Observer<ChartInformation>() {
             @Override
             public void onChanged(ChartInformation chartInformation) {
-                if(chartInformation != null){
+                Log.d("observe", "onChanged: ");
+                if (chartInformation != null) {
                     observeChart(binding.waveChart, chartInformation);
+                    binding.waveChart.notifyDataSetChanged();
                 }
             }
         });
         viewModel.getPhaseChart().observe(getViewLifecycleOwner(), new Observer<ChartInformation>() {
             @Override
             public void onChanged(ChartInformation chartInformation) {
-                if(chartInformation != null){
+                if (chartInformation != null) {
                     observeChart(binding.phaseChart, chartInformation);
                 }
             }
@@ -72,7 +77,7 @@ public class OutcomeFragment extends Fragment {
         viewModel.getFrequencyChart().observe(getViewLifecycleOwner(), new Observer<ChartInformation>() {
             @Override
             public void onChanged(ChartInformation chartInformation) {
-                if(chartInformation != null){
+                if (chartInformation != null) {
                     observeChart(binding.frequencyChart, chartInformation);
                 }
             }
@@ -80,7 +85,7 @@ public class OutcomeFragment extends Fragment {
         viewModel.getPowerChart().observe(getViewLifecycleOwner(), new Observer<ChartInformation>() {
             @Override
             public void onChanged(ChartInformation chartInformation) {
-                if(chartInformation != null){
+                if (chartInformation != null) {
                     observeChart(binding.powerChart, chartInformation);
                 }
             }

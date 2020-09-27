@@ -29,11 +29,10 @@ public class MyApplication extends Application {
     }
 
     @SuppressLint("ShowToast")
-    public void show_toast(String string){
-        if(toast == null){
-            toast = Toast.makeText(this,string, Toast.LENGTH_SHORT);
-        }
-        else {
+    public void show_toast(String string) {
+        if (toast == null) {
+            toast = Toast.makeText(this, string, Toast.LENGTH_SHORT);
+        } else {
             toast.setText(string);
         }
         toast.show();

@@ -7,7 +7,7 @@ import android.util.Log;
 
 import java.io.IOException;
 
-public class AudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener  {
+public class AudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
     private MediaPlayer player = null;
     private Listener listener = null;
 
@@ -17,7 +17,7 @@ public class AudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
 
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
-        if(listener != null){
+        if (listener != null) {
             listener.prepare_finished();
         }
         player.start();
@@ -26,21 +26,16 @@ public class AudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        if(listener != null){
+        if (listener != null) {
             listener.media_finished();
         }
         player.release();
         player = null;
     }
 
-    public interface Listener{
-        void prepare_finished();
-        void media_finished();
-    }
-
-    public void stop(){
+    public void stop() {
         listener = null;
-        if(player != null) {
+        if (player != null) {
             player.stop();
             player.release();
             player = null;
@@ -48,7 +43,7 @@ public class AudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
     }
 
     public void play(AssetFileDescriptor assetFileDescriptor) throws IOException {
-        if(player != null){
+        if (player != null) {
             player.stop();
             player.release();
             player = null;
@@ -61,5 +56,11 @@ public class AudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
         player.prepareAsync();
+    }
+
+    public interface Listener {
+        void prepare_finished();
+
+        void media_finished();
     }
 }
