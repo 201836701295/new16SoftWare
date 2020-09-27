@@ -15,6 +15,7 @@ import edu.scut.acoustics.R;
 import edu.scut.acoustics.utils.DSPMath;
 
 public class ChartRepository {
+    //图表最大数据数
     public static final int MAX_ENTRY = 3000;
     private DSPMath dspMath = new DSPMath();
     private final float[] audioData1;
@@ -62,10 +63,17 @@ public class ChartRepository {
         phase = new float[tailorData.length];
         length = new float[tailorData.length];
         dspMath.phaseAndLength(real,imagine,phase,length);
+        //求功率
+        power = new float[tailorData.length];
+        frequency = new float[tailorData.length];
+        dspMath.welch(tailorData,tailorData.length,44100,power,frequency);
+        //生成图像数据
         produce_chart();
     }
 
+    //裁剪数据
     private void tailor(){
+        //index 峰值坐标 lmost裁剪数据左端 rmost 裁剪数据右端
         int index = 0, lmost, rmost;
         float max = 0, temp;
         for (int i = 0; i < convolutionData.length; i++) {
@@ -75,18 +83,22 @@ public class ChartRepository {
                 index = i;
             }
         }
-        lmost = (int) (index - 44100f * 0.01f);
-        rmost = (int) (index + 44100f * 0.05f);
+        //截取峰值前0.1s和峰值后0.05s
+        lmost = (int) (index - 44100 * 0.01f);
+        rmost = (int) (index + 44100 * 0.05f);
+        //检查是否超越边界
         if(lmost < 0){
             lmost = 0;
         }
         if(rmost >= convolutionData.length){
             rmost = convolutionData.length - 1;
         }
+        //复制数据
         tailorData = new float[rmost - lmost + 1];
         System.arraycopy(convolutionData, lmost, tailorData, 0, rmost + 1 - lmost);
     }
 
+    //生成图表
     private void produce_chart(){
         wave_chart();
         frequency_chart();
@@ -94,24 +106,30 @@ public class ChartRepository {
         phase_chart();
     }
 
+    //生成波形图表
     private void wave_chart(){
         waveChart = new ChartInformation();
+        //设置坐标轴标签
         waveChart.labelX = "时间/s";
         waveChart.labelY = "振幅";
+        //设置坐标轴显示范围
         waveChart.maxX = tailorData.length / 44100f;
         waveChart.minX = 0;
         waveChart.maxY = 0;
         waveChart.minY = 0;
-
+        //设置采样区间
         int dpp = tailorData.length / MAX_ENTRY;
         if(dpp == 0){
             dpp = 1;
         }
+        //数据点数据
         List<Entry> values = new ArrayList<>(tailorData.length / dpp + 1);
+        //区间最值
         float low, high;
         for (int i = 0; i < tailorData.length; i += dpp) {
             low = tailorData[i];
             high = tailorData[i];
+            //更新Y轴范围，取区间最值
             for (int j = i, k = 0; j < tailorData.length && k < dpp; ++j, ++k) {
                 if(tailorData[j] > waveChart.maxY){
                     waveChart.maxY = tailorData[j];
@@ -126,9 +144,11 @@ public class ChartRepository {
                     high = tailorData[j];
                 }
             }
+            //将最值采样
             values.add(new Entry(i / 44100f,low));
             values.add(new Entry(i / 44100f,high));
         }
+        //设置图线绘制方法
         LineDataSet set = new LineDataSet(values,waveLabel);
         set.setDrawIcons(false);
         set.setColor(Color.BLACK);
@@ -186,13 +206,53 @@ public class ChartRepository {
     }
 
     private void power_chart(){
+        powerChart = new ChartInformation();
+        powerChart.labelX = "频率/Hz";
+        powerChart.labelY = "功率";
+        powerChart.minX = 0;
+        powerChart.maxX = frequency[frequency.length - 1];
+        powerChart.maxY = 0;
+        powerChart.minY = 0;
 
+        int dpp = power.length / MAX_ENTRY;
+        if(dpp == 0){
+            dpp = 1;
+        }
+        List<Entry> values = new ArrayList<>(power.length / dpp + 1);
+        float low, high;
+        for (int i = 0; i < power.length; i += dpp) {
+            low = power[i];
+            high = power[i];
+            for (int j = i, k = 0; j < power.length && k < dpp; ++j, ++k) {
+                if(power[j] > powerChart.maxY){
+                    powerChart.maxY = power[j];
+                }
+                if(power[j] < low){
+                    low = power[j];
+                }
+                if(power[j] > high){
+                    high = power[j];
+                }
+            }
+            values.add(new Entry(i ,low));
+            values.add(new Entry(i ,high));
+        }
+        LineDataSet set = new LineDataSet(values,powerLabel);
+        set.setDrawIcons(false);
+        set.setColor(Color.BLACK);
+        set.setLineWidth(0.1f);
+        set.setDrawCircles(false);
+        set.setDrawCircleHole(false);
+        set.setDrawFilled(false);
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set);
+        powerChart.lineData = new LineData(dataSets);
     }
 
     private void phase_chart(){
         phaseChart = new ChartInformation();
         phaseChart.labelX = "";
-        phaseChart.labelY = "";
+        phaseChart.labelY = "相位";
         phaseChart.minX = 0;
         phaseChart.maxX = phase.length;
         phaseChart.maxY = (float) (Math.PI * 2);

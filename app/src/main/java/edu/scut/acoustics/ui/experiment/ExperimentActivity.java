@@ -2,6 +2,7 @@ package edu.scut.acoustics.ui.experiment;
 
 import android.Manifest;
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -149,6 +150,13 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void run() {
                         try {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //UI显示正在处理
+                                    binding.progress.setVisibility(View.VISIBLE);
+                                }
+                            });
                             recorder.stop();
                             //数据处理
                             data_process();
@@ -157,6 +165,11 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
                                 @Override
                                 public void run() {
                                     //显示实验结果
+                                    viewModel.setFrequencyChart(repository.getFrequencyChart());
+                                    viewModel.setPhaseChart(repository.getPhaseChart());
+                                    viewModel.setWaveChart(repository.getWaveChart());
+                                    viewModel.setPowerChart(repository.getPowerChart());
+                                    binding.progress.setVisibility(View.INVISIBLE);
                                     show_outcome();
                                 }
                             });
@@ -206,12 +219,8 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
             temp |= bis.read() << 8;
             recordData[i] = (float) temp / SHORT_MAX;
         }
-        repository = new ChartRepository(getApplicationContext(),application.inverseSignal,recordData);
+        repository = new ChartRepository(application,application.inverseSignal,recordData);
         repository.doFinal();
-        viewModel.setFrequencyChart(repository.getFrequencyChart());
-        viewModel.setPhaseChart(repository.getPhaseChart());
-        viewModel.setWaveChart(repository.getWaveChart());
-        viewModel.setPowerChart(repository.getPowerChart());
     }
 
     //显示结果
