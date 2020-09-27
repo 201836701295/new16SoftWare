@@ -237,8 +237,8 @@ public class ChartRepository {
                     high = power[j];
                 }
             }
-            values.add(new Entry(i, low));
-            values.add(new Entry(i, high));
+            values.add(new Entry(frequency[i], low));
+            values.add(new Entry(frequency[i], high));
         }
         LineDataSet set = new LineDataSet(values, powerLabel);
         set.setDrawIcons(false);
