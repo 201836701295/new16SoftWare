@@ -152,7 +152,7 @@ public class ChartRepository {
         LineDataSet set = new LineDataSet(values, waveLabel);
         set.setDrawIcons(false);
         set.setColor(Color.BLACK);
-        set.setLineWidth(0.1f);
+        set.setLineWidth(1f);
         set.setDrawCircles(false);
         set.setDrawCircleHole(false);
         set.setDrawFilled(false);
@@ -196,7 +196,7 @@ public class ChartRepository {
         LineDataSet set = new LineDataSet(values, frequencyLabel);
         set.setDrawIcons(false);
         set.setColor(Color.BLACK);
-        set.setLineWidth(0.1f);
+        set.setLineWidth(1f);
         set.setDrawCircles(false);
         set.setDrawCircleHole(false);
         set.setDrawFilled(false);
@@ -227,6 +227,9 @@ public class ChartRepository {
                 if (power[j] > powerChart.maxY) {
                     powerChart.maxY = power[j];
                 }
+                if (power[j] < powerChart.minY) {
+                    powerChart.minY = power[j];
+                }
                 if (power[j] < low) {
                     low = power[j];
                 }
@@ -240,7 +243,7 @@ public class ChartRepository {
         LineDataSet set = new LineDataSet(values, powerLabel);
         set.setDrawIcons(false);
         set.setColor(Color.BLACK);
-        set.setLineWidth(0.1f);
+        set.setLineWidth(1f);
         set.setDrawCircles(false);
         set.setDrawCircleHole(false);
         set.setDrawFilled(false);
@@ -281,7 +284,7 @@ public class ChartRepository {
         LineDataSet set = new LineDataSet(values, phaseLabel);
         set.setDrawIcons(false);
         set.setColor(Color.BLACK);
-        set.setLineWidth(0.1f);
+        set.setLineWidth(1f);
         set.setDrawCircles(false);
         set.setDrawCircleHole(false);
         set.setDrawFilled(false);

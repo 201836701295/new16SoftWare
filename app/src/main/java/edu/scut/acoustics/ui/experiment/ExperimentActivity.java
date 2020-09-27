@@ -44,6 +44,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
     private Handler handler = new Handler(Looper.getMainLooper());
     private ChartViewModel viewModel;
     private OutcomeFragment outcomeFragment;
+    private MyApplication application;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         player = new AudioPlayer();
         device = new AudioDevice(getApplicationContext());
         viewModel = new ViewModelProvider(this).get(ChartViewModel.class);
+        application = (MyApplication) getApplication();
     }
 
     @Override
@@ -112,7 +114,6 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         if (requestCode == PERMISSIONS) {
             for (int i : grantResults) {
                 if (i != PackageManager.PERMISSION_GRANTED) {
-                    MyApplication application = (MyApplication) getApplication();
                     application.show_toast("你拒绝提供权限");
                     return;
                 }
@@ -134,6 +135,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void prepare_finished() {
                 try {
+                    application.show_toast("开始播放音频");
                     recorder.start();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -153,6 +155,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
                                 @Override
                                 public void run() {
                                     //UI显示正在处理
+                                    application.show_toast("放音结束，开始处理数据");
                                     binding.progress.setVisibility(View.VISIBLE);
                                 }
                             });
@@ -177,7 +180,6 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
                                 @Override
                                 public void run() {
                                     //错误后UI更新
-                                    MyApplication application = (MyApplication) getApplication();
                                     application.show_toast(getString(R.string.experiment_error));
                                 }
                             });
