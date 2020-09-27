@@ -17,7 +17,7 @@ public class MyApplication extends Application {
     public boolean have_headset = false;
 
     public float[] inverseSignal;
-    public short[] sampleSignal;
+    public float[] sampleSignal;
 
     @Override
     public void onCreate() {
@@ -40,7 +40,7 @@ public class MyApplication extends Application {
 
     public void initialize() throws IOException {
         inverseSignal = new float[264600];
-        sampleSignal = new short[529200];
+        sampleSignal = new float[529200];
         short temp;
         AssetFileDescriptor inverseSignalAFD = getResources().openRawResourceFd(R.raw.inverse_signal);
         AssetFileDescriptor sampleSignalAFD = getResources().openRawResourceFd(R.raw.sample_signal);
@@ -64,7 +64,7 @@ public class MyApplication extends Application {
         for (int i = 0; i < sampleSignal.length; ++i) {
             temp = (short) ssbis.read();
             temp |= (ssbis.read() << 8);
-            sampleSignal[i] = temp;
+            sampleSignal[i] = (float) temp / SHORT_MAX;
         }
         try {
             ssbis.close();
