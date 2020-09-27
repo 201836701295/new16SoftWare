@@ -19,4 +19,7 @@
     <string name="frequency_chart">频率谱</string>
     <string name="power_chart">功率谱</string>
     <string name="experiment_error">实验出错</string>
+    <string name="real_time_db">实时分贝</string>
+    <string name="max_db">最大分贝</string>
+    <string name="min_db">最小分贝</string>
 </resources>

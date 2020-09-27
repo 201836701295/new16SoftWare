@@ -1,12 +1,16 @@
 package edu.scut.acoustics.ui.noise_measurement;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.icu.text.DecimalFormat;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Objects;
 
@@ -16,12 +20,40 @@ import edu.scut.acoustics.ui.adjust.AdjustActivity;
 
 public class NoiseMeasurementActivity extends AppCompatActivity implements View.OnClickListener {
     private ActivityNoiseMeasurementBinding binding;
+    private NoiseViewModel viewModel;
+    private DecimalFormat format = new DecimalFormat("###.##");
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_noise_measurement);
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
+
+        viewModel = new ViewModelProvider(this).get(NoiseViewModel.class);
+        viewModel.getMax().observe(this, new Observer<Float>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onChanged(Float aFloat) {
+                binding.max.setText(getResources().getString(R.string.max_db) + "\n" + format.format(aFloat));
+            }
+        });
+        viewModel.getMin().observe(this, new Observer<Float>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onChanged(Float aFloat) {
+                binding.min.setText(getResources().getString(R.string.min_db) + "\n" + format.format(aFloat));
+            }
+        });
+        viewModel.getRealtime().observe(this, new Observer<Float>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onChanged(Float aFloat) {
+                binding.real.setText(getResources().getString(R.string.real_time_db) + "\n" + format.format(aFloat));
+            }
+        });
+
+        binding.refresh.setOnClickListener(this);
+        binding.adjust.setOnClickListener(this);
     }
 
 
@@ -40,7 +72,7 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
     }
 
     public void refresh() {
-
+        viewModel.refresh();
     }
 
 }
