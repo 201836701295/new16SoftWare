@@ -120,18 +120,18 @@ Java_edu_scut_acoustics_utils_DSPMath_welch(JNIEnv *env, jobject /* this */, jfl
 
     string text1 = "PXX length";
     string text2 = "F length";
-    LOGD("PXX length=%d",PXX.size(1));
-    LOGD("F length=%d",F.size(1));
+    LOGD("PXX length=%d",PXX.size(1) * PXX.size(0));
+    LOGD("F length=%d",F.size(0));
 
     env->ReleaseFloatArrayElements(x, xarr, JNI_ABORT);
 
     jfloat *parr = env->GetFloatArrayElements(pxx, nullptr);
     jfloat *farr = env->GetFloatArrayElements(f, nullptr);
 
-    for (int i = 0; i < pl && i < n && i < PXX.size(1); ++i) {
+    for (int i = 0; i < pl && i < n && i < PXX.size(1) * PXX.size(0); ++i) {
         parr[i] = PXX[i];
     }
-    for (int i = 0; i < fl && i < n && i < F.size(1); ++i) {
+    for (int i = 0; i < fl && i < n && i < F.size(0); ++i) {
         farr[i] = F[i];
     }
 

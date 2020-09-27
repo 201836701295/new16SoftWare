@@ -150,6 +150,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void run() {
                         try {
+                            recorder.stop();
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -157,7 +158,6 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
                                     binding.progress.setVisibility(View.VISIBLE);
                                 }
                             });
-                            recorder.stop();
                             //数据处理
                             data_process();
                             Log.d("recorder stop", "media_finished: ");
