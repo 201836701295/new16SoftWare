@@ -208,7 +208,7 @@ public class ChartRepository {
     private void power_chart() {
         powerChart = new ChartInformation();
         powerChart.labelX = "频率/Hz";
-        powerChart.labelY = "功率";
+        powerChart.labelY = "功率/dB";
         powerChart.minX = 0;
         powerChart.maxX = frequency[frequency.length - 1];
         powerChart.maxY = 0;
