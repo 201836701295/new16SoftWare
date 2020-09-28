@@ -22,6 +22,7 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
     private ActivityNoiseMeasurementBinding binding;
     private NoiseViewModel viewModel;
     private DecimalFormat format = new DecimalFormat("###.##");
+    private float baseline;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,31 +30,40 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
         binding = DataBindingUtil.setContentView(this, R.layout.activity_noise_measurement);
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
 
+        baseline = getSharedPreferences(getResources().getString(R.string.sharedpreferences),MODE_PRIVATE)
+                .getFloat(getResources().getString(R.string.baseline), 0.0f);
         viewModel = new ViewModelProvider(this).get(NoiseViewModel.class);
         viewModel.getMax().observe(this, new Observer<Float>() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onChanged(Float aFloat) {
-                binding.max.setText(getResources().getString(R.string.max_db) + "\n" + format.format(aFloat));
+                binding.max.setText(getResources().getString(R.string.max_db) + "\n" + format.format(aFloat + baseline) + "db");
             }
         });
         viewModel.getMin().observe(this, new Observer<Float>() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onChanged(Float aFloat) {
-                binding.min.setText(getResources().getString(R.string.min_db) + "\n" + format.format(aFloat));
+                binding.min.setText(getResources().getString(R.string.min_db) + "\n" + format.format(aFloat + baseline) + "db");
             }
         });
         viewModel.getRealtime().observe(this, new Observer<Float>() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onChanged(Float aFloat) {
-                binding.real.setText(getResources().getString(R.string.real_time_db) + "\n" + format.format(aFloat));
+                binding.real.setText(getResources().getString(R.string.real_time_db) + "\n" + format.format(aFloat + baseline) + "db");
             }
         });
 
         binding.refresh.setOnClickListener(this);
         binding.adjust.setOnClickListener(this);
+
+        new Thread(){
+            @Override
+            public void run() {
+                viewModel.start();
+            }
+        }.run();
     }
 
 

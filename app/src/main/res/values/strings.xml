@@ -22,4 +22,6 @@
     <string name="real_time_db">实时分贝</string>
     <string name="max_db">最大分贝</string>
     <string name="min_db">最小分贝</string>
+    <string name="baseline">基准值</string>
+    <string name="sharedpreferences">edu.scut.acoustics.PREFERENCE_FILE_KEY</string>
 </resources>

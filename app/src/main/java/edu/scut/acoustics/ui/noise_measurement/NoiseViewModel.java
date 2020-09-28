@@ -7,24 +7,18 @@ import androidx.lifecycle.ViewModel;
 import edu.scut.acoustics.utils.SLM;
 
 public class NoiseViewModel extends ViewModel {
-    private float maxValue;
-    private float minValue;
-    private float realtimeValue;
-    private MutableLiveData<Float> max;
-    private MutableLiveData<Float> min;
-    private MutableLiveData<Float> realtime;
-    private SLM slm;
+    LiveData<Float> max;
+    LiveData<Float> min;
+    LiveData<Float> realtime;
+    SLM slm;
 
 
     public NoiseViewModel() {
-        maxValue = 0f;
-        minValue = 0f;
-        realtimeValue = 0f;
-        max = new MutableLiveData<>(maxValue);
-        min = new MutableLiveData<>(minValue);
-        realtime = new MutableLiveData<>(realtimeValue);
+        slm = new SLM();
+        max = slm.getMax();
+        min = slm.getMin();
+        realtime = slm.getRealtime();
     }
-
 
     public LiveData<Float> getMax() {
         return max;
@@ -38,38 +32,18 @@ public class NoiseViewModel extends ViewModel {
         return realtime;
     }
 
-    public void setRealtime(float realtime) {
-        if(minValue > realtime){
-            minValue = realtimeValue;
-            this.min.setValue(minValue);
-        }
-        if(maxValue < realtime){
-            maxValue = realtimeValue;
-            this.max.setValue(maxValue);
-        }
-        this.realtime.setValue(realtime);
-    }
-
-    public void postRealtime(float realtime) {
-        if(minValue > realtime){
-            minValue = realtimeValue;
-            this.min.postValue(minValue);
-        }
-        if(maxValue < realtime){
-            maxValue = realtimeValue;
-            this.max.postValue(maxValue);
-        }
-        this.realtime.postValue(realtime);
+    public void start(){
+        slm.start();
     }
 
     public void refresh(){
-        minValue = maxValue = realtimeValue;
-        max.setValue(maxValue);
-        min.setValue(minValue);
+        slm.refresh();
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
+        slm.stop();
+        slm = null;
     }
 }
