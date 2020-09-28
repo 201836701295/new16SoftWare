@@ -18,10 +18,7 @@ public class AdjustViewModel extends ViewModel {
         slm.start();
     }
 
-    @Override
-    protected void onCleared() {
-        super.onCleared();
+    public void stop(){
         slm.stop();
-        slm = null;
     }
 }

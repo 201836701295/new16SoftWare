@@ -10,6 +10,9 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * dBA
+ */
 public class SLM {
     public static final int SOURCE = MediaRecorder.AudioSource.MIC;
     public static final int SAMPLE_RATE = 44100;
@@ -18,17 +21,18 @@ public class SLM {
     public static final int MIN_BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL, FORMAT) * 8;
     public static final int N = 8192;
 
-    private float[] audioData = new float[N];
-    private short[] buffer = new short[MIN_BUFFER_SIZE / 2];
-    private AudioRecord recorder = null;
-    private ExecutorService service = Executors.newSingleThreadExecutor();
+    float[] audioData = new float[N];
+    short[] buffer = new short[MIN_BUFFER_SIZE / 2];
+    boolean recording = false;
+    AudioRecord recorder = null;
+    ExecutorService service = Executors.newSingleThreadExecutor();
 
-    private MutableLiveData<Float> max;
-    private MutableLiveData<Float> min;
-    private MutableLiveData<Float> realtime;
-    private float maxValue;
-    private float minValue;
-    private float realtimeValue;
+    MutableLiveData<Float> max;
+    MutableLiveData<Float> min;
+    MutableLiveData<Float> realtime;
+    float maxValue;
+    float minValue;
+    float realtimeValue;
 
     public SLM(){
         maxValue = 0f;
@@ -40,12 +44,18 @@ public class SLM {
     }
 
     public void start(){
-        recorder = new AudioRecord(SOURCE, SAMPLE_RATE, CHANNEL, FORMAT, MIN_BUFFER_SIZE);
-        recorder.startRecording();
+        recording = true;
+        if(recorder != null){
+            service.shutdownNow();
+            recorder.stop();
+            recorder.release();
+            recorder = null;
+        }
         service.execute(new Calculator());
     }
 
     public void stop(){
+        recording = false;
         if (recorder != null) {
             service.shutdownNow();
             recorder.stop();
@@ -70,7 +80,7 @@ public class SLM {
      * 线程调用
      * @param realtime 实时获取的分贝值
      */
-    private void postRealtime(float realtime) {
+    void postRealtime(float realtime) {
         if(minValue > realtime){
             minValue = realtimeValue;
             this.min.postValue(minValue);
@@ -88,14 +98,15 @@ public class SLM {
         min.setValue(minValue);
     }
 
-    public class Calculator implements Runnable{
-
+    private class Calculator implements Runnable{
         @Override
         public void run() {
             try {
+                recorder = new AudioRecord(SOURCE, SAMPLE_RATE, CHANNEL, FORMAT, MIN_BUFFER_SIZE);
+                recorder.startRecording();
                 int off,length, temp;
                 float result = 0f;
-                while (true){
+                while (recording){
                     off = 0;
                     length = buffer.length;
                     while (off < N){

@@ -17,6 +17,8 @@ import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.ActivityAdjustBinding;
 
 public class AdjustActivity extends AppCompatActivity implements View.OnClickListener {
+    static final String unit = "dBA";
+
     DecimalFormat format = new DecimalFormat("###.##");
     float baseline;
     float realtime = 0.0f;
@@ -39,11 +41,11 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
 
         viewModel = new ViewModelProvider(this).get(AdjustViewModel.class);
         viewModel.realtime.observe(this, new Observer<Float>() {
-            @SuppressLint("SetTextI18n")
             @Override
             public void onChanged(Float aFloat) {
                 realtime = aFloat;
-                binding.real.setText(getResources().getString(R.string.real_time_db) + "\n" + format.format(aFloat + baseline) + "db");
+                String string = getResources().getString(R.string.real_time_db) + "\n" + format.format(aFloat + baseline) + unit;
+                binding.real.setText(string);
             }
         });
 
@@ -59,5 +61,11 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         baseline += (94f - realtime);
         getSharedPreferences(sharedpreferences,MODE_PRIVATE).edit().putFloat(key,baseline).apply();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.stop();
     }
 }

@@ -40,10 +40,7 @@ public class NoiseViewModel extends ViewModel {
         slm.refresh();
     }
 
-    @Override
-    protected void onCleared() {
-        super.onCleared();
+    public void stop(){
         slm.stop();
-        slm = null;
     }
 }
