@@ -18,7 +18,7 @@ public class AdjustViewModel extends ViewModel {
         slm.start();
     }
 
-    public void stop(){
+    public void stop() {
         slm.stop();
     }
 }

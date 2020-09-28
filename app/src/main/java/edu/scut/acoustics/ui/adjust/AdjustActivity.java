@@ -1,6 +1,5 @@
 package edu.scut.acoustics.ui.adjust;
 
-import android.annotation.SuppressLint;
 import android.icu.text.DecimalFormat;
 import android.os.Bundle;
 import android.view.View;

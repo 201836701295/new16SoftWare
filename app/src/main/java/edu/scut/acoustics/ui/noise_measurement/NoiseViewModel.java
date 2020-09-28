@@ -39,7 +39,7 @@ public class NoiseViewModel extends ViewModel {
         slm.refresh();
     }
 
-    public void stop(){
+    public void stop() {
         slm.stop();
     }
 }
