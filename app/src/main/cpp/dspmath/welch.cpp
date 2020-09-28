@@ -2,7 +2,7 @@
 // File: welch.cpp
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 16-Sep-2020 10:10:07
+// C/C++ source code generated on  : 28-Sep-2020 16:47:53
 //
 
 // Include Files
@@ -15,6 +15,7 @@
 #include "mconv.h"
 #include "mfft.h"
 #include "mifft.h"
+#include "mslm.h"
 #include "mywelch.h"
 #include "psdfreqvec.h"
 #include "rt_nonfinite.h"
@@ -363,7 +364,7 @@ void welch(const coder::array<float, 2U> &x, int varargin_3, int varargin_4,
             }
         }
 
-        b_fft(xw, static_cast<double>(varargin_3), Xx);
+        c_fft(xw, static_cast<double>(varargin_3), Xx);
         psdfreqvec(static_cast<double>(varargin_3), static_cast<double>(varargin_4),
                    win1);
         b_win = 0.0F;

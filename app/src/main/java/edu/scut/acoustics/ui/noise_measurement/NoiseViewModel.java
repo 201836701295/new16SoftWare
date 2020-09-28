@@ -1,7 +1,6 @@
 package edu.scut.acoustics.ui.noise_measurement;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import edu.scut.acoustics.utils.SLM;
@@ -32,11 +31,11 @@ public class NoiseViewModel extends ViewModel {
         return realtime;
     }
 
-    public void start(){
+    public void start() {
         slm.start();
     }
 
-    public void refresh(){
+    public void refresh() {
         slm.refresh();
     }
 

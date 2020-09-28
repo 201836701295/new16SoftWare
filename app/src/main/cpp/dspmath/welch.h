@@ -2,7 +2,7 @@
 // File: welch.h
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 16-Sep-2020 10:10:07
+// C/C++ source code generated on  : 28-Sep-2020 16:47:53
 //
 #ifndef WELCH_H
 #define WELCH_H

@@ -5,6 +5,12 @@ public class DSPMath {
         System.loadLibrary("native-lib");
     }
 
+    /**
+     * @param re     实部
+     * @param im     虚部
+     * @param rad    相位
+     * @param length 振幅
+     */
     public native void phaseAndLength(float[] re, float[] im, float[] rad, float[] length);
 
     /**
@@ -38,4 +44,10 @@ public class DSPMath {
      * @param c 输出信号3
      */
     public native void conv(float[] a, float[] b, float[] c);
+
+    /**
+     * @param a 音频数据
+     * @return 分贝值
+     */
+    public native float mslm(float[] a);
 }

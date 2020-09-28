@@ -2,7 +2,7 @@
 // File: mconv.cpp
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 16-Sep-2020 10:10:07
+// C/C++ source code generated on  : 28-Sep-2020 16:47:53
 //
 
 // Include Files
@@ -13,6 +13,7 @@
 #include "ifft.h"
 #include "mfft.h"
 #include "mifft.h"
+#include "mslm.h"
 #include "mywelch.h"
 #include "rt_nonfinite.h"
 #include <string.h>
@@ -23,15 +24,16 @@
 // Arguments    : const coder::array<float, 2U> *a
 //                const coder::array<float, 2U> *b
 //                int n
-//                coder::array<creal32_T, 2U> *c
+//                coder::array<float, 2U> *c
 // Return Type  : void
 //
 void mconv(const coder::array<float, 2U> &a, const coder::array<float, 2U> &b,
-           int n, coder::array<creal32_T, 2U> &c) {
+           int n, coder::array<float, 2U> &c) {
     coder::array<creal32_T, 2U> Fa;
     coder::array<creal32_T, 2U> Fb;
     coder::array<creal32_T, 2U> b_Fa;
     int loop_ub;
+    int i;
     if (!isInitialized_dspmath) {
         dspmath_initialize();
     }
@@ -40,12 +42,17 @@ void mconv(const coder::array<float, 2U> &a, const coder::array<float, 2U> &b,
     fft(b, n, Fb);
     b_Fa.set_size(1, Fa.size(1));
     loop_ub = Fa.size(0) * Fa.size(1);
-    for (int i = 0; i < loop_ub; i++) {
+    for (i = 0; i < loop_ub; i++) {
         b_Fa[i].re = Fa[i].re * Fb[i].re - Fa[i].im * Fb[i].im;
         b_Fa[i].im = Fa[i].re * Fb[i].im + Fa[i].im * Fb[i].re;
     }
 
-    ifft(b_Fa, n, c);
+    ifft(b_Fa, n, Fa);
+    c.set_size(1, Fa.size(1));
+    loop_ub = Fa.size(0) * Fa.size(1);
+    for (i = 0; i < loop_ub; i++) {
+        c[i] = Fa[i].re;
+    }
 }
 
 //

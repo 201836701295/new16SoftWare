@@ -37,7 +37,7 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
         sharedpreferences = getResources().getString(R.string.sharedpreferences);
         key = getResources().getString(R.string.baseline);
 
-        baseline = getSharedPreferences(sharedpreferences,MODE_PRIVATE).getFloat(key, 0.0f);
+        baseline = getSharedPreferences(sharedpreferences, MODE_PRIVATE).getFloat(key, 0.0f);
 
         viewModel = new ViewModelProvider(this).get(AdjustViewModel.class);
         viewModel.realtime.observe(this, new Observer<Float>() {
@@ -49,7 +49,7 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 viewModel.start();
@@ -60,7 +60,7 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         baseline += (94f - realtime);
-        getSharedPreferences(sharedpreferences,MODE_PRIVATE).edit().putFloat(key,baseline).apply();
+        getSharedPreferences(sharedpreferences, MODE_PRIVATE).edit().putFloat(key, baseline).apply();
     }
 
     @Override

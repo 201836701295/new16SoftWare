@@ -2,7 +2,7 @@
 // File: gencoswin.cpp
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 16-Sep-2020 10:10:07
+// C/C++ source code generated on  : 28-Sep-2020 16:47:53
 //
 
 // Include Files
@@ -11,6 +11,7 @@
 #include "mconv.h"
 #include "mfft.h"
 #include "mifft.h"
+#include "mslm.h"
 #include "mywelch.h"
 #include "rt_nonfinite.h"
 #include "welch.h"

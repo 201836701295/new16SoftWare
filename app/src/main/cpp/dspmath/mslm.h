@@ -1,11 +1,11 @@
 //
-// File: mfft.h
+// File: mslm.h
 //
 // MATLAB Coder version            : 5.0
 // C/C++ source code generated on  : 28-Sep-2020 16:47:53
 //
-#ifndef MFFT_H
-#define MFFT_H
+#ifndef MSLM_H
+#define MSLM_H
 
 // Include Files
 #include <cstddef>
@@ -14,13 +14,12 @@
 #include "dspmath_types.h"
 
 // Function Declarations
-extern void mfft(const coder::array<float, 2U> &X, int N, coder::array<creal32_T,
-        2U> &F);
+extern float mslm(const coder::array<float, 2U> &x);
 
 #endif
 
 //
-// File trailer for mfft.h
+// File trailer for mslm.h
 //
 // [EOF]
 //

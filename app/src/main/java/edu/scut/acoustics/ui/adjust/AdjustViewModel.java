@@ -14,7 +14,7 @@ public class AdjustViewModel extends ViewModel {
         realtime = slm.getRealtime();
     }
 
-    public void start(){
+    public void start() {
         slm.start();
     }
 

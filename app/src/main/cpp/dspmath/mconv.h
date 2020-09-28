@@ -2,7 +2,7 @@
 // File: mconv.h
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 16-Sep-2020 10:10:07
+// C/C++ source code generated on  : 28-Sep-2020 16:47:53
 //
 #ifndef MCONV_H
 #define MCONV_H
@@ -15,7 +15,7 @@
 
 // Function Declarations
 extern void mconv(const coder::array<float, 2U> &a, const coder::array<float, 2U>
-&b, int n, coder::array<creal32_T, 2U> &c);
+&b, int n, coder::array<float, 2U> &c);
 
 #endif
 

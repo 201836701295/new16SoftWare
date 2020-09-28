@@ -31,7 +31,7 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
         binding = DataBindingUtil.setContentView(this, R.layout.activity_noise_measurement);
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
 
-        baseline = getSharedPreferences(getResources().getString(R.string.sharedpreferences),MODE_PRIVATE)
+        baseline = getSharedPreferences(getResources().getString(R.string.sharedpreferences), MODE_PRIVATE)
                 .getFloat(getResources().getString(R.string.baseline), 0.0f);
 
         viewModel = new ViewModelProvider(this).get(NoiseViewModel.class);
