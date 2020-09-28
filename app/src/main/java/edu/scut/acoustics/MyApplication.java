@@ -40,6 +40,16 @@ public class MyApplication extends Application {
         toast.show();
     }
 
+    @SuppressLint("ShowToast")
+    public void show_toast(int id) {
+        if (toast == null) {
+            toast = Toast.makeText(this, id, Toast.LENGTH_SHORT);
+        } else {
+            toast.setText(id);
+        }
+        toast.show();
+    }
+
     public void initialize() throws IOException {
         inverseSignal = new float[264600];
         sampleSignal = new float[529200];

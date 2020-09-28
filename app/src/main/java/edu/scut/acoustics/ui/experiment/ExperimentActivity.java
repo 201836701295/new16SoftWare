@@ -114,7 +114,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         if (requestCode == PERMISSIONS) {
             for (int i : grantResults) {
                 if (i != PackageManager.PERMISSION_GRANTED) {
-                    application.show_toast("你拒绝提供权限");
+                    application.show_toast(R.string.you_refuse_authorize);
                     return;
                 }
             }
@@ -135,7 +135,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void prepare_finished() {
                 try {
-                    application.show_toast("开始播放音频");
+                    application.show_toast(R.string.start_to_play);
                     recorder.start();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -155,7 +155,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
                                 @Override
                                 public void run() {
                                     //UI显示正在处理
-                                    application.show_toast("放音结束，开始处理数据");
+                                    application.show_toast(R.string.start_to_process);
                                     binding.progress.setVisibility(View.VISIBLE);
                                 }
                             });
@@ -180,7 +180,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
                                 @Override
                                 public void run() {
                                     //错误后UI更新
-                                    application.show_toast(getString(R.string.experiment_error));
+                                    application.show_toast(R.string.experiment_error);
                                 }
                             });
                         } finally {
