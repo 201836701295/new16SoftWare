@@ -115,6 +115,17 @@ public class AudioRecorder {
     }
 
     public void start() throws IOException {
+        if (recorder != null) {
+            recorder.stop();
+            try {
+                future.get();
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            future = null;
+            recorder.release();
+            recorder = null;
+        }
         //创建录音机
         recorder = new AudioRecord(SOURCE, SAMPLE_RATE, CHANNEL, FORMAT, MIN_BUFFER_SIZE);
         recording = true;

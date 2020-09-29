@@ -60,8 +60,8 @@ public class ChartRepository {
         imagine = new float[tailorData.length];
         dspMath.fft(tailorData, tailorData.length, real, imagine);
         //作求模和相位
-        phase = new float[tailorData.length];
-        length = new float[tailorData.length];
+        phase = new float[(tailorData.length + 1) / 2];
+        length = new float[(tailorData.length + 1) / 2];
         dspMath.phaseAndLength(real, imagine, phase, length);
         //求功率
         power = new float[(tailorData.length + 1) / 2];

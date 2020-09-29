@@ -7,8 +7,11 @@ import android.media.MediaRecorder;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * dBA
@@ -23,9 +26,8 @@ public class SLM {
 
     float[] audioData = new float[N];
     short[] buffer = new short[MIN_BUFFER_SIZE / 2];
-    boolean recording = false;
     AudioRecord recorder = null;
-    ExecutorService service = Executors.newSingleThreadExecutor();
+    ExecutorService service = Executors.newCachedThreadPool();
 
     MutableLiveData<Float> max;
     MutableLiveData<Float> min;
@@ -33,6 +35,7 @@ public class SLM {
     float maxValue;
     float minValue;
     float realtimeValue;
+    Future<Void> future;
 
     public SLM() {
         maxValue = 0f;
@@ -44,23 +47,33 @@ public class SLM {
     }
 
     public void start() {
-        recording = true;
         if (recorder != null) {
-            service.shutdownNow();
             recorder.stop();
+            try {
+                future.get();
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            future = null;
             recorder.release();
             recorder = null;
         }
-        service.execute(new Calculator());
+        recorder = new AudioRecord(SOURCE, SAMPLE_RATE, CHANNEL, FORMAT, MIN_BUFFER_SIZE);
+        recorder.startRecording();
+        future = service.submit(new Calculator());
     }
 
     public void stop() {
-        recording = false;
         if (recorder != null) {
-            service.shutdownNow();
             recorder.stop();
+            try {
+                future.get();
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
             recorder.release();
             recorder = null;
+            future = null;
         }
     }
 
@@ -100,20 +113,23 @@ public class SLM {
         min.setValue(minValue);
     }
 
-    private class Calculator implements Runnable {
+    private class Calculator implements Callable<Void> {
         @Override
-        public void run() {
+        public Void call() {
             try {
                 DSPMath dspMath = new DSPMath();
                 recorder = new AudioRecord(SOURCE, SAMPLE_RATE, CHANNEL, FORMAT, MIN_BUFFER_SIZE);
                 recorder.startRecording();
                 int off, length, temp;
                 float result;
-                while (recording) {
+                while (true) {
                     off = 0;
                     length = buffer.length;
                     while (off < N) {
                         temp = recorder.read(buffer, off, length);
+                        if(temp == 0){
+                            return null;
+                        }
                         off += temp;
                         length -= temp;
                     }
@@ -126,6 +142,7 @@ public class SLM {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            return null;
         }
     }
 }

@@ -149,7 +149,8 @@ Java_edu_scut_acoustics_utils_DSPMath_phaseAndLength(JNIEnv *env, jobject, jfloa
     int iml = env->GetArrayLength(im);
     int ral = env->GetArrayLength(rad);
     int lel = env->GetArrayLength(length);
-    int arrLength = min(min(min(rel, iml), ral), lel);
+    int temp = (min(rel, iml) + 1) / 2;
+    int arrLength = min(min(temp,ral),lel);
 
     jfloat *reArr = env->GetFloatArrayElements(re, nullptr);
     jfloat *imArr = env->GetFloatArrayElements(im, nullptr);
@@ -166,6 +167,7 @@ Java_edu_scut_acoustics_utils_DSPMath_phaseAndLength(JNIEnv *env, jobject, jfloa
         } else {
             radArr[i] = TWO_PI - radius;
         }
+        leArr[i] *= 2;
     }
 
     env->ReleaseFloatArrayElements(rad, radArr, JNI_OK);

@@ -16,7 +16,7 @@
     <string name="adjust_tip">请将接收端放置在94db的噪声源10厘米处，待示数稳定后，按下校准按钮</string>
     <string name="convolution_wave">卷积波形</string>
     <string name="phase_chart">相位谱</string>
-    <string name="frequency_chart">频率谱</string>
+    <string name="frequency_chart">振幅谱</string>
     <string name="power_chart">功率谱</string>
     <string name="experiment_error">实验出错</string>
     <string name="real_time_db">实时分贝</string>
