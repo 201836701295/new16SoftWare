@@ -22,7 +22,7 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
 
     ActivityNoiseMeasurementBinding binding;
     NoiseViewModel viewModel;
-    DecimalFormat format = new DecimalFormat("###.##");
+    DecimalFormat format = new DecimalFormat("##0.00");
     float baseline;
 
     @Override

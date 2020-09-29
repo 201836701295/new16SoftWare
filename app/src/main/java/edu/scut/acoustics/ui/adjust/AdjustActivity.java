@@ -18,7 +18,7 @@ import edu.scut.acoustics.databinding.ActivityAdjustBinding;
 public class AdjustActivity extends AppCompatActivity implements View.OnClickListener {
     static final String unit = "dBA";
 
-    DecimalFormat format = new DecimalFormat("###.##");
+    DecimalFormat format = new DecimalFormat("##0.00");
     float baseline;
     float realtime = 0.0f;
     AdjustViewModel viewModel;

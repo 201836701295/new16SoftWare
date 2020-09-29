@@ -3,6 +3,7 @@ package edu.scut.acoustics.utils;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -82,15 +83,16 @@ public class SLM {
      * @param realtime 实时获取的分贝值
      */
     void postRealtime(float realtime) {
-        if (minValue > realtime) {
+        realtimeValue = realtime;
+        if (minValue > realtimeValue) {
             minValue = realtimeValue;
             this.min.postValue(minValue);
         }
-        if (maxValue < realtime) {
+        if (maxValue < realtimeValue) {
             maxValue = realtimeValue;
             this.max.postValue(maxValue);
         }
-        this.realtime.postValue(realtime);
+        this.realtime.postValue(realtimeValue);
     }
 
     public void refresh() {
