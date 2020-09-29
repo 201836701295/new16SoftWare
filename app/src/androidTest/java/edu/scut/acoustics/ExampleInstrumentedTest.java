@@ -2,8 +2,6 @@ package edu.scut.acoustics;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
-import android.media.AudioFormat;
-import android.media.AudioTrack;
 import android.media.MediaCodec;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
@@ -17,6 +15,7 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 
+import edu.scut.acoustics.utils.DSPMath;
 import edu.scut.acoustics.utils.SinWave;
 
 import static org.junit.Assert.assertEquals;
@@ -60,7 +59,13 @@ public class ExampleInstrumentedTest {
 
     @Test
     public void test() {
-        int length = AudioTrack.getMinBufferSize(SinWave.SAMPLE_RATE, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
-        Log.d("TAG", "test: " + length);
+        float[] a = new float[8192];
+        SinWave sinWave = new SinWave(2000, 40);
+        sinWave.doFinal(a);
+        for (int i = 0; i < a.length; i++) {
+            a[i] *= ((int) Short.MAX_VALUE + 1);
+        }
+        DSPMath dspMath = new DSPMath();
+        System.out.println(dspMath.mslm(a));
     }
 }

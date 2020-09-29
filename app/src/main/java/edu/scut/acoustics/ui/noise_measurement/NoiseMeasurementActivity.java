@@ -99,15 +99,14 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_FOR_DBA);
-        }
-        else {
+        } else {
             startActivity(new Intent(this, AdjustActivity.class));
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == PERMISSIONS_FOR_DBA){
+        if (requestCode == PERMISSIONS_FOR_DBA) {
             for (int i : grantResults) {
                 if (i != PackageManager.PERMISSION_GRANTED) {
                     application.show_toast(R.string.you_refuse_authorize);

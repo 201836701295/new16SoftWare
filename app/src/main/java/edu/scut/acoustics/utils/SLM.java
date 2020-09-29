@@ -3,6 +3,7 @@ package edu.scut.acoustics.utils;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -75,6 +76,7 @@ public class SLM {
             recorder = null;
             future = null;
         }
+        future = null;
     }
 
     public LiveData<Float> getMax() {
@@ -127,7 +129,7 @@ public class SLM {
                     length = buffer.length;
                     while (off < N) {
                         temp = recorder.read(buffer, off, length);
-                        if(temp == 0){
+                        if (temp == 0) {
                             return null;
                         }
                         off += temp;
@@ -142,6 +144,7 @@ public class SLM {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            Log.d("listen thread", "dead");
             return null;
         }
     }
