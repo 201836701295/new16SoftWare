@@ -163,9 +163,9 @@ public class ChartRepository {
 
     private void frequency_chart() {
         frequencyChart = new ChartInformation();
-        frequencyChart.labelX = "";
+        frequencyChart.labelX = "频率/Hz";
         frequencyChart.labelY = "振幅";
-        frequencyChart.maxX = length.length;
+        frequencyChart.maxX = frequency[frequency.length - 1];
         frequencyChart.minX = 0;
         frequencyChart.maxY = 0;
         frequencyChart.minY = 0;
@@ -190,8 +190,8 @@ public class ChartRepository {
                     high = length[j];
                 }
             }
-            values.add(new Entry(i, low));
-            values.add(new Entry(i, high));
+            values.add(new Entry(frequency[i], low));
+            values.add(new Entry(frequency[i], high));
         }
         LineDataSet set = new LineDataSet(values, frequencyLabel);
         set.setDrawIcons(false);
@@ -254,10 +254,10 @@ public class ChartRepository {
 
     private void phase_chart() {
         phaseChart = new ChartInformation();
-        phaseChart.labelX = "";
+        phaseChart.labelX = "频率/Hz";
         phaseChart.labelY = "相位";
         phaseChart.minX = 0;
-        phaseChart.maxX = phase.length;
+        phaseChart.maxX = frequency[frequency.length - 1];
         phaseChart.maxY = (float) (Math.PI * 2);
         phaseChart.minY = 0;
 
@@ -278,8 +278,8 @@ public class ChartRepository {
                     high = phase[j];
                 }
             }
-            values.add(new Entry(i, low));
-            values.add(new Entry(i, high));
+            values.add(new Entry(frequency[i], low));
+            values.add(new Entry(frequency[i], high));
         }
         LineDataSet set = new LineDataSet(values, phaseLabel);
         set.setDrawIcons(false);
