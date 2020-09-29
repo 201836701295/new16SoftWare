@@ -13,7 +13,7 @@
     <string name="noise_measure">噪声测量</string>
     <string name="test_signal">测试信号</string>
     <string name="inverse_signal">卷积逆信号</string>
-    <string name="adjust_tip">请将接收端放置在94db的噪声源10厘米处，待示数稳定后，按下校准按钮</string>
+    <string name="adjust_tip">请将接收端放置在94dBA的噪声源10厘米处，待示数稳定后，按下校准按钮</string>
     <string name="convolution_wave">卷积波形</string>
     <string name="phase_chart">相位谱</string>
     <string name="frequency_chart">振幅谱</string>
