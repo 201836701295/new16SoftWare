@@ -41,7 +41,8 @@
         <activity
             android:name=".ui.adjust.AdjustActivity"
             android:label="@string/adjust"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.noise_measurement.NoiseMeasurementActivity" />
 
         <activity
             android:name=".ui.ear_test.EarTestActivity"
