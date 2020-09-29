@@ -26,7 +26,7 @@ public class SLM {
     public static final int N = 8192;
 
     float[] audioData = new float[N];
-    short[] buffer = new short[MIN_BUFFER_SIZE / 2];
+    byte[] buffer = new byte[MIN_BUFFER_SIZE];
     AudioRecord recorder = null;
     ExecutorService service = Executors.newCachedThreadPool();
 
@@ -61,6 +61,7 @@ public class SLM {
         }
         recorder = new AudioRecord(SOURCE, SAMPLE_RATE, CHANNEL, FORMAT, MIN_BUFFER_SIZE);
         recorder.startRecording();
+        Log.d("SLM", "start: ");
         future = service.submit(new Calculator());
     }
 
@@ -109,6 +110,13 @@ public class SLM {
         this.realtime.postValue(realtimeValue);
     }
 
+    void initialPost(float rv) {
+        maxValue = minValue = realtimeValue = rv;
+        min.postValue(minValue);
+        max.postValue(maxValue);
+        realtime.postValue(realtimeValue);
+    }
+
     public void refresh() {
         minValue = maxValue = realtimeValue;
         max.setValue(maxValue);
@@ -120,14 +128,33 @@ public class SLM {
         public Void call() {
             try {
                 DSPMath dspMath = new DSPMath();
-                recorder = new AudioRecord(SOURCE, SAMPLE_RATE, CHANNEL, FORMAT, MIN_BUFFER_SIZE);
-                recorder.startRecording();
                 int off, length, temp;
+                short tv1, tv2;
                 float result;
+
+                off = 0;
+                length = buffer.length;
+                while (off < N * 2) {
+                    temp = recorder.read(buffer, off, length);
+                    if (temp == 0) {
+                        return null;
+                    }
+                    off += temp;
+                    length -= temp;
+                }
+                for (int i = 0; i < audioData.length; i++) {
+                    tv1 = buffer[i * 2];
+                    tv2 = (short) ((int) buffer[i * 2 + 1] << 8);
+                    tv1 |= tv2;
+                    audioData[i] = tv1;
+                }
+                result = dspMath.mslm(audioData);
+                initialPost(result);
+
                 while (true) {
                     off = 0;
                     length = buffer.length;
-                    while (off < N) {
+                    while (off < N * 2) {
                         temp = recorder.read(buffer, off, length);
                         if (temp == 0) {
                             return null;
@@ -135,8 +162,11 @@ public class SLM {
                         off += temp;
                         length -= temp;
                     }
-                    for (int i = 0; i < N; i++) {
-                        audioData[i] = buffer[i];
+                    for (int i = 0; i < audioData.length; i++) {
+                        tv1 = buffer[i * 2];
+                        tv2 = (short) ((int) buffer[i * 2 + 1] << 8);
+                        tv1 |= tv2;
+                        audioData[i] = tv1;
                     }
                     result = dspMath.mslm(audioData);
                     postRealtime(result);
@@ -144,7 +174,6 @@ public class SLM {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Log.d("listen thread", "dead");
             return null;
         }
     }
