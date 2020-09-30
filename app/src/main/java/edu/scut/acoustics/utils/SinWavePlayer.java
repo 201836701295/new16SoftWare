@@ -5,17 +5,21 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 
-public class SinWavePlayer implements AudioTrack.OnPlaybackPositionUpdateListener {
+public class SinWavePlayer {
     //各个频率，250hz到8000hz，倍频
     public static final int[] FREQUENTS = {250, 500, 1000, 2000, 4000, 8000};
     //音量级
     public static final int[] DBS = new int[]{0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85};
+
+    public static final int LEFT = AudioFormat.CHANNEL_OUT_FRONT_LEFT;
+
+    public static final int RIGHT = AudioFormat.CHANNEL_OUT_FRONT_RIGHT;
     //pcm_float格式的音频数据，0.5秒的音频
-    private float[] pcm_data = new float[SinWave.SAMPLE_RATE / 2];
+    float[] pcm_data = new float[SinWave.SAMPLE_RATE / 2];
     //音频播放类
-    private AudioTrack audioTrack;
+    AudioTrack audioTrack;
     //正弦波生产器
-    private SinWave sinWave;
+    SinWave sinWave;
 
     public SinWavePlayer() {
         sinWave = new SinWave(250, 0);
@@ -24,18 +28,24 @@ public class SinWavePlayer implements AudioTrack.OnPlaybackPositionUpdateListene
     /**
      * 耗时操作
      *
-     * @param hz      频率
-     * @param db      音量
-     * @param channel 左右声道 AudioFormat::CHANNEL_OUT_FRONT_LEFT CHANNEL_OUT_FRONT_RIGHT CHANNEL_OUT_STEREO
+     * @param hz 频率
+     * @param db 音量
      */
-    public void set(int hz, int db, int channel) {
+    public void set(int hz, int db) {
         //生成正弦波
         sinWave.set(hz, db);
         sinWave.doFinal(pcm_data);
-        //TODO 设置播放声道
+    }
+
+    /**
+     * 播放音频
+     * 耗时操作
+     *
+     * @param channel 左右声道 AudioFormat::CHANNEL_OUT_FRONT_LEFT CHANNEL_OUT_FRONT_RIGHT CHANNEL_OUT_STEREO
+     */
+    public void play(int channel) {
         if (audioTrack != null) {
             audioTrack.pause();
-            audioTrack.flush();
             audioTrack.release();
             audioTrack = null;
         }
@@ -44,39 +54,21 @@ public class SinWavePlayer implements AudioTrack.OnPlaybackPositionUpdateListene
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build();
 
         AudioFormat.Builder formatBuilder = new AudioFormat.Builder();
-        AudioFormat format = formatBuilder.setSampleRate(SinWave.SAMPLE_RATE)
+        AudioFormat format = formatBuilder.setSampleRate(SinWave.SAMPLE_RATE).setChannelMask(channel)
                 .setEncoding(AudioFormat.ENCODING_PCM_FLOAT).build();
 
         audioTrack = new AudioTrack(attributes, format, pcm_data.length * Float.BYTES, AudioTrack.MODE_STATIC, AudioManager.AUDIO_SESSION_ID_GENERATE);
         audioTrack.flush();
         audioTrack.write(pcm_data, 0, pcm_data.length, AudioTrack.WRITE_BLOCKING);
+        audioTrack.play();
     }
 
-    /**
-     * 播放音频
-     */
-    public void play() {
+    public void stop() {
         if (audioTrack != null) {
+            audioTrack.pause();
             audioTrack.flush();
-            audioTrack.setNotificationMarkerPosition(pcm_data.length);
-            audioTrack.setPlaybackPositionUpdateListener(this);
-            audioTrack.play();
+            audioTrack.release();
+            audioTrack = null;
         }
-    }
-
-    private void stop() {
-        audioTrack.stop();
-        audioTrack.release();
-        audioTrack = null;
-    }
-
-    @Override
-    public void onMarkerReached(AudioTrack audioTrack) {
-
-    }
-
-    @Override
-    public void onPeriodicNotification(AudioTrack audioTrack) {
-        stop();
     }
 }

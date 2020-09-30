@@ -62,7 +62,7 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        baseline += (94f - realtime);
+        baseline = (94f - realtime);
         getSharedPreferences(sharedpreferences, MODE_PRIVATE).edit().putFloat(key, baseline).apply();
     }
 }

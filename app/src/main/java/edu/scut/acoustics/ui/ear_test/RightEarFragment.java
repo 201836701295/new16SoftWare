@@ -21,4 +21,14 @@ public class RightEarFragment extends Fragment {
         binding.earTest.ear.setText(R.string.right_ear);
         return binding.getRoot();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 }
