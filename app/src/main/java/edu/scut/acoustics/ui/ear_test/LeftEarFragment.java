@@ -26,7 +26,7 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
         binding.earTest.play.setOnClickListener(this);
 
         viewModel = new ViewModelProvider(this).get(EarViewModel.class);
-        viewModel.setChannel(AudioFormat.CHANNEL_OUT_FRONT_LEFT);
+        viewModel.setChannel(AudioFormat.CHANNEL_OUT_STEREO);
         return binding.getRoot();
     }
 

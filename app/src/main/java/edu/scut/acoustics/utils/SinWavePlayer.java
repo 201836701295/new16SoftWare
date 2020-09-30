@@ -55,7 +55,7 @@ public class SinWavePlayer {
 
         AudioFormat.Builder formatBuilder = new AudioFormat.Builder();
         AudioFormat format = formatBuilder.setSampleRate(SinWave.SAMPLE_RATE).setChannelMask(channel)
-                .setChannelIndexMask(1).setEncoding(AudioFormat.ENCODING_PCM_FLOAT).build();
+                .setChannelIndexMask(3).setEncoding(AudioFormat.ENCODING_PCM_FLOAT).build();
 
         audioTrack = new AudioTrack(attributes, format, pcm_data.length * Float.BYTES, AudioTrack.MODE_STATIC, AudioManager.AUDIO_SESSION_ID_GENERATE);
         audioTrack.flush();
