@@ -14,7 +14,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.FragmentLeftEarBinding;
@@ -119,6 +118,10 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
     }
 
     void able_hear() {
-        NavHostFragment.findNavController(this);
+        if (current < viewModel.getFrequencies().length - 1) {
+            hzs[current].setEnabled(true);
+            viewModel.show(++current);
+            hzs[current].setEnabled(false);
+        }
     }
 }
