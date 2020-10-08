@@ -19,10 +19,12 @@ import edu.scut.acoustics.databinding.ActivityMainBinding;
 import edu.scut.acoustics.ui.ear_test.EarTestActivity;
 import edu.scut.acoustics.ui.experiment.ExperimentActivity;
 import edu.scut.acoustics.ui.noise_measurement.NoiseMeasurementActivity;
+import edu.scut.acoustics.utils.AudioDevice;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     final static int PERMISSIONS_FOR_DBA = 1;
     MyApplication application;
+    AudioDevice audioDevice;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         activityMainBinding.noiseMeasurement.setOnClickListener(this);
 
         application = (MyApplication) getApplication();
+        audioDevice = new AudioDevice(this);
     }
 
     @Override

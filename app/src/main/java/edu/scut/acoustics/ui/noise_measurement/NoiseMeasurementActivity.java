@@ -25,11 +25,10 @@ import edu.scut.acoustics.ui.adjust.AdjustActivity;
 
 public class NoiseMeasurementActivity extends AppCompatActivity implements View.OnClickListener {
     final static int PERMISSIONS_FOR_DBA = 1;
-    static final String unit = "dBA";
 
     ActivityNoiseMeasurementBinding binding;
     NoiseViewModel viewModel;
-    DecimalFormat format = new DecimalFormat("##0.00");
+    DecimalFormat format = new DecimalFormat("###0.00");
     float baseline;
     MyApplication application;
 
@@ -43,22 +42,19 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
         viewModel.getMax().observe(this, new Observer<Float>() {
             @Override
             public void onChanged(Float aFloat) {
-                String temp = getResources().getString(R.string.max_db) + "\n" + format.format(aFloat + baseline) + unit;
-                binding.max.setText(temp);
+                binding.max.setText(getString(R.string.max_db, format.format(aFloat + baseline)));
             }
         });
         viewModel.getMin().observe(this, new Observer<Float>() {
             @Override
             public void onChanged(Float aFloat) {
-                String temp = getResources().getString(R.string.min_db) + "\n" + format.format(aFloat + baseline) + unit;
-                binding.min.setText(temp);
+                binding.min.setText(getString(R.string.min_db, format.format(aFloat + baseline)));
             }
         });
         viewModel.getRealtime().observe(this, new Observer<Float>() {
             @Override
             public void onChanged(Float aFloat) {
-                String temp = getResources().getString(R.string.real_time_db) + "\n" + format.format(aFloat + baseline) + unit;
-                binding.real.setText(temp);
+                binding.real.setText(getString(R.string.real_time_db, format.format(aFloat + baseline)));
             }
         });
 
@@ -70,8 +66,8 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
     @Override
     protected void onResume() {
         super.onResume();
-        baseline = getSharedPreferences(getResources().getString(R.string.sharedpreferences), MODE_PRIVATE)
-                .getFloat(getResources().getString(R.string.baseline), 0.0f);
+        baseline = getSharedPreferences(getString(R.string.sharedpreferences), MODE_PRIVATE)
+                .getFloat(getString(R.string.baseline), 0.0f);
         viewModel.start();
     }
 

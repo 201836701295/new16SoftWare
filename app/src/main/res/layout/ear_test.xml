@@ -11,39 +11,70 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/ear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:textSize="30sp"
+        <LinearLayout
+            android:id="@+id/freqcontainer"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="左右耳" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"></LinearLayout>
 
         <TextView
-            android:id="@+id/frequent"
-            android:layout_width="0dp"
+            android:id="@+id/frequency"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
             android:gravity="center"
-            android:textSize="20sp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/volume"
-            app:layout_constraintTop_toBottomOf="@id/ear"
-            tools:text="当前频率\n1000Hz" />
-
-        <TextView
-            android:id="@+id/volume"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="20sp"
-            app:layout_constraintLeft_toRightOf="@id/frequent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ear"
-            tools:text="当前分贝\n40Db" />
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/freqcontainer"
+            tools:text="当前频率\n125Hz" />
+
+        <LinearLayout
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@id/play"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:ignore="ContentDescription">
+
+            <ImageButton
+                android:id="@+id/upbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_baseline_arrow_drop_up_24" />
+
+            <TextView
+                android:id="@+id/volume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:textSize="20sp"
+                tools:text="当前分贝\n0db" />
+
+            <ImageButton
+                android:id="@+id/downbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_baseline_arrow_drop_down_24" />
+
+            <SeekBar
+                android:id="@+id/seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="85"
+                android:min="0" />
+
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/play"
@@ -57,6 +88,7 @@
             tools:ignore="ContentDescription" />
 
         <Button
+            android:visibility="invisible"
             android:id="@+id/unable_hear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

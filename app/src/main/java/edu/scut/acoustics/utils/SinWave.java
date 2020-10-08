@@ -23,6 +23,24 @@ public class SinWave {
         height = Math.sqrt(temp);
     }
 
+    public SinWave() {
+        hz = -1;
+        height = -1.0;
+    }
+
+    public void generate(float[] wave, int offset, int step) throws Exception {
+        if (hz == -1f || height == -1.0) {
+            throw new Exception("hz and height not initialized");
+        }
+        //求波长
+        double wave_length = (1.0 * SAMPLE_RATE) / hz;
+        int temp;
+        for (int i = offset; i < wave.length; i += step) {
+            temp = (i - offset) / step;
+            wave[i] = (float) (height * Math.sin(TWO_PI * (temp % wave_length) / wave_length));
+        }
+    }
+
     /**
      * @param wave 输出的正弦波
      */

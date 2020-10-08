@@ -68,4 +68,19 @@ public class ExampleInstrumentedTest {
         DSPMath dspMath = new DSPMath();
         System.out.println(dspMath.mslm(a));
     }
+
+    @Test
+    public void testfft() throws Exception {
+        float[] a = new float[441];
+        float[] re = new float[a.length];
+        float[] im = new float[a.length];
+        SinWave sinWave = new SinWave();
+        sinWave.set(200, 100);
+        sinWave.generate(a, 0, 1);
+        DSPMath dspMath = new DSPMath();
+        dspMath.fft(a, a.length, re, im);
+        for (int i = 0; i < re.length; i++) {
+            System.out.println(re[i] + " " + im[i] + "j");
+        }
+    }
 }

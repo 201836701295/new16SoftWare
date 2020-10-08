@@ -20,10 +20,10 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import edu.scut.acoustics.R;
-import edu.scut.acoustics.databinding.FramentOutcomeBinding;
+import edu.scut.acoustics.databinding.FragmentOutcomeBinding;
 
 public class OutcomeFragment extends Fragment {
-    private FramentOutcomeBinding binding;
+    private FragmentOutcomeBinding binding;
     private ChartViewModel viewModel;
 
     private void observeChart(LineChart chart, ChartInformation chartInformation) {
@@ -54,7 +54,7 @@ public class OutcomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //UI初始化
-        binding = DataBindingUtil.inflate(inflater, R.layout.frament_outcome, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_outcome, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(ChartViewModel.class);
         viewModel.getWaveChart().observe(getViewLifecycleOwner(), new Observer<ChartInformation>() {
             @Override
