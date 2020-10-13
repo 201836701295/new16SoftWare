@@ -17,14 +17,17 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import edu.scut.acoustics.MyApplication;
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.FragmentLeftEarBinding;
+import edu.scut.acoustics.utils.AudioDevice;
 
 public class LeftEarFragment extends Fragment implements View.OnClickListener {
     EarViewModel viewModel;
     FragmentLeftEarBinding binding;
     Button[] hzs;
     int current = 0;
+    AudioDevice device;
 
     @Nullable
     @Override
@@ -36,7 +39,7 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
         binding.earTest.play.setOnClickListener(this);
 
         viewModel = new ViewModelProvider(this).get(EarViewModel.class);
-        viewModel.setSide(0);
+        viewModel.setSide(EarViewModel.LEFT);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
         hzs = new Button[viewModel.getFrequencies().length];
         for (int i = 0; i < hzs.length; i++) {
@@ -87,6 +90,9 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onChanged(EarTestRepository.Tested tested) {
                 Log.d("asdfg", "onChanged() returned: " + tested.left);
+                if (tested.left == viewModel.TEST_FINISH + 1) {
+                    return;
+                }
                 if (tested.left != viewModel.TEST_FINISH) {
                     //寻找未测试项
                     for (int i = 0; i < viewModel.getFrequencies().length; i++) {
@@ -100,15 +106,19 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
                     }
                     return;
                 }
-                if (tested.right != viewModel.TEST_FINISH) {
+                if (tested.right != viewModel.TEST_FINISH && tested.right != viewModel.TEST_FINISH + 1) {
+                    viewModel.resetTested();
                     //进入下一页面
                     Navigation.findNavController(binding.getRoot()).navigate(R.id.left_to_right);
                     return;
                 }
                 //所有测试做完
+                viewModel.resetTested();
                 Navigation.findNavController(binding.getRoot()).navigate(R.id.left_to_result);
             }
         });
+
+        device = new AudioDevice(requireContext());
         return binding.getRoot();
     }
 
@@ -132,7 +142,7 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
         }
         switch (view.getId()) {
             case R.id.able_hear:
-                able_hear();
+                viewModel.test(current);
                 break;
             case R.id.upbtn:
                 viewModel.upVolume();
@@ -141,12 +151,14 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
                 viewModel.downVolume();
                 break;
             case R.id.play:
+                if (!device.have_headset()) {
+                    MyApplication application = (MyApplication) requireActivity().getApplication();
+                    application.show_toast("请带上耳机测试");
+                    return;
+                }
+                device.setVolume(device.getMaxVolume());
                 viewModel.play();
                 break;
         }
-    }
-
-    void able_hear() {
-        viewModel.test(current);
     }
 }

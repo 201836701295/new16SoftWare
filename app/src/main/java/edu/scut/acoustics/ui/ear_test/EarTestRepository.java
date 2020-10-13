@@ -55,11 +55,45 @@ public class EarTestRepository {
     }
 
     public void testLeft(int i) {
+        if (tested.left == TEST_FINISH + 1) {
+            tested.left = TEST_FINISH;
+            testedLiveData.setValue(tested);
+            return;
+        }
         tested.left |= 1 << i;
         testedLiveData.setValue(tested);
     }
 
+    public void resetTested() {
+        tested.left = 0;
+        tested.right = 0;
+        testedLiveData.setValue(tested);
+        Arrays.fill(leftSensitivities, 0);
+        Arrays.fill(rightSensitivities, 0);
+        leftSensitivitiesLiveData.setValue(leftSensitivities);
+        rightSensitivitiesLiveData.setValue(rightSensitivities);
+    }
+
+    public void resetLeftTested() {
+        if (tested.left == TEST_FINISH) {
+            tested.left = TEST_FINISH + 1;
+            testedLiveData.setValue(tested);
+        }
+    }
+
+    public void resetRightTested() {
+        if (tested.right == TEST_FINISH) {
+            tested.right = TEST_FINISH + 1;
+            testedLiveData.setValue(tested);
+        }
+    }
+
     public void testRight(int i) {
+        if (tested.right == TEST_FINISH + 1) {
+            tested.right = TEST_FINISH;
+            testedLiveData.setValue(tested);
+            return;
+        }
         tested.right |= 1 << i;
         testedLiveData.setValue(tested);
     }

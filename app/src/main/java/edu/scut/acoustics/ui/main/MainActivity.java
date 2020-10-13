@@ -58,7 +58,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void start_ear_test() {
-        startActivity(new Intent(this, EarTestActivity.class));
+        if (!audioDevice.have_headset()) {
+            startActivity(new Intent(this, EarTestActivity.class));
+        }
     }
 
     public void start_noise_measurement() {

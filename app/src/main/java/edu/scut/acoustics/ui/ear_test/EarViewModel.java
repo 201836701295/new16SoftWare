@@ -107,6 +107,14 @@ public class EarViewModel extends AndroidViewModel {
         }
     }
 
+    public void resetTested() {
+        if (side == LEFT) {
+            repository.resetLeftTested();
+        } else if (side == RIGHT) {
+            repository.resetRightTested();
+        }
+    }
+
     public LiveData<EarTestRepository.Tested> getTested() {
         return tested;
     }
@@ -117,10 +125,6 @@ public class EarViewModel extends AndroidViewModel {
 
     public LiveData<Integer> getVolume() {
         return volume;
-    }
-
-    public void resetTested() {
-
     }
 
     public void setVolume(int v) {
