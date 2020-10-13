@@ -1,7 +1,9 @@
 package edu.scut.acoustics.ui.ear_test;
 
 import android.app.Application;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -24,16 +26,23 @@ public class EarViewModel extends AndroidViewModel {
     int[] frequencies;
     int[] sensitivities;
     int i;
+    public final int TEST_FINISH;
+    LiveData<Integer> leftTestedLiveData;
+    LiveData<Integer> rightTestedLiveData;
     MutableLiveData<Integer> volume;
     MutableLiveData<Integer> frequency;
+    LiveData<EarTestRepository.Tested> tested;
 
-    public EarViewModel(Application application) {
+    public EarViewModel(@NonNull Application application) {
         super(application);
 
-        repository = EarTestRepository.getInstance(application);
+        repository = EarTestRepository.getRepository(application);
         volume = new MutableLiveData<>();
         frequency = new MutableLiveData<>();
         frequencies = application.getResources().getIntArray(R.array.frequency);
+        tested = repository.getTestedLiveData();
+        TEST_FINISH = repository.TEST_FINISH;
+        Log.d("asdfg", "EarViewModel() returned: " + TEST_FINISH);
     }
 
     public void setSide(int side) {
@@ -49,10 +58,6 @@ public class EarViewModel extends AndroidViewModel {
 
     public int[] getFrequencies() {
         return frequencies;
-    }
-
-    public int[] getSensitivities() {
-        return sensitivities;
     }
 
     public void play() {
@@ -79,6 +84,7 @@ public class EarViewModel extends AndroidViewModel {
             int f = frequencies[i];
             volume.setValue(v);
             sinWavePlayer.set(f, v);
+            repository.updateSensitivitiesLiveData();
         }
     }
 
@@ -89,7 +95,20 @@ public class EarViewModel extends AndroidViewModel {
             int f = frequencies[i];
             volume.setValue(v);
             sinWavePlayer.set(f, v);
+            repository.updateSensitivitiesLiveData();
         }
+    }
+
+    public void test(int i) {
+        if (side == LEFT) {
+            repository.testLeft(i);
+        } else if (side == RIGHT) {
+            repository.testRight(i);
+        }
+    }
+
+    public LiveData<EarTestRepository.Tested> getTested() {
+        return tested;
     }
 
     public LiveData<Integer> getFrequency() {
@@ -100,11 +119,18 @@ public class EarViewModel extends AndroidViewModel {
         return volume;
     }
 
+    public void resetTested() {
+
+    }
+
     public void setVolume(int v) {
-        sensitivities[i] = v;
-        int f = frequencies[i];
-        volume.setValue(v);
-        sinWavePlayer.set(f, v);
+        if (v >= 0 && v <= 85) {
+            sensitivities[i] = v;
+            int f = frequencies[i];
+            volume.setValue(v);
+            sinWavePlayer.set(f, v);
+            repository.updateSensitivitiesLiveData();
+        }
     }
 
     class PlayThread extends Thread {

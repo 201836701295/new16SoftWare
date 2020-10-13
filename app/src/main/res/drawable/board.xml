@@ -9,4 +9,19 @@
         android:fillColor="@color/black"
         android:pathData="M0,0 h50 50 v100 h-100 z" />
 
+    <path
+        android:pathData="M0,10 l10,10"
+        android:strokeWidth="1"
+        android:strokeColor="@color/white" />
+
+    <path
+        android:pathData="M 100,10 l -10,10"
+        android:strokeWidth="1"
+        android:strokeColor="@color/white" />
+
+    <path
+        android:pathData="M 10,10 C 20,20 22,1 33,33"
+        android:strokeWidth="1"
+        android:strokeColor="@color/white" />
+
 </vector>

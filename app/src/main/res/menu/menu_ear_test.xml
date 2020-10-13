@@ -11,4 +11,9 @@
         android:icon="@drawable/ic_right_ear_24"
         android:title="@string/right_ear" />
 
+    <item
+        android:id="@+id/test_result"
+        android:icon="@drawable/ic_baseline_show_chart_24"
+        android:title="@string/test_result" />
+
 </menu>

@@ -13,6 +13,9 @@
         <action
             android:id="@+id/left_to_right"
             app:destination="@id/right_ear" />
+        <action
+            android:id="@+id/left_to_result"
+            app:destination="@id/test_result" />
     </fragment>
 
     <fragment
@@ -23,7 +26,15 @@
         <action
             android:id="@+id/right_to_left"
             app:destination="@id/left_ear" />
-
+        <action
+            android:id="@+id/right_to_result"
+            app:destination="@id/test_result" />
     </fragment>
+
+    <fragment
+        android:id="@+id/test_result"
+        android:name="edu.scut.acoustics.ui.ear_test.TestResultFragment"
+        android:label="@string/test_result"
+        tools:layout="@layout/fragment_test_result"></fragment>
 
 </navigation>

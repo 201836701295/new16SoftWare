@@ -1,6 +1,7 @@
 package edu.scut.acoustics.ui.ear_test;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.FragmentLeftEarBinding;
@@ -80,6 +82,33 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
 
             }
         });
+
+        viewModel.getTested().observe(getViewLifecycleOwner(), new Observer<EarTestRepository.Tested>() {
+            @Override
+            public void onChanged(EarTestRepository.Tested tested) {
+                Log.d("asdfg", "onChanged() returned: " + tested.left);
+                if (tested.left != viewModel.TEST_FINISH) {
+                    //寻找未测试项
+                    for (int i = 0; i < viewModel.getFrequencies().length; i++) {
+                        if (((tested.left >> i) & 1) == 0) {
+                            hzs[current].setEnabled(true);
+                            current = i;
+                            viewModel.show(current);
+                            hzs[current].setEnabled(false);
+                            break;
+                        }
+                    }
+                    return;
+                }
+                if (tested.right != viewModel.TEST_FINISH) {
+                    //进入下一页面
+                    Navigation.findNavController(binding.getRoot()).navigate(R.id.left_to_right);
+                    return;
+                }
+                //所有测试做完
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.left_to_result);
+            }
+        });
         return binding.getRoot();
     }
 
@@ -118,10 +147,6 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
     }
 
     void able_hear() {
-        if (current < viewModel.getFrequencies().length - 1) {
-            hzs[current].setEnabled(true);
-            viewModel.show(++current);
-            hzs[current].setEnabled(false);
-        }
+        viewModel.test(current);
     }
 }

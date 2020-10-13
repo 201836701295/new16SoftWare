@@ -2,18 +2,24 @@ package edu.scut.acoustics.ui.ear_test;
 
 import android.content.Context;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import java.util.Arrays;
 
 import edu.scut.acoustics.R;
 
 public class EarTestRepository {
     static EarTestRepository repository;
-    final int TEST_FINISH;
+
+    public final int TEST_FINISH;
+    MutableLiveData<int[]> leftSensitivitiesLiveData;
+    MutableLiveData<int[]> rightSensitivitiesLiveData;
+    MutableLiveData<Tested> testedLiveData;
     int[] frequencies;
     int[] leftSensitivities;
     int[] rightSensitivities;
-    int leftTested = 0;
-    int rightTested = 0;
+    Tested tested;
 
     private EarTestRepository(Context context) {
         frequencies = context.getResources().getIntArray(R.array.frequency);
@@ -22,9 +28,14 @@ public class EarTestRepository {
         Arrays.fill(leftSensitivities, 0);
         Arrays.fill(rightSensitivities, 0);
         TEST_FINISH = (1 << frequencies.length) - 1;
+
+        leftSensitivitiesLiveData = new MutableLiveData<>(leftSensitivities);
+        rightSensitivitiesLiveData = new MutableLiveData<>(rightSensitivities);
+        tested = new Tested();
+        testedLiveData = new MutableLiveData<>(tested);
     }
 
-    public static EarTestRepository getInstance(Context context) {
+    public static EarTestRepository getRepository(Context context) {
         if (repository == null) {
             repository = new EarTestRepository(context);
         }
@@ -43,4 +54,41 @@ public class EarTestRepository {
         return frequencies;
     }
 
+    public void testLeft(int i) {
+        tested.left |= 1 << i;
+        testedLiveData.setValue(tested);
+    }
+
+    public void testRight(int i) {
+        tested.right |= 1 << i;
+        testedLiveData.setValue(tested);
+    }
+
+    public void updateSensitivitiesLiveData() {
+        leftSensitivitiesLiveData.setValue(leftSensitivities);
+        rightSensitivitiesLiveData.setValue(rightSensitivities);
+    }
+
+    public LiveData<int[]> getLeftSensitivitiesLiveData() {
+        return leftSensitivitiesLiveData;
+    }
+
+    public LiveData<int[]> getRightSensitivitiesLiveData() {
+        return rightSensitivitiesLiveData;
+    }
+
+    public LiveData<Tested> getTestedLiveData() {
+        return testedLiveData;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        repository = null;
+    }
+
+    public static class Tested {
+        public int left = 0;
+        public int right = 0;
+    }
 }
