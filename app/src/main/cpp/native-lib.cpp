@@ -139,42 +139,6 @@ Java_edu_scut_acoustics_utils_DSPMath_welch(JNIEnv *env, jobject /* this */, jfl
 }
 
 using std::min;
-using std::acos;
-extern "C"
-JNIEXPORT void JNICALL
-Java_edu_scut_acoustics_utils_DSPMath_phaseAndLength(JNIEnv *env, jobject, jfloatArray re,
-                                                     jfloatArray im, jfloatArray rad,
-                                                     jfloatArray length) {
-    int rel = env->GetArrayLength(re);
-    int iml = env->GetArrayLength(im);
-    int ral = env->GetArrayLength(rad);
-    int lel = env->GetArrayLength(length);
-    int temp = (min(rel, iml) + 1) / 2;
-    int arrLength = min(min(temp, ral), lel);
-
-    jfloat *reArr = env->GetFloatArrayElements(re, nullptr);
-    jfloat *imArr = env->GetFloatArrayElements(im, nullptr);
-    jfloat *radArr = env->GetFloatArrayElements(rad, nullptr);
-    jfloat *leArr = env->GetFloatArrayElements(length, nullptr);
-
-    jfloat TWO_PI = M_PI * 2;
-
-    for (int i = 0; i < arrLength; ++i) {
-        leArr[i] = sqrt(reArr[i] * reArr[i] + imArr[i] * imArr[i]);
-        jfloat radius = acos(reArr[i] / leArr[i]);
-        if (imArr[i] >= 0) {
-            radArr[i] = radius;
-        } else {
-            radArr[i] = TWO_PI - radius;
-        }
-        leArr[i] *= 2;
-    }
-
-    env->ReleaseFloatArrayElements(rad, radArr, JNI_OK);
-    env->ReleaseFloatArrayElements(length, leArr, JNI_OK);
-    env->ReleaseFloatArrayElements(re, reArr, JNI_ABORT);
-    env->ReleaseFloatArrayElements(im, imArr, JNI_ABORT);
-}
 
 extern "C"
 JNIEXPORT jfloat JNICALL

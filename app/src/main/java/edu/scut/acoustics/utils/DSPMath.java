@@ -6,14 +6,6 @@ public class DSPMath {
     }
 
     /**
-     * @param re     实部
-     * @param im     虚部
-     * @param rad    相位
-     * @param length 振幅
-     */
-    public native void phaseAndLength(float[] re, float[] im, float[] rad, float[] length);
-
-    /**
      * @param x   输入信号
      * @param n   FFT长度
      * @param fs  采样率
@@ -51,5 +43,10 @@ public class DSPMath {
      */
     public native float mslm(float[] a);
 
+    /**
+     * @param re  频域实部
+     * @param im  频域虚部
+     * @param rad 相位
+     */
     public native void phase(float[] re, float[] im, float[] rad);
 }
