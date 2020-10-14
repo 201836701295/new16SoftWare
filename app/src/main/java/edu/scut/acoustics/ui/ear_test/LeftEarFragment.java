@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import edu.scut.acoustics.MyApplication;
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.FragmentLeftEarBinding;
 import edu.scut.acoustics.utils.AudioDevice;
@@ -150,13 +151,11 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
                 viewModel.downVolume();
                 break;
             case R.id.play:
-                /*
                 if (!device.have_headset()) {
                     MyApplication application = (MyApplication) requireActivity().getApplication();
                     application.show_toast("请带上耳机测试");
                     return;
                 }
-                 */
                 device.setVolume(device.getMaxVolume());
                 viewModel.play();
                 break;
