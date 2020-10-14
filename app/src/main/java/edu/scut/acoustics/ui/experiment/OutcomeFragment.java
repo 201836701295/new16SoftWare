@@ -17,7 +17,6 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.LineDataSet;
 
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.FragmentOutcomeBinding;
@@ -41,7 +40,6 @@ public class OutcomeFragment extends Fragment {
         xAxis.setAxisMaximum(chartInformation.maxX);
         xAxis.setAxisMinimum(chartInformation.minX);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        LineDataSet set1;
         chart.setData(chartInformation.lineData);
         chart.animateX(1);
         Legend l = chart.getLegend();
