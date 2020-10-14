@@ -11,7 +11,6 @@ public class NoiseViewModel extends ViewModel {
     LiveData<Float> realtime;
     SLM slm;
 
-
     public NoiseViewModel() {
         slm = new SLM();
         max = slm.getMax();
