@@ -3,6 +3,7 @@ package edu.scut.acoustics.utils;
 import android.content.Context;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
+import android.util.Log;
 
 public class AudioDevice {
     private AudioManager audioManager = null;
@@ -14,6 +15,7 @@ public class AudioDevice {
     public boolean have_headset() {
         AudioDeviceInfo[] audioDeviceInfos = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         for (AudioDeviceInfo v : audioDeviceInfos) {
+            Log.i("AudioDevice", "have_headset: " + v.getType());
             if (v.getType() == AudioDeviceInfo.TYPE_WIRED_HEADSET) {
                 return true;
             }

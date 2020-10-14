@@ -19,12 +19,12 @@ import androidx.navigation.Navigation;
 
 import edu.scut.acoustics.MyApplication;
 import edu.scut.acoustics.R;
-import edu.scut.acoustics.databinding.FragmentLeftEarBinding;
+import edu.scut.acoustics.databinding.FragmentRightEarBinding;
 import edu.scut.acoustics.utils.AudioDevice;
 
 public class RightEarFragment extends Fragment implements View.OnClickListener {
     EarViewModel viewModel;
-    FragmentLeftEarBinding binding;
+    FragmentRightEarBinding binding;
     Button[] hzs;
     int current = 0;
     AudioDevice device;

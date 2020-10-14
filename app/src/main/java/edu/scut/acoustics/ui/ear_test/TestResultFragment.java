@@ -52,6 +52,34 @@ public class TestResultFragment extends Fragment implements OnChartValueSelected
                 return viewModel.getFrequencies()[index] + "Hz";
             }
         };
+        initialLineChar();
+        viewModel.getLeftSensitivitiesLiveData().observe(getViewLifecycleOwner(), new Observer<int[]>() {
+            @Override
+            public void onChanged(int[] ints) {
+                setData(ints, LEFT);
+            }
+        });
+        viewModel.getRightSensitivitiesLiveData().observe(getViewLifecycleOwner(), new Observer<int[]>() {
+            @Override
+            public void onChanged(int[] ints) {
+                setData(ints, RIGHT);
+            }
+        });
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+        //binding.earChart.getPixelForValues(e.getX(), e.getY(), binding.earChartbn .AxisDependency.LEFT)
+    }
+
+    @Override
+    public void onNothingSelected() {
+
+    }
+
+    void initialLineChar() {
         LineChart chart = binding.earChart;
         chart.setBackgroundColor(Color.WHITE);
         chart.setOnChartValueSelectedListener(this);
@@ -75,34 +103,48 @@ public class TestResultFragment extends Fragment implements OnChartValueSelected
         xAxis.setAxisMaximum(viewModel.getFrequencies().length - 1);
         xAxis.setAxisMinimum(0);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setValueFormatter(valueFormatter);
         chart.animateX(1500);
         Legend l = chart.getLegend();
         l.setForm(Legend.LegendForm.LINE);
 
-        viewModel.getLeftSensitivitiesLiveData().observe(getViewLifecycleOwner(), new Observer<int[]>() {
-            @Override
-            public void onChanged(int[] ints) {
+        Vector<Entry> vector = new Vector<>();
+        ArrayList<ILineDataSet> lineDataSets = new ArrayList<>(3);
 
-            }
-        });
-        viewModel.getRightSensitivitiesLiveData().observe(getViewLifecycleOwner(), new Observer<int[]>() {
-            @Override
-            public void onChanged(int[] ints) {
+        LineDataSet set = new LineDataSet(vector, "左耳");
+        set.setDrawIcons(false);
+        set.enableDashedLine(10f, 5f, 0f);
+        set.setColor(Color.RED);
+        set.setCircleColor(Color.RED);
+        set.setLineWidth(1f);
+        set.setCircleRadius(3f);
+        set.setDrawCircleHole(false);
+        set.setFormLineWidth(1f);
+        set.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
+        set.setFormSize(15.f);
+        set.setValueTextSize(9f);
+        set.enableDashedHighlightLine(10f, 5f, 0f);
 
-            }
-        });
+        lineDataSets.add(set);
 
-        return binding.getRoot();
-    }
+        set = new LineDataSet(vector, "右耳");
+        set.setDrawIcons(false);
+        set.enableDashedLine(10f, 5f, 0f);
+        set.setColor(Color.BLUE);
+        set.setCircleColor(Color.BLUE);
+        set.setLineWidth(1f);
+        set.setCircleRadius(3f);
+        set.setDrawCircleHole(false);
+        set.setFormLineWidth(1f);
+        set.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
+        set.setFormSize(15.f);
+        set.setValueTextSize(9f);
+        set.enableDashedHighlightLine(10f, 5f, 0f);
 
-    @Override
-    public void onValueSelected(Entry e, Highlight h) {
-        //binding.earChart.getPixelForValues(e.getX(), e.getY(), binding.earChartbn .AxisDependency.LEFT)
-    }
+        lineDataSets.add(set);
 
-    @Override
-    public void onNothingSelected() {
-
+        LineData lineData = new LineData(lineDataSets);
+        chart.setData(lineData);
     }
 
     void setData(int[] data, int flags) {
@@ -112,50 +154,10 @@ public class TestResultFragment extends Fragment implements OnChartValueSelected
             vector.add(new Entry(i, data[i]));
         }
         LineDataSet set;
-        if (chart.getData() != null && chart.getData().getDataSetCount() > flags) {
-            set = (LineDataSet) chart.getData().getDataSetByIndex(flags);
-            set.setValues(vector);
-            set.notifyDataSetChanged();
-            chart.getData().notifyDataChanged();
-            chart.notifyDataSetChanged();
-        } else {
-            String label = "";
-            if (flags == LEFT) {
-                label = "左耳";
-            } else if (flags == RIGHT) {
-                label = "右耳";
-            }
-            set = new LineDataSet(vector, label);
-            set.setDrawIcons(false);
-            set.enableDashedLine(10f, 5f, 0f);
-            if (flags == LEFT) {
-                set.setColor(Color.RED);
-                set.setCircleColor(Color.RED);
-            } else if (flags == RIGHT) {
-                set.setColor(Color.BLUE);
-                set.setCircleColor(Color.BLUE);
-            }
-            set.setLineWidth(1f);
-            set.setCircleRadius(3f);
-            set.setDrawCircleHole(false);
-
-            set.setFormLineWidth(1f);
-            set.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-            set.setFormSize(15.f);
-
-            // text size of values
-            set.setValueTextSize(9f);
-
-            // draw selection line as dashed
-            set.enableDashedHighlightLine(10f, 5f, 0f);
-            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-            dataSets.add(flags, set); // add the data sets
-
-            // create a data object with the data sets
-            LineData lineData = new LineData(dataSets);
-
-            // set data
-            chart.setData(lineData);
-        }
+        set = (LineDataSet) chart.getData().getDataSetByIndex(flags);
+        set.setValues(vector);
+        set.notifyDataSetChanged();
+        chart.getData().notifyDataChanged();
+        chart.notifyDataSetChanged();
     }
 }

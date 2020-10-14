@@ -58,8 +58,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void start_ear_test() {
-        if (!audioDevice.have_headset()) {
+        if (audioDevice.have_headset()) {
             startActivity(new Intent(this, EarTestActivity.class));
+        } else {
+            application.show_toast("请带上耳机测试");
         }
     }
 
