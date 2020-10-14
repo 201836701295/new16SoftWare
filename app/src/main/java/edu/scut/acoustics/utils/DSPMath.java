@@ -50,4 +50,6 @@ public class DSPMath {
      * @return 分贝值
      */
     public native float mslm(float[] a);
+
+    public native void phase(float[] re, float[] im, float[] rad);
 }

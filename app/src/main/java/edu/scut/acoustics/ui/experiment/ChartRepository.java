@@ -3,6 +3,9 @@ package edu.scut.acoustics.ui.experiment;
 import android.content.Context;
 import android.graphics.Color;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -17,35 +20,68 @@ import edu.scut.acoustics.utils.DSPMath;
 public class ChartRepository {
     //图表最大数据数
     public static final int MAX_ENTRY = 3000;
-    private final float[] audioData1;
-    private final float[] audioData2;
+    MutableLiveData<ChartInformation> waveChartLiveData;
+    MutableLiveData<ChartInformation> phaseChartLiveData;
     private DSPMath dspMath = new DSPMath();
     private float[] convolutionData;
     private float[] tailorData;
     private float[] real;
     private float[] imagine;
-    private float[] length;
     private float[] phase;
     private float[] power;
     private float[] frequency;
     private String waveLabel;
-    private String frequencyLabel;
     private String phaseLabel;
     private String powerLabel;
     private ChartInformation waveChart;
-    private ChartInformation frequencyChart;
     private ChartInformation phaseChart;
     private ChartInformation powerChart;
+    MutableLiveData<ChartInformation> powerChartLiveData;
+    private float[] audioData1;
+    private float[] audioData2;
+
+    public ChartRepository(Context context) {
+        waveLabel = context.getResources().getString(R.string.convolution_wave);
+        phaseLabel = context.getResources().getString(R.string.phase_chart);
+        powerLabel = context.getResources().getString(R.string.power_chart);
+        waveChartLiveData = new MutableLiveData<>();
+        phaseChartLiveData = new MutableLiveData<>();
+        powerChartLiveData = new MutableLiveData<>();
+    }
+
+    public LiveData<ChartInformation> getPhaseChartLiveData() {
+        return phaseChartLiveData;
+    }
+
+    public LiveData<ChartInformation> getWaveChartLiveData() {
+        return waveChartLiveData;
+    }
+
+    public LiveData<ChartInformation> getPowerChartLiveData() {
+        return powerChartLiveData;
+    }
+
+    public void setAudioData1(float[] audioData1) {
+        this.audioData1 = audioData1;
+    }
+
+    public void setAudioData2(float[] audioData2) {
+        this.audioData2 = audioData2;
+    }
 
     public ChartRepository(Context context, float[] a1, float[] a2) {
         waveLabel = context.getResources().getString(R.string.convolution_wave);
-        frequencyLabel = context.getResources().getString(R.string.frequency_chart);
         phaseLabel = context.getResources().getString(R.string.phase_chart);
         powerLabel = context.getResources().getString(R.string.power_chart);
         audioData1 = a1;
         audioData2 = a2;
     }
 
+    /**
+     * 子线程处理数据
+     *
+     * @throws Exception
+     */
     public void doFinal() throws Exception {
         if (audioData1 == null || audioData2 == null) {
             throw new Exception("audio data not initialized");
@@ -59,14 +95,15 @@ public class ChartRepository {
         real = new float[tailorData.length];
         imagine = new float[tailorData.length];
         dspMath.fft(tailorData, tailorData.length, real, imagine);
-        //作求模和相位
+        //作求相位
         phase = new float[(tailorData.length + 1) / 2];
-        length = new float[(tailorData.length + 1) / 2];
-        dspMath.phaseAndLength(real, imagine, phase, length);
+        dspMath.phase(real, imagine,phase);
         //求功率
         power = new float[(tailorData.length + 1) / 2];
         frequency = new float[(tailorData.length + 1) / 2];
         dspMath.welch(tailorData, tailorData.length, 44100, power, frequency);
+
+
         //生成图像数据
         produce_chart();
     }
@@ -101,7 +138,6 @@ public class ChartRepository {
     //生成图表
     private void produce_chart() {
         wave_chart();
-        frequency_chart();
         power_chart();
         phase_chart();
     }
@@ -159,50 +195,7 @@ public class ChartRepository {
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set);
         waveChart.lineData = new LineData(dataSets);
-    }
-
-    private void frequency_chart() {
-        frequencyChart = new ChartInformation();
-        frequencyChart.labelX = "频率/Hz";
-        frequencyChart.labelY = "振幅";
-        frequencyChart.maxX = frequency[frequency.length - 1];
-        frequencyChart.minX = 0;
-        frequencyChart.maxY = 0;
-        frequencyChart.minY = 0;
-
-        int dpp = length.length / MAX_ENTRY;
-        if (dpp == 0) {
-            dpp = 1;
-        }
-        List<Entry> values = new ArrayList<>(length.length / dpp + 1);
-        float low, high;
-        for (int i = 0; i < length.length; i += dpp) {
-            low = length[i];
-            high = length[i];
-            for (int j = i, k = 0; j < length.length && k < dpp; ++j, ++k) {
-                if (length[j] > frequencyChart.maxY) {
-                    frequencyChart.maxY = length[j];
-                }
-                if (length[j] < low) {
-                    low = length[j];
-                }
-                if (length[j] > high) {
-                    high = length[j];
-                }
-            }
-            values.add(new Entry(frequency[i], low));
-            values.add(new Entry(frequency[i], high));
-        }
-        LineDataSet set = new LineDataSet(values, frequencyLabel);
-        set.setDrawIcons(false);
-        set.setColor(Color.BLACK);
-        set.setLineWidth(1f);
-        set.setDrawCircles(false);
-        set.setDrawCircleHole(false);
-        set.setDrawFilled(false);
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set);
-        frequencyChart.lineData = new LineData(dataSets);
+        waveChartLiveData.postValue(waveChart);
     }
 
     private void power_chart() {
@@ -250,6 +243,7 @@ public class ChartRepository {
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set);
         powerChart.lineData = new LineData(dataSets);
+        powerChartLiveData.postValue(powerChart);
     }
 
     private void phase_chart() {
@@ -258,8 +252,8 @@ public class ChartRepository {
         phaseChart.labelY = "相位";
         phaseChart.minX = 0;
         phaseChart.maxX = frequency[frequency.length - 1];
-        phaseChart.maxY = (float) (Math.PI * 2);
-        phaseChart.minY = 0;
+        phaseChart.maxY = (float) (Math.PI / 2);
+        phaseChart.minY = -(float) (Math.PI / 2);
 
         int dpp = phase.length / MAX_ENTRY;
         if (dpp == 0) {
@@ -291,14 +285,11 @@ public class ChartRepository {
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set);
         phaseChart.lineData = new LineData(dataSets);
+        phaseChartLiveData.postValue(phaseChart);
     }
 
     public ChartInformation getWaveChart() {
         return waveChart;
-    }
-
-    public ChartInformation getFrequencyChart() {
-        return frequencyChart;
     }
 
     public ChartInformation getPhaseChart() {

@@ -187,3 +187,27 @@ Java_edu_scut_acoustics_utils_DSPMath_mslm(JNIEnv *env, jobject, jfloatArray a) 
     env->ReleaseFloatArrayElements(a, arr, JNI_ABORT);
     return result;
 }
+
+using std::atan;
+extern "C"
+JNIEXPORT void JNICALL
+Java_edu_scut_acoustics_utils_DSPMath_phase(JNIEnv *env, jobject thiz, jfloatArray re,
+                                            jfloatArray im, jfloatArray rad) {
+    int rel = env->GetArrayLength(re);
+    int iml = env->GetArrayLength(im);
+    int ral = env->GetArrayLength(rad);
+    int temp = (min(rel, iml) + 1) / 2;
+    int arrLength = min(temp, ral);
+
+    jfloat *reArr = env->GetFloatArrayElements(re, nullptr);
+    jfloat *imArr = env->GetFloatArrayElements(im, nullptr);
+    jfloat *radArr = env->GetFloatArrayElements(rad, nullptr);
+
+    for (int i = 0; i < arrLength; ++i) {
+        radArr[i] = atan(imArr[i] / reArr[i]);
+    }
+
+    env->ReleaseFloatArrayElements(rad, radArr, JNI_OK);
+    env->ReleaseFloatArrayElements(re, reArr, JNI_ABORT);
+    env->ReleaseFloatArrayElements(im, imArr, JNI_ABORT);
+}

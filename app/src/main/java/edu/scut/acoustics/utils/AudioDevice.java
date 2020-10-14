@@ -16,7 +16,7 @@ public class AudioDevice {
         AudioDeviceInfo[] audioDeviceInfos = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         for (AudioDeviceInfo v : audioDeviceInfos) {
             Log.i("AudioDevice", "have_headset: " + v.getType());
-            if (v.getType() == AudioDeviceInfo.TYPE_WIRED_HEADSET) {
+            if (v.getType() == AudioDeviceInfo.TYPE_WIRED_HEADSET || v.getType() == AudioDeviceInfo.TYPE_USB_HEADSET) {
                 return true;
             }
         }

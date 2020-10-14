@@ -23,7 +23,7 @@ import edu.scut.acoustics.databinding.FragmentOutcomeBinding;
 
 public class OutcomeFragment extends Fragment {
     private FragmentOutcomeBinding binding;
-    private ChartViewModel viewModel;
+    private ExperimentViewModel viewModel;
 
     private void observeChart(LineChart chart, ChartInformation chartInformation) {
         //图表初始化
@@ -53,7 +53,7 @@ public class OutcomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //UI初始化
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_outcome, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(ChartViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ExperimentViewModel.class);
         viewModel.getWaveChart().observe(getViewLifecycleOwner(), new Observer<ChartInformation>() {
             @Override
             public void onChanged(ChartInformation chartInformation) {
@@ -72,14 +72,6 @@ public class OutcomeFragment extends Fragment {
                 }
             }
         });
-        viewModel.getFrequencyChart().observe(getViewLifecycleOwner(), new Observer<ChartInformation>() {
-            @Override
-            public void onChanged(ChartInformation chartInformation) {
-                if (chartInformation != null) {
-                    observeChart(binding.frequencyChart, chartInformation);
-                }
-            }
-        });
         viewModel.getPowerChart().observe(getViewLifecycleOwner(), new Observer<ChartInformation>() {
             @Override
             public void onChanged(ChartInformation chartInformation) {
@@ -91,12 +83,5 @@ public class OutcomeFragment extends Fragment {
         return binding.getRoot();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        viewModel.getFrequencyChart().removeObservers(getViewLifecycleOwner());
-        viewModel.getPhaseChart().removeObservers(getViewLifecycleOwner());
-        viewModel.getPowerChart().removeObservers(getViewLifecycleOwner());
-        viewModel.getWaveChart().removeObservers(getViewLifecycleOwner());
-    }
+
 }

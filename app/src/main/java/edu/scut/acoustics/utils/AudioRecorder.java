@@ -10,7 +10,6 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -103,7 +102,11 @@ public class AudioRecorder {
     private Future<Integer> future = null;
 
     public AudioRecorder(Context context) {
-        filename = Objects.requireNonNull(context.getExternalCacheDir()).getAbsolutePath() + "/testAudio.wav";
+        filename = context.getCacheDir().getAbsolutePath() + "/testAudio.wav";
+    }
+
+    public AudioRecorder(String f) {
+        filename = f;
     }
 
     public boolean isRecording() {

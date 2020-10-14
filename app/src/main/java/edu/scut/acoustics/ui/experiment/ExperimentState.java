@@ -1,44 +1,10 @@
 package edu.scut.acoustics.ui.experiment;
 
 public class ExperimentState {
-    private Integer success;
-    private Integer play;
-    private Integer process;
-    private Integer error;
-
-    public Integer getSuccess() {
-        return success;
-    }
-
-    public void setSuccess(Integer success) {
-        play = null;
-        process = null;
-        error = null;
-        this.success = null;
-        this.success = success;
-    }
-
-    public Integer getPlay() {
-        return play;
-    }
-
-    public void setPlay(Integer play) {
-        this.play = play;
-    }
-
-    public Integer getProcess() {
-        return process;
-    }
-
-    public void setProcess(Integer process) {
-        this.process = process;
-    }
-
-    public Integer getError() {
-        return error;
-    }
-
-    public void setError(Integer error) {
-        this.error = error;
-    }
+    public static final int IDLE = -1;
+    public static final int PLAYING = 1;
+    public static final int PROCESSING = 2;
+    public static final int ERROR = 3;
+    public static final int FINISH = 0;
+    public int state = -1;
 }

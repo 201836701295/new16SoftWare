@@ -3,9 +3,6 @@ package edu.scut.acoustics.ui.experiment;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -14,35 +11,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import edu.scut.acoustics.MyApplication;
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.ActivityExperimentBinding;
 import edu.scut.acoustics.utils.AudioDevice;
 import edu.scut.acoustics.utils.AudioPlayer;
-import edu.scut.acoustics.utils.AudioRecorder;
 
 public class ExperimentActivity extends AppCompatActivity implements View.OnClickListener {
     private final static int PERMISSIONS = 1;
-    private ChartRepository repository;
-    private AudioRecorder recorder;
-    private AudioPlayer player;
     private AudioDevice device;
     private ActivityExperimentBinding binding;
-    private ExecutorService service = Executors.newCachedThreadPool();
-    private Handler handler = new Handler(Looper.getMainLooper());
-    private ChartViewModel viewModel;
+    private ExperimentViewModel viewModel;
     private OutcomeFragment outcomeFragment;
     private MyApplication application;
 
@@ -54,35 +41,77 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         GuideFragment guideFragment = new GuideFragment();
         getSupportFragmentManager().beginTransaction().add(binding.frame.getId(), guideFragment).commit();
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
-
         //设置点击监听
         binding.button.setOnClickListener(this);
 
         //初始化
-        recorder = new AudioRecorder(this);
-        player = new AudioPlayer();
         device = new AudioDevice(getApplicationContext());
-        viewModel = new ViewModelProvider(this).get(ChartViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ExperimentViewModel.class);
+        viewModel.setListener(new AudioPlayer.Listener() {
+            @Override
+            public void prepare_finished() {
+                try {
+                    viewModel.startRecord();
+                } catch (IOException e) {
+                    viewModel.setError();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void media_finished() {
+                try {
+                    viewModel.stopRecord();
+                    viewModel.dataProcess();
+                } catch (ExecutionException | InterruptedException e) {
+                    viewModel.setError();
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        viewModel.getExperimentState().observe(this, new Observer<ExperimentState>() {
+            @Override
+            public void onChanged(ExperimentState experimentState) {
+                switch (experimentState.state) {
+                    case ExperimentState.IDLE:
+                        binding.button.setEnabled(true);
+                        break;
+                    case ExperimentState.ERROR:
+                        binding.button.setEnabled(true);
+                        application.show_toast(R.string.experiment_error);
+                        break;
+                    case ExperimentState.FINISH:
+                        binding.button.setEnabled(true);
+                        binding.progress.setVisibility(View.INVISIBLE);
+                        show_outcome();
+                        break;
+                    case ExperimentState.PLAYING:
+                        binding.button.setEnabled(false);
+                        application.show_toast(R.string.start_to_play);
+                        break;
+                    case ExperimentState.PROCESSING:
+                        binding.button.setEnabled(false);
+                        application.show_toast(R.string.start_to_process);
+                        binding.progress.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+        });
+
         application = (MyApplication) getApplication();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        player.stop();
+        viewModel.stopPlay();
         try {
-            recorder.stop();
+            viewModel.stopRecord();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         binding.button.setEnabled(true);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        service.shutdownNow();
-        handler.removeCallbacksAndMessages(null);
     }
 
     //检查权限并请求权限
@@ -125,103 +154,16 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
 
     //开始实验
     private void start_experiment() {
-        //停用按钮
-        binding.button.setEnabled(false);
+        viewModel.reset();
         //声音最大
         device.setVolume(device.getMaxVolume());
         //设置播放事件接口
-        player.setListener(new AudioPlayer.Listener() {
-            //准备完成时调用
-            @Override
-            public void prepare_finished() {
-                try {
-                    application.show_toast(R.string.start_to_play);
-                    recorder.start();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            //播放结束时调用
-            @Override
-            public void media_finished() {
-                Log.d("call media_finished", "media_finished: ");
-                service.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            recorder.stop();
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //UI显示正在处理
-                                    application.show_toast(R.string.start_to_process);
-                                    binding.progress.setVisibility(View.VISIBLE);
-                                }
-                            });
-                            //数据处理
-                            data_process();
-                            Log.d("recorder stop", "media_finished: ");
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //显示实验结果
-                                    binding.progress.setVisibility(View.INVISIBLE);
-                                    show_outcome();
-                                    viewModel.setFrequencyChart(repository.getFrequencyChart());
-                                    viewModel.setPhaseChart(repository.getPhaseChart());
-                                    viewModel.setWaveChart(repository.getWaveChart());
-                                    viewModel.setPowerChart(repository.getPowerChart());
-                                }
-                            });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //错误后UI更新
-                                    application.show_toast(R.string.experiment_error);
-                                }
-                            });
-                        } finally {
-                            binding.button.setEnabled(true);
-                        }
-                    }
-                });
-            }
-        });
         try {
             //开始播放
-            player.play(getResources().openRawResourceFd(R.raw.sample_signal));
+            viewModel.startPlay(getResources().openRawResourceFd(R.raw.sample_signal));
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    //数据处理
-    public void data_process() throws Exception {
-        MyApplication application = (MyApplication) getApplication();
-        File file = new File(recorder.getFilename());
-        FileInputStream fis = new FileInputStream(file);
-        //获得音频长度
-        int length = (int) ((fis.getChannel().size() - 44) / 2);
-        //创建数组
-        float[] recordData = new float[length];
-        BufferedInputStream bis = new BufferedInputStream(fis);
-        //跳过文件头
-        for (int i = 0; i < 44; i++) {
-            bis.read();
-        }
-        //读入音频数据，并转为float类型
-        short temp;
-        final int SHORT_MAX = (int) Short.MAX_VALUE + 1;
-        for (int i = 0; i < recordData.length; i++) {
-            temp = (short) bis.read();
-            temp |= bis.read() << 8;
-            recordData[i] = (float) temp / SHORT_MAX;
-        }
-        repository = new ChartRepository(application, application.inverseSignal, recordData);
-        repository.doFinal();
     }
 
     //显示结果
@@ -233,8 +175,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        outcomeFragment = null;
+        finish();
     }
 
     @Override
@@ -242,6 +183,8 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         if (outcomeFragment != null) {
             getSupportFragmentManager().beginTransaction().remove(outcomeFragment).commit();
             outcomeFragment = null;
+            GuideFragment guideFragment = new GuideFragment();
+            getSupportFragmentManager().beginTransaction().add(binding.frame.getId(), guideFragment).commit();
         }
         //检查权限
         permission();
