@@ -69,6 +69,10 @@ public class ExperimentViewModel extends AndroidViewModel {
         recorder.stop();
     }
 
+    public int getCurrentPosition() {
+        return player.getCurrentPosition();
+    }
+
     public void dataProcess() {
         state.state = ExperimentState.PROCESSING;
         experimentState.setValue(state);

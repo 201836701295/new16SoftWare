@@ -26,31 +26,32 @@ import edu.scut.acoustics.utils.AudioDevice;
 import edu.scut.acoustics.utils.AudioPlayer;
 
 public class ExperimentActivity extends AppCompatActivity implements View.OnClickListener {
-    private final static int PERMISSIONS = 1;
-    private AudioDevice device;
-    private ActivityExperimentBinding binding;
-    private ExperimentViewModel viewModel;
-    private OutcomeFragment outcomeFragment;
-    private MyApplication application;
+    final static int PERMISSIONS = 1;
+    AudioDevice device;
+    ActivityExperimentBinding binding;
+    ExperimentViewModel viewModel;
+    OutcomeFragment outcomeFragment;
+    GuideFragment guideFragment;
+    MyApplication application;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //UI初始化
         binding = DataBindingUtil.setContentView(this, R.layout.activity_experiment);
-        GuideFragment guideFragment = new GuideFragment();
+        guideFragment = new GuideFragment();
         getSupportFragmentManager().beginTransaction().add(binding.frame.getId(), guideFragment).commit();
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
         //设置点击监听
         binding.button.setOnClickListener(this);
-
         //初始化
         device = new AudioDevice(getApplicationContext());
         viewModel = new ViewModelProvider(this).get(ExperimentViewModel.class);
         viewModel.setListener(new AudioPlayer.Listener() {
             @Override
-            public void prepare_finished() {
+            public void prepare_finished(int duration) {
                 try {
+                    guideFragment.startCountDown(duration);
                     viewModel.startRecord();
                 } catch (IOException e) {
                     viewModel.setError();
@@ -62,6 +63,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
             public void media_finished() {
                 try {
                     viewModel.stopRecord();
+                    guideFragment.stopCountDown();
                     viewModel.dataProcess();
                 } catch (ExecutionException | InterruptedException e) {
                     viewModel.setError();
@@ -171,6 +173,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         outcomeFragment = new OutcomeFragment();
         getSupportFragmentManager().beginTransaction().replace(binding.frame.getId(), outcomeFragment)
                 .addToBackStack(null).commit();
+        guideFragment = null;
     }
 
     @Override
@@ -183,7 +186,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         if (outcomeFragment != null) {
             getSupportFragmentManager().beginTransaction().remove(outcomeFragment).commit();
             outcomeFragment = null;
-            GuideFragment guideFragment = new GuideFragment();
+            guideFragment = new GuideFragment();
             getSupportFragmentManager().beginTransaction().add(binding.frame.getId(), guideFragment).commit();
         }
         //检查权限
