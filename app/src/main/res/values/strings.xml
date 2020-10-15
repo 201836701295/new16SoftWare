@@ -17,7 +17,7 @@
     <string name="convolution_wave">卷积波形</string>
     <string name="phase_chart">相位谱</string>
     <string name="frequency_chart">振幅谱</string>
-    <string name="power_chart">功率谱</string>
+    <string name="power_chart">频率响应</string>
     <string name="experiment_error">实验出错</string>
     <string name="real_time_db">实时分贝\n%sdBA</string>
     <string name="max_db">最大分贝\n%sdBA</string>

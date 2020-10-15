@@ -92,7 +92,7 @@ public class TestResultFragment extends Fragment {
 
         YAxis yAxis = chart.getAxisLeft();
         yAxis.setAxisMaximum(90f);
-        yAxis.setAxisMinimum(0f);
+        yAxis.setAxisMinimum(-20f);
         yAxis.setValueFormatter(yValueFormatter);
 
         XAxis xAxis = chart.getXAxis();
