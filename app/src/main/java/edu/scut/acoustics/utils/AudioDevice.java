@@ -6,7 +6,7 @@ import android.media.AudioManager;
 import android.util.Log;
 
 public class AudioDevice {
-    private AudioManager audioManager = null;
+    AudioManager audioManager;
 
     public AudioDevice(Context context) {
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
@@ -16,7 +16,9 @@ public class AudioDevice {
         AudioDeviceInfo[] audioDeviceInfos = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         for (AudioDeviceInfo v : audioDeviceInfos) {
             Log.i("AudioDevice", "have_headset: " + v.getType());
-            if (v.getType() == AudioDeviceInfo.TYPE_WIRED_HEADSET || v.getType() == AudioDeviceInfo.TYPE_USB_HEADSET) {
+            if (v.getType() == AudioDeviceInfo.TYPE_WIRED_HEADSET || v.getType() == AudioDeviceInfo.TYPE_USB_HEADSET
+                    || v.getType() == AudioDeviceInfo.TYPE_WIRED_HEADPHONES || v.getType() == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP
+                    || v.getType() == AudioDeviceInfo.TYPE_BLUETOOTH_SCO) {
                 return true;
             }
         }

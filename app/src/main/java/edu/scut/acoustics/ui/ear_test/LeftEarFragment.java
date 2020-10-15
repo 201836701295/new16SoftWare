@@ -28,6 +28,7 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
     Button[] hzs;
     int current = 0;
     AudioDevice device;
+    public static final int PERMISSIONS_FOR_DETECT = 1;
 
     @Nullable
     @Override
