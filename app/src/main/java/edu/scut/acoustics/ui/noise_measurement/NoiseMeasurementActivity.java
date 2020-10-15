@@ -102,6 +102,7 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_FOR_DBA);
         } else {
+            viewModel.stop();
             startActivity(new Intent(this, AdjustActivity.class));
         }
     }
