@@ -1,6 +1,7 @@
 package edu.scut.acoustics.ui.experiment;
 
 import android.graphics.Color;
+import android.icu.text.DecimalFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,8 +26,9 @@ import edu.scut.acoustics.databinding.FragmentOutcomeBinding;
 import edu.scut.acoustics.view.MyMarkerView;
 
 public class OutcomeFragment extends Fragment {
-    private FragmentOutcomeBinding binding;
-    private ExperimentViewModel viewModel;
+    FragmentOutcomeBinding binding;
+    ExperimentViewModel viewModel;
+    DecimalFormat format = new DecimalFormat("######0.00");
 
     void observeChart(LineChart chart, final ChartInformation chartInformation) {
         YAxis yAxis = chart.getAxisLeft();
@@ -35,7 +37,7 @@ public class OutcomeFragment extends Fragment {
         yAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return value + chartInformation.yUnit;
+                return format.format(value) + chartInformation.yUnit;
             }
         });
 
@@ -46,7 +48,7 @@ public class OutcomeFragment extends Fragment {
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return value + chartInformation.xUnit;
+                return format.format(value) + chartInformation.xUnit;
             }
         });
         chart.setData(chartInformation.lineData);
