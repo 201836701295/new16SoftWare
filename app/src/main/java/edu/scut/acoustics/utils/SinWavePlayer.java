@@ -17,7 +17,7 @@ public class SinWavePlayer {
 
     public static final int RIGHT = AudioFormat.CHANNEL_OUT_FRONT_RIGHT;
     //pcm_float格式的音频数据，0.5秒的音频
-    float[] pcm_data = new float[SinWave.SAMPLE_RATE];
+    float[] pcm_data = new float[SinWave.SAMPLE_RATE * 4];
     //音频播放类
     AudioTrack audioTrack;
     //正弦波生产器
