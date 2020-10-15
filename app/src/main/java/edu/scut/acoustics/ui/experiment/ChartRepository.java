@@ -49,6 +49,14 @@ public class ChartRepository {
         powerChartLiveData = new MutableLiveData<>();
     }
 
+    public ChartRepository(Context context, float[] a1, float[] a2) {
+        waveLabel = context.getResources().getString(R.string.convolution_wave);
+        phaseLabel = context.getResources().getString(R.string.phase_chart);
+        powerLabel = context.getResources().getString(R.string.power_chart);
+        audioData1 = a1;
+        audioData2 = a2;
+    }
+
     public LiveData<ChartInformation> getPhaseChartLiveData() {
         return phaseChartLiveData;
     }
@@ -67,14 +75,6 @@ public class ChartRepository {
 
     public void setAudioData2(float[] audioData2) {
         this.audioData2 = audioData2;
-    }
-
-    public ChartRepository(Context context, float[] a1, float[] a2) {
-        waveLabel = context.getResources().getString(R.string.convolution_wave);
-        phaseLabel = context.getResources().getString(R.string.phase_chart);
-        powerLabel = context.getResources().getString(R.string.power_chart);
-        audioData1 = a1;
-        audioData2 = a2;
     }
 
     /**
@@ -97,7 +97,7 @@ public class ChartRepository {
         dspMath.fft(tailorData, tailorData.length, real, imagine);
         //作求相位
         phase = new float[(tailorData.length + 1) / 2];
-        dspMath.phase(real, imagine,phase);
+        dspMath.phase(real, imagine, phase);
         //求功率
         power = new float[(tailorData.length + 1) / 2];
         frequency = new float[(tailorData.length + 1) / 2];
