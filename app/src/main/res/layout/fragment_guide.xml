@@ -53,21 +53,21 @@
             app:layout_constraintTop_toTopOf="@id/test_wave" />
 
         <TextView
-            android:visibility="invisible"
             android:id="@+id/description2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/inverse_signal"
+            android:visibility="invisible"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/test_wave" />
 
         <ImageView
-            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:src="@drawable/inverse_wave"
+            android:visibility="invisible"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/description2"
             tools:ignore="ContentDescription" />

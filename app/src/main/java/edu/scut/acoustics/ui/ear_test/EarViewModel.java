@@ -17,7 +17,7 @@ import edu.scut.acoustics.utils.SinWavePlayer;
 public class EarViewModel extends AndroidViewModel {
     public final static int LEFT = 0;
     public final static int RIGHT = 1;
-
+    public final int TEST_FINISH;
     EarTestRepository repository;
     SinWavePlayer sinWavePlayer = new SinWavePlayer();
     ExecutorService service = Executors.newSingleThreadExecutor();
@@ -26,7 +26,6 @@ public class EarViewModel extends AndroidViewModel {
     int[] frequencies;
     int[] sensitivities;
     int i;
-    public final int TEST_FINISH;
     LiveData<Integer> leftTestedLiveData;
     LiveData<Integer> rightTestedLiveData;
     MutableLiveData<Integer> volume;

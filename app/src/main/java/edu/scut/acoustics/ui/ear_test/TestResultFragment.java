@@ -32,10 +32,10 @@ import edu.scut.acoustics.databinding.FragmentTestResultBinding;
 import edu.scut.acoustics.view.MyMarkerView;
 
 public class TestResultFragment extends Fragment {
-    FragmentTestResultBinding binding;
-    ResultViewModel viewModel;
     final static int LEFT = 0;
     final static int RIGHT = 1;
+    FragmentTestResultBinding binding;
+    ResultViewModel viewModel;
     ValueFormatter xValueFormatter, yValueFormatter;
 
     @Nullable

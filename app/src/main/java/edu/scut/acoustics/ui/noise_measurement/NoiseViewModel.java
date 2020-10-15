@@ -54,28 +54,28 @@ public class NoiseViewModel extends ViewModel {
             timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                        try {
-                            List<MicrophoneInfo> microphoneInfos = slm.getActiveMicrophones();
-                            StringBuilder string = new StringBuilder();
-                            for (MicrophoneInfo v : microphoneInfos) {
-                                Log.i("micType", "micType: " + v.getType());
-                                switch (v.getType()) {
-                                    case AudioDeviceInfo.TYPE_BUILTIN_MIC:
-                                        string.append("内置麦克风\n");
-                                        break;
-                                    case AudioDeviceInfo.TYPE_WIRED_HEADSET:
-                                        string.append("外接麦克风\n");
-                                        break;
-                                    case AudioDeviceInfo.TYPE_USB_HEADSET:
-                                        string.append("外接USB麦克风\n");
-                                        break;
-                                }
+                    try {
+                        List<MicrophoneInfo> microphoneInfos = slm.getActiveMicrophones();
+                        StringBuilder string = new StringBuilder();
+                        for (MicrophoneInfo v : microphoneInfos) {
+                            Log.i("micType", "micType: " + v.getType());
+                            switch (v.getType()) {
+                                case AudioDeviceInfo.TYPE_BUILTIN_MIC:
+                                    string.append("内置麦克风\n");
+                                    break;
+                                case AudioDeviceInfo.TYPE_WIRED_HEADSET:
+                                    string.append("外接麦克风\n");
+                                    break;
+                                case AudioDeviceInfo.TYPE_USB_HEADSET:
+                                    string.append("外接USB麦克风\n");
+                                    break;
                             }
-                            sourceType.postValue(string.toString());
-                        } catch (IOException e) {
-                            e.printStackTrace();
                         }
+                        sourceType.postValue(string.toString());
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+                }
             };
             timer.schedule(timerTask, 0, 1000);
         }
