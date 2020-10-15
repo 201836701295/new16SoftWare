@@ -22,6 +22,7 @@ public class ChartRepository {
     public static final int MAX_ENTRY = 3000;
     MutableLiveData<ChartInformation> waveChartLiveData;
     MutableLiveData<ChartInformation> phaseChartLiveData;
+    MutableLiveData<ChartInformation> powerChartLiveData;
     private DSPMath dspMath = new DSPMath();
     private float[] convolutionData;
     private float[] tailorData;
@@ -36,7 +37,6 @@ public class ChartRepository {
     private ChartInformation waveChart;
     private ChartInformation phaseChart;
     private ChartInformation powerChart;
-    MutableLiveData<ChartInformation> powerChartLiveData;
     private float[] audioData1;
     private float[] audioData2;
 
@@ -148,6 +148,8 @@ public class ChartRepository {
         //设置坐标轴标签
         waveChart.labelX = "时间/s";
         waveChart.labelY = "振幅";
+        waveChart.xUnit = "s";
+        waveChart.yUnit = "";
         //设置坐标轴显示范围
         waveChart.maxX = tailorData.length / 44100f;
         waveChart.minX = 0;
@@ -192,6 +194,9 @@ public class ChartRepository {
         set.setDrawCircles(false);
         set.setDrawCircleHole(false);
         set.setDrawFilled(false);
+        set.setFormLineWidth(1f);
+        set.setFormSize(15.f);
+        set.setValueTextSize(9f);
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set);
         waveChart.lineData = new LineData(dataSets);
@@ -202,6 +207,8 @@ public class ChartRepository {
         powerChart = new ChartInformation();
         powerChart.labelX = "频率/Hz";
         powerChart.labelY = "功率/dB";
+        powerChart.xUnit = "Hz";
+        powerChart.yUnit = "dB";
         powerChart.minX = 0;
         powerChart.maxX = frequency[frequency.length - 1];
         powerChart.maxY = 0;
@@ -240,6 +247,9 @@ public class ChartRepository {
         set.setDrawCircles(false);
         set.setDrawCircleHole(false);
         set.setDrawFilled(false);
+        set.setFormLineWidth(1f);
+        set.setFormSize(15.f);
+        set.setValueTextSize(9f);
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set);
         powerChart.lineData = new LineData(dataSets);
@@ -250,6 +260,8 @@ public class ChartRepository {
         phaseChart = new ChartInformation();
         phaseChart.labelX = "频率/Hz";
         phaseChart.labelY = "相位";
+        phaseChart.xUnit = "Hz";
+        phaseChart.yUnit = "";
         phaseChart.minX = 0;
         phaseChart.maxX = frequency[frequency.length - 1];
         phaseChart.maxY = (float) (Math.PI / 2);
@@ -282,21 +294,12 @@ public class ChartRepository {
         set.setDrawCircles(false);
         set.setDrawCircleHole(false);
         set.setDrawFilled(false);
+        set.setFormLineWidth(1f);
+        set.setFormSize(15.f);
+        set.setValueTextSize(9f);
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set);
         phaseChart.lineData = new LineData(dataSets);
         phaseChartLiveData.postValue(phaseChart);
-    }
-
-    public ChartInformation getWaveChart() {
-        return waveChart;
-    }
-
-    public ChartInformation getPhaseChart() {
-        return phaseChart;
-    }
-
-    public ChartInformation getPowerChart() {
-        return powerChart;
     }
 }

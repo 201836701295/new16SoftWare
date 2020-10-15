@@ -116,6 +116,12 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         binding.button.setEnabled(true);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.shutdown();
+    }
+
     //检查权限并请求权限
     private void permission() {
         Vector<String> vector = new Vector<>();
@@ -192,5 +198,4 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         //检查权限
         permission();
     }
-
 }

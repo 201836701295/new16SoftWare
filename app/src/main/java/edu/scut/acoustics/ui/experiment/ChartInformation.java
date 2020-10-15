@@ -10,4 +10,6 @@ public class ChartInformation {
     public float minY;
     public String labelX;
     public String labelY;
+    public String xUnit;
+    public String yUnit;
 }

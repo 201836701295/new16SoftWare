@@ -113,6 +113,10 @@ public class ExperimentViewModel extends AndroidViewModel {
         });
     }
 
+    public void shutdown() {
+        service.shutdownNow();
+    }
+
     public void reset() {
         state.state = ExperimentState.IDLE;
         experimentState.setValue(state);
