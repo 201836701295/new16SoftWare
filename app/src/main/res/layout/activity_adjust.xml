@@ -35,6 +35,17 @@
             app:layout_constraintTop_toBottomOf="@id/title"
             tools:text="实时分贝\n60db" />
 
+        <TextView
+            android:id="@+id/sourceType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/real"
+            tools:text="音源" />
+
         <Button
             android:id="@+id/adjust"
             android:layout_width="wrap_content"

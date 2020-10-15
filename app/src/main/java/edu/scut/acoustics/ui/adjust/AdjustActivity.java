@@ -42,6 +42,12 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
                 binding.real.setText(getString(R.string.real_time_db, format.format(aFloat + baseline)));
             }
         });
+        viewModel.getSourceType().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                binding.sourceType.setText(s);
+            }
+        });
     }
 
     @Override

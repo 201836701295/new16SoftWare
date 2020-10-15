@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import edu.scut.acoustics.utils.SLM;
 
@@ -24,7 +22,6 @@ public class NoiseViewModel extends ViewModel {
     MutableLiveData<String> sourceType;
     TimerTask timerTask;
     Timer timer = new Timer();
-    ExecutorService service = Executors.newCachedThreadPool();
     SLM slm;
 
     public NoiseViewModel() {
@@ -57,7 +54,6 @@ public class NoiseViewModel extends ViewModel {
             timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    while (true) {
                         try {
                             List<MicrophoneInfo> microphoneInfos = slm.getActiveMicrophones();
                             StringBuilder string = new StringBuilder();
@@ -80,7 +76,6 @@ public class NoiseViewModel extends ViewModel {
                             e.printStackTrace();
                         }
                     }
-                }
             };
             timer.schedule(timerTask, 0, 1000);
         }
