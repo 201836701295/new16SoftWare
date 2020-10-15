@@ -57,6 +57,12 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
                 binding.real.setText(getString(R.string.real_time_db, format.format(aFloat + baseline)));
             }
         });
+        viewModel.getSourceType().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                binding.sourceType.setText(s);
+            }
+        });
 
         binding.refresh.setOnClickListener(this);
         binding.adjust.setOnClickListener(this);
@@ -72,8 +78,8 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         viewModel.stop();
     }
 

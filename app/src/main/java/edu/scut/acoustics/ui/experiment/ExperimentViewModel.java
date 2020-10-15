@@ -30,7 +30,7 @@ public class ExperimentViewModel extends AndroidViewModel {
     AudioPlayer player;
     AudioRecorder recorder;
     ChartRepository repository;
-    private ExecutorService service = Executors.newCachedThreadPool();
+    ExecutorService service = Executors.newCachedThreadPool();
 
 
     public ExperimentViewModel(@NonNull Application application) {

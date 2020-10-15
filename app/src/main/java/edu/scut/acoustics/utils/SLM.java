@@ -3,11 +3,14 @@ package edu.scut.acoustics.utils;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.media.MicrophoneInfo;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -45,6 +48,13 @@ public class SLM {
         max = new MutableLiveData<>(maxValue);
         min = new MutableLiveData<>(minValue);
         realtime = new MutableLiveData<>(realtimeValue);
+    }
+
+    public List<MicrophoneInfo> getActiveMicrophones() throws IOException {
+        if (recorder != null) {
+            return recorder.getActiveMicrophones();
+        }
+        throw new NullPointerException("recorder not initialized");
     }
 
     public void start() {
