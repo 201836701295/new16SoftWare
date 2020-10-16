@@ -3,6 +3,7 @@ package edu.scut.acoustics.ui.noise_measurement;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.icu.text.DecimalFormat;
 import android.os.Bundle;
 import android.view.View;
@@ -16,12 +17,24 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+
+import java.util.ArrayList;
 import java.util.Objects;
 
 import edu.scut.acoustics.MyApplication;
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.ActivityNoiseMeasurementBinding;
 import edu.scut.acoustics.ui.adjust.AdjustActivity;
+import edu.scut.acoustics.utils.SLM;
 
 public class NoiseMeasurementActivity extends AppCompatActivity implements View.OnClickListener {
     final static int PERMISSIONS_FOR_DBA = 1;
@@ -31,6 +44,8 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
     DecimalFormat format = new DecimalFormat("###0.00");
     float baseline;
     MyApplication application;
+    ValueFormatter xValueFormatter;
+    ArrayList<BarEntry> barEntries;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +53,8 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
         binding = DataBindingUtil.setContentView(this, R.layout.activity_noise_measurement);
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
 
+        barEntries = new ArrayList<>(8);
+        initialBarChart();
         viewModel = new ViewModelProvider(this).get(NoiseViewModel.class);
         viewModel.getMax().observe(this, new Observer<Float>() {
             @Override
@@ -63,10 +80,89 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
                 binding.sourceType.setText(s);
             }
         });
+        viewModel.getDba().observe(this, new Observer<SLM.DBA>() {
+            @Override
+            public void onChanged(SLM.DBA dba) {
+                observeDBA(dba);
+            }
+        });
 
         binding.refresh.setOnClickListener(this);
         binding.adjust.setOnClickListener(this);
         application = (MyApplication) getApplication();
+    }
+
+    void initialBarChart() {
+        BarChart chart = binding.dbChart;
+        chart.setDrawBarShadow(false);
+        chart.setDrawValueAboveBar(true);
+        chart.setTouchEnabled(false);
+        chart.getDescription().setEnabled(false);
+        chart.setMaxVisibleValueCount(80);
+        chart.setScaleEnabled(false);
+        chart.getAxisRight().setEnabled(false);
+
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setGranularity(1f); // only intervals of 1 day
+        xAxis.setLabelCount(8);
+        xAxis.setAxisMinimum(0);
+        xAxis.setAxisMaximum(7);
+
+        YAxis yAxis = chart.getAxisLeft();
+        yAxis.setAxisMaximum(150f);
+        yAxis.setAxisMinimum(-30f);
+        /*
+        yAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return value + "dBA";
+            }
+        });
+         */
+
+        Legend legend = chart.getLegend();
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        legend.setDrawInside(false);
+        legend.setForm(Legend.LegendForm.SQUARE);
+        legend.setFormSize(9f);
+        legend.setTextSize(11f);
+        legend.setXEntrySpace(4f);
+    }
+
+    void observeDBA(final SLM.DBA dba) {
+        BarChart chart = binding.dbChart;
+        barEntries.clear();
+        if (xValueFormatter == null) {
+            xValueFormatter = new ValueFormatter() {
+                @Override
+                public String getAxisLabel(float value, AxisBase axis) {
+                    int index = (int) value;
+                    return (int) dba.xAxisValue[index] + "dBA";
+                }
+            };
+            chart.getXAxis().setValueFormatter(xValueFormatter);
+        }
+        for (int i = 0; i < dba.yValue.length; i++) {
+            barEntries.add(new BarEntry(i, dba.yValue[i]));
+        }
+        BarDataSet set;
+        if (chart.getData() != null &&
+                chart.getData().getDataSetCount() > 0) {
+            set = (BarDataSet) chart.getData().getDataSetByIndex(0);
+            set.setValues(barEntries);
+            chart.getData().notifyDataChanged();
+            chart.notifyDataSetChanged();
+        } else {
+            set = new BarDataSet(barEntries, "倍频声压级");
+            set.setDrawIcons(false);
+            set.setColors(Color.RED);
+            BarData barData = new BarData(set);
+            chart.setData(barData);
+        }
     }
 
     @Override

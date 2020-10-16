@@ -19,6 +19,7 @@ public class NoiseViewModel extends ViewModel {
     LiveData<Float> max;
     LiveData<Float> min;
     LiveData<Float> realtime;
+    LiveData<SLM.DBA> dba;
     MutableLiveData<String> sourceType;
     TimerTask timerTask;
     Timer timer = new Timer();
@@ -29,6 +30,7 @@ public class NoiseViewModel extends ViewModel {
         max = slm.getMax();
         min = slm.getMin();
         realtime = slm.getRealtime();
+        dba = slm.getDba();
         sourceType = new MutableLiveData<>("");
     }
 
@@ -46,6 +48,10 @@ public class NoiseViewModel extends ViewModel {
 
     public LiveData<Float> getRealtime() {
         return realtime;
+    }
+
+    public LiveData<SLM.DBA> getDba() {
+        return dba;
     }
 
     public void start() {

@@ -9,11 +9,8 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.github.mikephil.charting.data.Entry;
-
 import java.io.IOException;
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -32,6 +29,8 @@ public class SLM {
     public static final int N = 8192;
 
     float[] audioData = new float[N];
+    float[] frequencies = new float[10];
+    float[] dbas = new float[10];
     byte[] buffer = new byte[MIN_BUFFER_SIZE];
     AudioRecord recorder = null;
     ExecutorService service = Executors.newCachedThreadPool();
@@ -51,17 +50,14 @@ public class SLM {
         minValue = 0f;
         realtimeValue = 0f;
         dbaValue = new DBA();
-        dbaValue.xAxisValue = new float[8];
-        dbaValue.data = new Vector<>();
         max = new MutableLiveData<>(maxValue);
         min = new MutableLiveData<>(minValue);
         realtime = new MutableLiveData<>(realtimeValue);
         dba = new MutableLiveData<>(dbaValue);
     }
 
-    static class DBA {
-        public List<Entry> data;
-        public float[] xAxisValue;
+    public LiveData<DBA> getDba() {
+        return dba;
     }
 
     public List<MicrophoneInfo> getActiveMicrophones() throws IOException {
@@ -121,7 +117,7 @@ public class SLM {
      *
      * @param realtime 实时获取的分贝值
      */
-    void postRealtime(float realtime) {
+    void postRealtime(float realtime, float[] dbas) {
         realtimeValue = realtime;
         if (minValue > realtimeValue) {
             minValue = realtimeValue;
@@ -132,13 +128,23 @@ public class SLM {
             this.max.postValue(maxValue);
         }
         this.realtime.postValue(realtimeValue);
+        System.arraycopy(dbas, 0, dbaValue.yValue, 0, dbas.length);
+        dba.postValue(dbaValue);
     }
 
-    void initialPost(float rv) {
+    void initialPost(float rv, float[] dbas, float[] frequencies) {
         maxValue = minValue = realtimeValue = rv;
         min.postValue(minValue);
         max.postValue(maxValue);
         realtime.postValue(realtimeValue);
+        System.arraycopy(dbas, 0, dbaValue.yValue, 0, dbas.length);
+        System.arraycopy(frequencies, 0, dbaValue.xAxisValue, 0, frequencies.length);
+        dba.postValue(dbaValue);
+    }
+
+    public static class DBA {
+        public float[] yValue = new float[10];
+        public float[] xAxisValue = new float[10];
     }
 
     public void refresh() {
@@ -172,9 +178,8 @@ public class SLM {
                     tv1 |= tv2;
                     audioData[i] = tv1;
                 }
-                //TODO change
-                result = 0.0f;
-                initialPost(result);
+                result = dspMath.slmfunc(audioData, dbas, frequencies);
+                initialPost(result, dbas, frequencies);
 
                 while (true) {
                     off = 0;
@@ -193,9 +198,12 @@ public class SLM {
                         tv1 |= tv2;
                         audioData[i] = tv1;
                     }
-                    //TODO change
-                    result = 0.0f;
-                    postRealtime(result);
+                    result = dspMath.slmfunc(audioData, dbas, frequencies);
+                    Log.i("SLM", "dba = " + result);
+                    for (int i = 0; i < dbas.length; ++i) {
+                        Log.i("SLM", "dba" + frequencies[i] + " = " + dbas[i]);
+                    }
+                    postRealtime(result, dbas);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
