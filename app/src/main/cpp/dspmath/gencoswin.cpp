@@ -2,7 +2,7 @@
 // File: gencoswin.cpp
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 15-Oct-2020 21:35:42
+// C/C++ source code generated on  : 16-Oct-2020 18:58:30
 //
 
 // Include Files
@@ -27,16 +27,16 @@
 // Return Type  : void
 //
 void calc_window(double m, double n, coder::array<double, 1U> &w) {
-  coder::array<double, 2U> y;
-  int nx;
-  int k;
-  if (rtIsNaN(m - 1.0)) {
-    y.set_size(1, 1);
-    y[0] = rtNaN;
-  } else if (m - 1.0 < 0.0) {
-    y.set_size(1, 0);
-  } else if (rtIsInf(m - 1.0) && (0.0 == m - 1.0)) {
-    y.set_size(1, 1);
+    coder::array<double, 2U> y;
+    int nx;
+    int k;
+    if (rtIsNaN(m - 1.0)) {
+        y.set_size(1, 1);
+        y[0] = rtNaN;
+    } else if (m - 1.0 < 0.0) {
+        y.set_size(1, 0);
+    } else if (rtIsInf(m - 1.0) && (0.0 == m - 1.0)) {
+        y.set_size(1, 1);
     y[0] = rtNaN;
   } else {
     nx = static_cast<int>(std::floor(m - 1.0));

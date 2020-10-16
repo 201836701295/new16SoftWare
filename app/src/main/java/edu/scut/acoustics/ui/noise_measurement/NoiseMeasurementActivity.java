@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.icu.text.DecimalFormat;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -14,11 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -29,6 +30,8 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import edu.scut.acoustics.MyApplication;
 import edu.scut.acoustics.R;
@@ -46,6 +49,13 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
     MyApplication application;
     ValueFormatter xValueFormatter;
     ArrayList<BarEntry> barEntries;
+    int foo = 0;
+    int max = 150;
+    Timer timer = new Timer();
+    TimerTask timerTask;
+    SLM.DBA dba = new SLM.DBA();
+    MutableLiveData<SLM.DBA> dbaMutableLiveData = new MutableLiveData<>(dba);
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,7 +90,34 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
                 binding.sourceType.setText(s);
             }
         });
+        /*
         viewModel.getDba().observe(this, new Observer<SLM.DBA>() {
+            @Override
+            public void onChanged(SLM.DBA dba) {
+                if(foo < 30){
+                    observeDBA(dba);
+                    ++foo;
+                    Log.d("chart observe", "onChanged() returned: ");
+                }
+
+            }
+        });
+
+         */
+
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                for (int i = 0; i < dba.yValue.length; i++) {
+                    dba.yValue[i] = max;
+                    dba.xAxisValue[i] = 10 * i;
+                }
+                max -= 2;
+                dbaMutableLiveData.postValue(dba);
+            }
+        };
+        timer.schedule(timerTask, 0, 1000);
+        dbaMutableLiveData.observe(this, new Observer<SLM.DBA>() {
             @Override
             public void onChanged(SLM.DBA dba) {
                 observeDBA(dba);
@@ -98,7 +135,7 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
         chart.setDrawValueAboveBar(true);
         chart.setTouchEnabled(false);
         chart.getDescription().setEnabled(false);
-        chart.setMaxVisibleValueCount(80);
+        chart.setMaxVisibleValueCount(8);
         chart.setScaleEnabled(false);
         chart.getAxisRight().setEnabled(false);
 
@@ -107,20 +144,19 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f); // only intervals of 1 day
         xAxis.setLabelCount(8);
-        xAxis.setAxisMinimum(0);
-        xAxis.setAxisMaximum(7);
+        xAxis.setAxisMinimum(-0.5f);
+        xAxis.setAxisMaximum(8.5f);
 
         YAxis yAxis = chart.getAxisLeft();
         yAxis.setAxisMaximum(150f);
         yAxis.setAxisMinimum(-30f);
-        /*
         yAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
                 return value + "dBA";
             }
         });
-         */
+
 
         Legend legend = chart.getLegend();
         legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
@@ -133,27 +169,37 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
         legend.setXEntrySpace(4f);
     }
 
-    void observeDBA(final SLM.DBA dba) {
+    void observeDBA(SLM.DBA dba) {
         BarChart chart = binding.dbChart;
         barEntries.clear();
+        /*
         if (xValueFormatter == null) {
             xValueFormatter = new ValueFormatter() {
                 @Override
                 public String getAxisLabel(float value, AxisBase axis) {
                     int index = (int) value;
-                    return (int) dba.xAxisValue[index] + "dBA";
+                    if(index < 0){
+                        return "";
+                    }
+                    return (int) dba.xAxisValue[index] + "Hz";
                 }
             };
             chart.getXAxis().setValueFormatter(xValueFormatter);
         }
+        else {
+            chart.getXAxis().setValueFormatter(xValueFormatter);
+        }
+         */
         for (int i = 0; i < dba.yValue.length; i++) {
             barEntries.add(new BarEntry(i, dba.yValue[i]));
+            Log.i("barEntries", "BarEntry: " + i + " " + dba.yValue[i]);
         }
         BarDataSet set;
         if (chart.getData() != null &&
                 chart.getData().getDataSetCount() > 0) {
             set = (BarDataSet) chart.getData().getDataSetByIndex(0);
             set.setValues(barEntries);
+            set.notifyDataSetChanged();
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
         } else {

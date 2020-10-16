@@ -28,10 +28,10 @@ public class SLM {
     public static final int MIN_BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL, FORMAT) * 8;
     public static final int N = 8192;
 
-    float[] audioData = new float[N];
     float[] frequencies = new float[10];
     float[] dbas = new float[10];
-    byte[] buffer = new byte[MIN_BUFFER_SIZE];
+    short[] audioData = new short[N];
+    short[] buffer = new short[MIN_BUFFER_SIZE / 2];
     AudioRecord recorder = null;
     ExecutorService service = Executors.newCachedThreadPool();
 
@@ -164,7 +164,7 @@ public class SLM {
 
                 off = 0;
                 length = buffer.length;
-                while (off < N * 2) {
+                while (off < N) {
                     temp = recorder.read(buffer, off, length);
                     if (temp == 0) {
                         return null;
@@ -172,19 +172,14 @@ public class SLM {
                     off += temp;
                     length -= temp;
                 }
-                for (int i = 0; i < audioData.length; i++) {
-                    tv1 = buffer[i * 2];
-                    tv2 = (short) ((int) buffer[i * 2 + 1] << 8);
-                    tv1 |= tv2;
-                    audioData[i] = tv1;
-                }
+                System.arraycopy(buffer, 0, audioData, 0, audioData.length);
                 result = dspMath.slmfunc(audioData, dbas, frequencies);
                 initialPost(result, dbas, frequencies);
 
                 while (true) {
                     off = 0;
                     length = buffer.length;
-                    while (off < N * 2) {
+                    while (off < N) {
                         temp = recorder.read(buffer, off, length);
                         if (temp == 0) {
                             return null;
@@ -192,17 +187,8 @@ public class SLM {
                         off += temp;
                         length -= temp;
                     }
-                    for (int i = 0; i < audioData.length; i++) {
-                        tv1 = buffer[i * 2];
-                        tv2 = (short) ((int) buffer[i * 2 + 1] << 8);
-                        tv1 |= tv2;
-                        audioData[i] = tv1;
-                    }
+                    System.arraycopy(buffer, 0, audioData, 0, audioData.length);
                     result = dspMath.slmfunc(audioData, dbas, frequencies);
-                    Log.i("SLM", "dba = " + result);
-                    for (int i = 0; i < dbas.length; ++i) {
-                        Log.i("SLM", "dba" + frequencies[i] + " = " + dbas[i]);
-                    }
                     postRealtime(result, dbas);
                 }
             } catch (Exception e) {

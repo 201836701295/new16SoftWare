@@ -165,21 +165,21 @@ Java_edu_scut_acoustics_utils_DSPMath_phase(JNIEnv *env, jobject thiz, jfloatArr
 
 extern "C"
 JNIEXPORT jfloat JNICALL
-Java_edu_scut_acoustics_utils_DSPMath_slmfunc(JNIEnv *env, jobject thiz, jfloatArray x,
+Java_edu_scut_acoustics_utils_DSPMath_slmfunc(JNIEnv *env, jobject thiz, jshortArray x,
                                               jfloatArray l8, jfloatArray ff) {
     const int n = env->GetArrayLength(x);
-    jfloat *xArr = env->GetFloatArrayElements(x, nullptr);
+    jshort *xArr = env->GetShortArrayElements(x, nullptr);
     jfloat *l8Arr = env->GetFloatArrayElements(l8, nullptr);
     jfloat *ffArr = env->GetFloatArrayElements(ff, nullptr);
 
-    coder::array<float, 2U> xx;
+    coder::array<short, 2U> xx;
     xx.set(xArr, 1, n);
 
     jfloat temp;
 
     slmfunc(xx, l8Arr, ffArr, &temp);
 
-    env->ReleaseFloatArrayElements(x, xArr, JNI_ABORT);
+    env->ReleaseShortArrayElements(x, xArr, JNI_ABORT);
     env->ReleaseFloatArrayElements(l8, l8Arr, JNI_OK);
     env->ReleaseFloatArrayElements(ff, ffArr, JNI_OK);
 

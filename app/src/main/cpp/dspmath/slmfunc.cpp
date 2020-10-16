@@ -2,17 +2,15 @@
 // File: slmfunc.cpp
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 15-Oct-2020 21:35:42
+// C/C++ source code generated on  : 16-Oct-2020 18:58:30
 //
 
 // Include Files
 #include "slmfunc.h"
-#include "FFTImplementationCallback.h"
 #include "butter.h"
 #include "computepsd.h"
 #include "dspmath_data.h"
 #include "dspmath_initialize.h"
-#include "ifft.h"
 #include "mconv.h"
 #include "mfft.h"
 #include "mifft.h"
@@ -79,42 +77,39 @@ static double rt_powd_snf(double u0, double u1) {
 }
 
 //
-// Arguments    : const coder::array<float, 2U> *x
-//                float L8[8]
-//                float F[8]
-//                float *LA
+// Arguments    : const coder::array<short, 2U> *x
+//                float p[8]
+//                float ff[8]
+//                float *Lp
 // Return Type  : void
 //
-void slmfunc(const coder::array<float, 2U> &x, float L8[8], float F[8], float
-*LA) {
+void slmfunc(const coder::array<short, 2U> &x, float p[8], float ff[8], float
+*Lp) {
     int loop_ub;
     int i;
-    int xblockoffset;
     int naxpy;
-    int nblocks;
+    int b_loop_ub;
+    int y1_tmp;
     boolean_T idx[8];
-    double b_L8[8];
+    double b_p[8];
     int k;
-    double b_LA[8];
+    double LA[8];
     signed char tmp_data[8];
-    double Fc_tmp;
+    double as;
     static const double dv[8] = {62.5, 125.0, 250.0, 500.0, 1000.0, 2000.0,
                                  4000.0, 8000.0};
 
-    coder::array<double, 2U> y;
+    coder::array<double, 2U> z1;
     double Fc[2];
     double B[7];
     double A[7];
-    coder::array<float, 1U> b;
-    coder::array<float, 1U> b_y1;
+    coder::array<double, 1U> b;
+    coder::array<double, 1U> b_y1;
     static const double Aweight[8] = {-26.2, -16.1, -8.6, -3.2, 0.0, 1.2, 1.0,
                                       -1.1};
 
-    static const short b_F[8] = {63, 125, 250, 500, 1000, 2000, 4000, 8000};
+    static const short F[8] = {63, 125, 250, 500, 1000, 2000, 4000, 8000};
 
-    coder::array<float, 2U> z1;
-    float as;
-    float bsum;
     if (!isInitialized_dspmath) {
         dspmath_initialize();
     }
@@ -149,7 +144,6 @@ void slmfunc(const coder::array<float, 2U> &x, float L8[8], float F[8], float
     loop_ub = x.size(1);
     for (i = 0; i < 8; i++) {
         int nx;
-        int lastBlockLength;
 
         //  OCTDSGN  Design of an octave filter.
         //     [B,A] = OCTDSGN(Fc,Fs,N) designs a digital octave filter with
@@ -174,96 +168,65 @@ void slmfunc(const coder::array<float, 2U> &x, float L8[8], float F[8], float
         //  Note: BUTTER is based on a bilinear transformation, as suggested in [1].
         // W1 = Fc/(Fs/2)*sqrt(1/2);
         // W2 = Fc/(Fs/2)*sqrt(2);
-        Fc_tmp = dv[7 - i] / 22050.0;
-        Fc[0] = Fc_tmp * 0.70710678118654757 / 0.98505216233236492;
-        Fc[1] = Fc_tmp * 1.4142135623730951 * 0.98505216233236492;
+        as = dv[7 - i] / 22050.0;
+        Fc[0] = as * 0.70710678118654757 / 0.98505216233236492;
+        Fc[1] = as * 1.4142135623730951 * 0.98505216233236492;
         butter(Fc, B, A);
         b.set_size(x.size(1));
-        for (nblocks = 0; nblocks < loop_ub; nblocks++) {
-            b[nblocks] = x[nblocks];
+        for (y1_tmp = 0; y1_tmp < loop_ub; y1_tmp++) {
+            b[y1_tmp] = x[y1_tmp];
         }
 
         nx = b.size(0) - 1;
-        naxpy = b.size(0);
+        b_loop_ub = b.size(0);
         b_y1.set_size(b.size(0));
-        for (nblocks = 0; nblocks < naxpy; nblocks++) {
-            b_y1[nblocks] = 0.0F;
+        for (y1_tmp = 0; y1_tmp < b_loop_ub; y1_tmp++) {
+            b_y1[y1_tmp] = 0.0;
         }
 
         for (k = 0; k <= nx; k++) {
-            xblockoffset = nx - k;
-            naxpy = xblockoffset + 1;
+            int j;
+            b_loop_ub = nx - k;
+            naxpy = b_loop_ub + 1;
             if (naxpy >= 7) {
                 naxpy = 7;
             }
 
-            for (lastBlockLength = 0; lastBlockLength < naxpy; lastBlockLength++) {
-                nblocks = k + lastBlockLength;
-                b_y1[nblocks] = b_y1[nblocks] + b[k] * static_cast<float>
-                (B[lastBlockLength]);
+            for (j = 0; j < naxpy; j++) {
+                y1_tmp = k + j;
+                b_y1[y1_tmp] = b_y1[y1_tmp] + b[k] * B[j];
             }
 
-            if (xblockoffset < 6) {
-                naxpy = xblockoffset;
+            if (b_loop_ub < 6) {
+                naxpy = b_loop_ub;
             } else {
                 naxpy = 6;
             }
 
             as = -b_y1[k];
-            for (lastBlockLength = 0; lastBlockLength < naxpy; lastBlockLength++) {
-                nblocks = (k + lastBlockLength) + 1;
-                b_y1[nblocks] = b_y1[nblocks] + as * static_cast<float>
-                (A[lastBlockLength + 1]);
+            for (j = 0; j < naxpy; j++) {
+                y1_tmp = (k + j) + 1;
+                b_y1[y1_tmp] = b_y1[y1_tmp] + as * A[j + 1];
             }
         }
 
-        nblocks = b_y1.size(0);
+        y1_tmp = b_y1.size(0);
         z1.set_size(1, b_y1.size(0));
-        for (k = 0; k < nblocks; k++) {
-            z1[k] = b_y1[k] * b_y1[k];
+        for (k = 0; k < y1_tmp; k++) {
+            z1[k] = rt_powd_snf(b_y1[k], 2.0);
         }
 
+        y1_tmp = z1.size(1);
         if (z1.size(1) == 0) {
-            as = 0.0F;
+            as = 0.0;
         } else {
-            if (z1.size(1) <= 1024) {
-                naxpy = z1.size(1);
-                lastBlockLength = 0;
-                nblocks = 1;
-            } else {
-                naxpy = 1024;
-                nblocks = z1.size(1) / 1024;
-                lastBlockLength = z1.size(1) - (nblocks << 10);
-                if (lastBlockLength > 0) {
-                    nblocks++;
-                } else {
-                    lastBlockLength = 1024;
-                }
-            }
-
             as = z1[0];
-            for (k = 2; k <= naxpy; k++) {
+            for (k = 2; k <= y1_tmp; k++) {
                 as += z1[k - 1];
             }
-
-            for (nx = 2; nx <= nblocks; nx++) {
-                xblockoffset = (nx - 1) << 10;
-                bsum = z1[xblockoffset];
-                if (nx == nblocks) {
-                    naxpy = lastBlockLength;
-                } else {
-                    naxpy = 1024;
-                }
-
-                for (k = 2; k <= naxpy; k++) {
-                    bsum += z1[(xblockoffset + k) - 1];
-                }
-
-                as += bsum;
-            }
         }
 
-        b_L8[7 - i] = as / static_cast<float>(x.size(1));
+        b_p[7 - i] = as / static_cast<double>(x.size(1));
     }
 
     //  1250 Hz to 100 Hz, multirate filter implementation (see [2]).
@@ -282,61 +245,62 @@ void slmfunc(const coder::array<float, 2U> &x, float L8[8], float F[8], float
     // end
     //  Convert to decibels.
     //  Reference level for dB scale.
-    xblockoffset = 0;
     naxpy = 0;
+    b_loop_ub = 0;
     for (i = 0; i < 8; i++) {
-        idx[i] = (b_L8[i] > 0.0);
-        if (b_L8[i] > 0.0) {
-            xblockoffset++;
-            tmp_data[naxpy] = static_cast<signed char>(i + 1);
+        idx[i] = (b_p[i] > 0.0);
+        if (b_p[i] > 0.0) {
             naxpy++;
+            tmp_data[b_loop_ub] = static_cast<signed char>(i + 1);
+            b_loop_ub++;
         }
     }
 
-    for (nblocks = 0; nblocks < xblockoffset; nblocks++) {
-        b_LA[nblocks] = b_L8[tmp_data[nblocks] - 1];
+    for (y1_tmp = 0; y1_tmp < naxpy; y1_tmp++) {
+        LA[y1_tmp] = b_p[tmp_data[y1_tmp] - 1];
     }
 
-    for (k = 0; k < xblockoffset; k++) {
-        b_LA[k] = std::log10(b_LA[k]);
+    for (k = 0; k < naxpy; k++) {
+        LA[k] = std::log10(LA[k]);
     }
 
-    y.set_size(1, xblockoffset);
-    for (nblocks = 0; nblocks < xblockoffset; nblocks++) {
-        y[nblocks] = 10.0 * b_LA[nblocks];
+    z1.set_size(1, naxpy);
+    for (y1_tmp = 0; y1_tmp < naxpy; y1_tmp++) {
+        z1[y1_tmp] = 10.0 * LA[y1_tmp];
     }
 
-    naxpy = 0;
+    b_loop_ub = 0;
 
     //  Generate the plot
     for (k = 0; k < 8; k++) {
-        Fc_tmp = b_L8[k];
-        if (b_L8[k] > 0.0) {
+        as = b_p[k];
+        if (b_p[k] > 0.0) {
             double d;
-            Fc_tmp = y[naxpy];
-            d = y[naxpy];
-            b_L8[k] = d;
-            naxpy++;
+            as = z1[b_loop_ub];
+            d = z1[b_loop_ub];
+            b_p[k] = d;
+            b_loop_ub++;
         }
 
         if (!idx[k]) {
-            Fc_tmp = rtNaN;
-            b_L8[k] = rtNaN;
+            as = rtNaN;
+            b_p[k] = rtNaN;
         }
 
-        b_LA[k] = rt_powd_snf(10.0, 0.1 * (Fc_tmp + Aweight[k]));
+        LA[k] = rt_powd_snf(10.0, 0.1 * (as + Aweight[k]));
     }
 
-    Fc_tmp = b_LA[0];
+    as = LA[0];
     for (k = 0; k < 7; k++) {
-        Fc_tmp += b_LA[k + 1];
+        as += LA[k + 1];
     }
 
-    *LA = static_cast<float>(10.0 * std::log10(Fc_tmp));
-    for (nblocks = 0; nblocks < 8; nblocks++) {
-        L8[nblocks] = static_cast<float>(b_L8[nblocks]);
-        F[nblocks] = b_F[nblocks];
+    for (y1_tmp = 0; y1_tmp < 8; y1_tmp++) {
+        p[y1_tmp] = static_cast<float>(b_p[y1_tmp]);
+        ff[y1_tmp] = F[y1_tmp];
     }
+
+    *Lp = static_cast<float>(10.0 * std::log10(as));
 }
 
 //

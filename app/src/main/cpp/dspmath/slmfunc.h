@@ -2,7 +2,7 @@
 // File: slmfunc.h
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 15-Oct-2020 21:35:42
+// C/C++ source code generated on  : 16-Oct-2020 18:58:30
 //
 #ifndef SLMFUNC_H
 #define SLMFUNC_H
@@ -14,8 +14,8 @@
 #include "dspmath_types.h"
 
 // Function Declarations
-extern void slmfunc(const coder::array<float, 2U> &x, float L8[8], float F[8],
-                    float *LA);
+extern void slmfunc(const coder::array<short, 2U> &x, float p[8], float ff[8],
+                    float *Lp);
 
 #endif
 
