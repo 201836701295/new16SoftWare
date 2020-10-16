@@ -2,7 +2,7 @@
 // File: psdfreqvec.cpp
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 29-Sep-2020 18:02:36
+// C/C++ source code generated on  : 15-Oct-2020 21:35:42
 //
 
 // Include Files
@@ -11,9 +11,9 @@
 #include "mconv.h"
 #include "mfft.h"
 #include "mifft.h"
-#include "mslm.h"
 #include "mywelch.h"
 #include "rt_nonfinite.h"
+#include "slmfunc.h"
 #include <cfloat>
 #include <cmath>
 #include <string.h>

@@ -38,15 +38,17 @@ public class DSPMath {
     public native void conv(float[] a, float[] b, float[] c);
 
     /**
-     * @param a 音频数据
-     * @return 分贝值
-     */
-    public native float mslm(float[] a);
-
-    /**
      * @param re  频域实部
      * @param im  频域虚部
      * @param rad 相位
      */
     public native void phase(float[] re, float[] im, float[] rad);
+
+    /**
+     * @param x  信号
+     * @param l8 倍频程分压 63 125 250 500 1000 2000 4000 8000
+     * @param ff 频率
+     * @return 总分压
+     */
+    public native float slmfunc(float[] x, float[] l8, float[] ff);
 }

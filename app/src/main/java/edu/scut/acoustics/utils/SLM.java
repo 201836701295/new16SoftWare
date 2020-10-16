@@ -9,8 +9,11 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.github.mikephil.charting.data.Entry;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -36,18 +39,29 @@ public class SLM {
     MutableLiveData<Float> max;
     MutableLiveData<Float> min;
     MutableLiveData<Float> realtime;
+    MutableLiveData<DBA> dba;
     float maxValue;
     float minValue;
     float realtimeValue;
+    DBA dbaValue;
     Future<Void> future;
 
     public SLM() {
         maxValue = 0f;
         minValue = 0f;
         realtimeValue = 0f;
+        dbaValue = new DBA();
+        dbaValue.xAxisValue = new float[8];
+        dbaValue.data = new Vector<>();
         max = new MutableLiveData<>(maxValue);
         min = new MutableLiveData<>(minValue);
         realtime = new MutableLiveData<>(realtimeValue);
+        dba = new MutableLiveData<>(dbaValue);
+    }
+
+    static class DBA {
+        public List<Entry> data;
+        public float[] xAxisValue;
     }
 
     public List<MicrophoneInfo> getActiveMicrophones() throws IOException {
@@ -158,7 +172,8 @@ public class SLM {
                     tv1 |= tv2;
                     audioData[i] = tv1;
                 }
-                result = dspMath.mslm(audioData);
+                //TODO change
+                result = 0.0f;
                 initialPost(result);
 
                 while (true) {
@@ -178,7 +193,8 @@ public class SLM {
                         tv1 |= tv2;
                         audioData[i] = tv1;
                     }
-                    result = dspMath.mslm(audioData);
+                    //TODO change
+                    result = 0.0f;
                     postRealtime(result);
                 }
             } catch (Exception e) {

@@ -54,19 +54,6 @@ public class ExampleInstrumentedTest {
         }
         assert mediaDecode != null;
         mediaDecode.start();
-
-    }
-
-    @Test
-    public void test() {
-        float[] a = new float[8192];
-        SinWave sinWave = new SinWave(2000, 40);
-        sinWave.doFinal(a);
-        for (int i = 0; i < a.length; i++) {
-            a[i] *= ((int) Short.MAX_VALUE + 1);
-        }
-        DSPMath dspMath = new DSPMath();
-        System.out.println(dspMath.mslm(a));
     }
 
     @Test

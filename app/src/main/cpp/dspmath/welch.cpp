@@ -2,7 +2,7 @@
 // File: welch.cpp
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 29-Sep-2020 18:02:36
+// C/C++ source code generated on  : 15-Oct-2020 21:35:42
 //
 
 // Include Files
@@ -15,17 +15,16 @@
 #include "mconv.h"
 #include "mfft.h"
 #include "mifft.h"
-#include "mslm.h"
 #include "mywelch.h"
 #include "psdfreqvec.h"
 #include "rt_nonfinite.h"
+#include "slmfunc.h"
 #include <cmath>
 #include <math.h>
 #include <string.h>
 
 // Function Declarations
 static int div_s32(int numerator, int denominator);
-
 static int div_s32_floor(int numerator, int denominator);
 
 // Function Definitions
@@ -364,7 +363,7 @@ void welch(const coder::array<float, 2U> &x, int varargin_3, int varargin_4,
             }
         }
 
-        c_fft(xw, static_cast<double>(varargin_3), Xx);
+        b_fft(xw, static_cast<double>(varargin_3), Xx);
         psdfreqvec(static_cast<double>(varargin_3), static_cast<double>(varargin_4),
                    win1);
         b_win = 0.0F;

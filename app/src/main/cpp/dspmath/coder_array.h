@@ -57,7 +57,7 @@ namespace coder {
 #define CODER_DELETE(P) delete[](P)
 #endif
 
-    typedef int32_T SizeType;
+typedef int32_T SizeType;
 
     namespace detail {
 
@@ -247,13 +247,13 @@ namespace coder {
         }
 
         array_iterator<T> operator++(int) {
-            array_iterator <T> cp(*this);
+            array_iterator<T> cp(*this);
             ++i_;
             return cp;
         }
 
         array_iterator<T> operator--(int) {
-            array_iterator <T> cp(*this);
+            array_iterator<T> cp(*this);
             --i_;
             return cp;
         }
@@ -288,7 +288,7 @@ namespace coder {
         }
 
         array_iterator<T> operator+(typename T::size_type _add) const {
-            array_iterator <T> cp(*this);
+            array_iterator<T> cp(*this);
             cp.i_ += _add;
             return cp;
         }
@@ -299,7 +299,7 @@ namespace coder {
         }
 
         array_iterator<T> operator-(typename T::size_type _subtract) const {
-            array_iterator <T> cp(*this);
+            array_iterator<T> cp(*this);
             cp.i_ -= _subtract;
             return cp;
         }
@@ -362,7 +362,7 @@ namespace coder {
         }
 
         const_array_iterator<T> operator++(int) {
-            const_array_iterator <T> copy(*this);
+            const_array_iterator<T> copy(*this);
             ++i_;
             return copy;
         }
@@ -403,7 +403,7 @@ namespace coder {
         }
 
         const_array_iterator<T> operator+(typename T::size_type _add) const {
-            const_array_iterator <T> cp(*this);
+            const_array_iterator<T> cp(*this);
             cp.i_ += _add;
             return cp;
         }

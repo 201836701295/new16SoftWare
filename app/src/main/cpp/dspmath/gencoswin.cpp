@@ -2,7 +2,7 @@
 // File: gencoswin.cpp
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 29-Sep-2020 18:02:36
+// C/C++ source code generated on  : 15-Oct-2020 21:35:42
 //
 
 // Include Files
@@ -11,9 +11,9 @@
 #include "mconv.h"
 #include "mfft.h"
 #include "mifft.h"
-#include "mslm.h"
 #include "mywelch.h"
 #include "rt_nonfinite.h"
+#include "slmfunc.h"
 #include "welch.h"
 #include <cmath>
 #include <string.h>
@@ -27,40 +27,40 @@
 // Return Type  : void
 //
 void calc_window(double m, double n, coder::array<double, 1U> &w) {
-    coder::array<double, 2U> y;
-    int nx;
-    int k;
-    if (rtIsNaN(m - 1.0)) {
-        y.set_size(1, 1);
-        y[0] = rtNaN;
-    } else if (m - 1.0 < 0.0) {
-        y.set_size(1, 0);
-    } else if (rtIsInf(m - 1.0) && (0.0 == m - 1.0)) {
-        y.set_size(1, 1);
-        y[0] = rtNaN;
-    } else {
-        nx = static_cast<int>(std::floor(m - 1.0));
-        y.set_size(1, (nx + 1));
-        for (k = 0; k <= nx; k++) {
-            y[k] = k;
-        }
+  coder::array<double, 2U> y;
+  int nx;
+  int k;
+  if (rtIsNaN(m - 1.0)) {
+    y.set_size(1, 1);
+    y[0] = rtNaN;
+  } else if (m - 1.0 < 0.0) {
+    y.set_size(1, 0);
+  } else if (rtIsInf(m - 1.0) && (0.0 == m - 1.0)) {
+    y.set_size(1, 1);
+    y[0] = rtNaN;
+  } else {
+    nx = static_cast<int>(std::floor(m - 1.0));
+    y.set_size(1, (nx + 1));
+    for (k = 0; k <= nx; k++) {
+      y[k] = k;
     }
+  }
 
-    w.set_size(y.size(1));
-    nx = y.size(1);
-    for (k = 0; k < nx; k++) {
-        w[k] = 6.2831853071795862 * (y[k] / (n - 1.0));
-    }
+  w.set_size(y.size(1));
+  nx = y.size(1);
+  for (k = 0; k < nx; k++) {
+    w[k] = 6.2831853071795862 * (y[k] / (n - 1.0));
+  }
 
-    nx = w.size(0);
-    for (k = 0; k < nx; k++) {
-        w[k] = std::cos(w[k]);
-    }
+  nx = w.size(0);
+  for (k = 0; k < nx; k++) {
+    w[k] = std::cos(w[k]);
+  }
 
-    nx = w.size(0);
-    for (k = 0; k < nx; k++) {
-        w[k] = 0.54 - 0.46 * w[k];
-    }
+  nx = w.size(0);
+  for (k = 0; k < nx; k++) {
+    w[k] = 0.54 - 0.46 * w[k];
+  }
 }
 
 //

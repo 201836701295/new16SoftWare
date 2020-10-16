@@ -2,19 +2,16 @@
 //  File: rtGetNaN.h
 //
 //  MATLAB Coder version            : 5.0
-//  C/C++ source code generated on  : 29-Sep-2020 18:02:36
+//  C/C++ source code generated on  : 15-Oct-2020 21:35:42
 
 
 #ifndef RTGETNAN_H
 #define RTGETNAN_H
-
 #include "rtwtypes.h"
 #include "rt_nonfinite.h"
-
 #ifndef __cplusplus
 #include <stddef.h>
 #else
-
 #include <cstddef>
 
 extern "C" {

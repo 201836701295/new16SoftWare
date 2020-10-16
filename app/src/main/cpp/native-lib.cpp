@@ -6,7 +6,7 @@
 #include "dspmath/mfft.h"
 #include "dspmath/mifft.h"
 #include "dspmath/mywelch.h"
-#include "dspmath/mslm.h"
+#include "dspmath/slmfunc.h"
 #include <android/log.h>
 
 #define LOG_TAG  "C_TAG"
@@ -139,19 +139,6 @@ Java_edu_scut_acoustics_utils_DSPMath_welch(JNIEnv *env, jobject /* this */, jfl
 }
 
 using std::min;
-
-extern "C"
-JNIEXPORT jfloat JNICALL
-Java_edu_scut_acoustics_utils_DSPMath_mslm(JNIEnv *env, jobject, jfloatArray a) {
-    int l = env->GetArrayLength(a);
-    jfloat *arr = env->GetFloatArrayElements(a, nullptr);
-    coder::array<float, 2U> x;
-    x.set(arr, 1, l);
-    jfloat result = mslm(x);
-    env->ReleaseFloatArrayElements(a, arr, JNI_ABORT);
-    return result;
-}
-
 using std::atan;
 extern "C"
 JNIEXPORT void JNICALL
@@ -174,4 +161,27 @@ Java_edu_scut_acoustics_utils_DSPMath_phase(JNIEnv *env, jobject thiz, jfloatArr
     env->ReleaseFloatArrayElements(rad, radArr, JNI_OK);
     env->ReleaseFloatArrayElements(re, reArr, JNI_ABORT);
     env->ReleaseFloatArrayElements(im, imArr, JNI_ABORT);
+}
+
+extern "C"
+JNIEXPORT jfloat JNICALL
+Java_edu_scut_acoustics_utils_DSPMath_slmfunc(JNIEnv *env, jobject thiz, jfloatArray x,
+                                              jfloatArray l8, jfloatArray ff) {
+    const int n = env->GetArrayLength(x);
+    jfloat *xArr = env->GetFloatArrayElements(x, nullptr);
+    jfloat *l8Arr = env->GetFloatArrayElements(l8, nullptr);
+    jfloat *ffArr = env->GetFloatArrayElements(ff, nullptr);
+
+    coder::array<float, 2U> xx;
+    xx.set(xArr, 1, n);
+
+    jfloat temp;
+
+    slmfunc(xx, l8Arr, ffArr, &temp);
+
+    env->ReleaseFloatArrayElements(x, xArr, JNI_ABORT);
+    env->ReleaseFloatArrayElements(l8, l8Arr, JNI_OK);
+    env->ReleaseFloatArrayElements(ff, ffArr, JNI_OK);
+
+    return temp;
 }

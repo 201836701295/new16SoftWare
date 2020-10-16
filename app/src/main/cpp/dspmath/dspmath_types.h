@@ -2,7 +2,7 @@
 // File: dspmath_types.h
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 29-Sep-2020 18:02:36
+// C/C++ source code generated on  : 15-Oct-2020 21:35:42
 //
 #ifndef DSPMATH_TYPES_H
 #define DSPMATH_TYPES_H
@@ -10,7 +10,6 @@
 // Include Files
 #include "rtwtypes.h"
 #include "coder_array.h"
-
 #ifdef _MSC_VER
 
 #pragma warning(push)
