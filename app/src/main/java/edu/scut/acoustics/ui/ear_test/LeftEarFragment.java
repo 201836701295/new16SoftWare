@@ -47,7 +47,11 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
             hzs[i] = new Button(requireContext());
             hzs[i].setText(getString(R.string.hzbtn, viewModel.getFrequencies()[i]));
             hzs[i].setOnClickListener(this);
-            binding.earTest.freqcontainer.addView(hzs[i], layoutParams);
+            if (i < 4) {
+                binding.earTest.freqcontainer1.addView(hzs[i], layoutParams);
+            } else {
+                binding.earTest.freqcontainer2.addView(hzs[i], layoutParams);
+            }
         }
         hzs[current].setEnabled(false);
         viewModel.show(current);

@@ -12,13 +12,22 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/freqcontainer"
+            android:id="@+id/freqcontainer1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/freqcontainer2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/freqcontainer1" />
 
         <TextView
             android:id="@+id/frequency"
@@ -30,7 +39,7 @@
             android:textSize="20sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/freqcontainer"
+            app:layout_constraintTop_toBottomOf="@id/freqcontainer2"
             tools:text="当前频率\n125Hz" />
 
         <LinearLayout
