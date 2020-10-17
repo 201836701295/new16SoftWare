@@ -112,11 +112,11 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
                     dba.yValue[i] = max;
                     dba.xAxisValue[i] = 10 * i;
                 }
-                max -= 2;
+                max -= 1;
                 dbaMutableLiveData.postValue(dba);
             }
         };
-        timer.schedule(timerTask, 0, 1000);
+        timer.schedule(timerTask, 0, 20);
         dbaMutableLiveData.observe(this, new Observer<SLM.DBA>() {
             @Override
             public void onChanged(SLM.DBA dba) {
@@ -209,6 +209,7 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
             BarData barData = new BarData(set);
             chart.setData(barData);
         }
+        chart.invalidate();
     }
 
     @Override
