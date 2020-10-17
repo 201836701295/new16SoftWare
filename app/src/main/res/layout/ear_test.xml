@@ -18,7 +18,7 @@
             android:orientation="horizontal"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/frequency"
@@ -71,8 +71,8 @@
                 android:id="@+id/seekbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="85"
-                android:min="-20" />
+                android:max="@integer/maxear"
+                android:min="@integer/minear" />
 
         </LinearLayout>
 

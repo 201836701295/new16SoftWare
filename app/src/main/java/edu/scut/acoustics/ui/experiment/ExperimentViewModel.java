@@ -47,6 +47,27 @@ public class ExperimentViewModel extends AndroidViewModel {
         recorder = new AudioRecorder(application);
     }
 
+    public void setAudioData2(float[] audioData2) {
+        state.state = ExperimentState.PROCESSING;
+        experimentState.setValue(state);
+        repository.setAudioData2(audioData2);
+        service.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    repository.doFinal();
+                    state.state = ExperimentState.FINISH;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    state.state = ExperimentState.ERROR;
+                } finally {
+                    experimentState.postValue(state);
+                    Log.i("data process", "run: finish");
+                }
+            }
+        });
+    }
+
     public void setListener(AudioPlayer.Listener listener) {
         player.setListener(listener);
     }

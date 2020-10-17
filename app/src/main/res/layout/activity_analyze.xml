@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -12,7 +13,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/wave"
@@ -45,7 +46,8 @@
                 android:src="@drawable/ic_baseline_play_arrow_24"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/amplitude" />
+                app:layout_constraintTop_toBottomOf="@id/amplitude"
+                tools:ignore="ContentDescription" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

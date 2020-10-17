@@ -2,6 +2,7 @@ package edu.scut.acoustics.ui.experiment;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -23,7 +24,7 @@ public class ChartRepository {
     MutableLiveData<ChartInformation> waveChartLiveData;
     MutableLiveData<ChartInformation> phaseChartLiveData;
     MutableLiveData<ChartInformation> powerChartLiveData;
-    private DSPMath dspMath = new DSPMath();
+    private final DSPMath dspMath = new DSPMath();
     private float[] convolutionData;
     private float[] tailorData;
     private float[] real;
@@ -31,9 +32,9 @@ public class ChartRepository {
     private float[] phase;
     private float[] power;
     private float[] frequency;
-    private String waveLabel;
-    private String phaseLabel;
-    private String powerLabel;
+    private final String waveLabel;
+    private final String phaseLabel;
+    private final String powerLabel;
     private ChartInformation waveChart;
     private ChartInformation phaseChart;
     private ChartInformation powerChart;
@@ -209,8 +210,10 @@ public class ChartRepository {
         powerChart.labelY = "功率/dB";
         powerChart.xUnit = "Hz";
         powerChart.yUnit = "dB";
-        powerChart.minX = 0;
-        powerChart.maxX = frequency[frequency.length - 1];
+        powerChart.minX = (float) Math.log10(frequency[1]);
+        powerChart.maxX = (float) Math.log10(frequency[frequency.length - 1]);
+        Log.i("power chart", "powerChart.minX: " + powerChart.minX);
+        Log.i("power chart", "powerChart.maxX: " + powerChart.maxX);
         powerChart.maxY = 0;
         powerChart.minY = 0;
 
@@ -220,7 +223,7 @@ public class ChartRepository {
         }
         List<Entry> values = new ArrayList<>(power.length / dpp + 1);
         float low, high;
-        for (int i = 0; i < power.length; i += dpp) {
+        for (int i = 1; i < power.length; i += dpp) {
             low = power[i];
             high = power[i];
             for (int j = i, k = 0; j < power.length && k < dpp; ++j, ++k) {
@@ -237,8 +240,9 @@ public class ChartRepository {
                     high = power[j];
                 }
             }
-            values.add(new Entry(frequency[i], low));
-            values.add(new Entry(frequency[i], high));
+            values.add(new Entry((float) Math.log10(frequency[i]), low));
+            values.add(new Entry((float) Math.log10(frequency[i]), high));
+            Log.i("power chart", "powerChart: " + (float) Math.log10(frequency[i]));
         }
         LineDataSet set = new LineDataSet(values, powerLabel);
         set.setDrawIcons(false);

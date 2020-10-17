@@ -45,12 +45,21 @@ public class OutcomeFragment extends Fragment {
         xAxis.setAxisMaximum(chartInformation.maxX);
         xAxis.setAxisMinimum(chartInformation.minX);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                return format.format(value) + chartInformation.xUnit;
-            }
-        });
+        if (chart == binding.powerChart) {
+            xAxis.setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    return format.format(Math.pow(10, value)) + chartInformation.xUnit;
+                }
+            });
+        } else {
+            xAxis.setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    return format.format(value) + chartInformation.xUnit;
+                }
+            });
+        }
         chart.setData(chartInformation.lineData);
     }
 

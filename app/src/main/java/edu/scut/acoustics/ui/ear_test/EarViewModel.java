@@ -25,9 +25,9 @@ public class EarViewModel extends AndroidViewModel {
     Thread thread = new PlayThread();
     int[] frequencies;
     int[] sensitivities;
+    final int min;
+    final int max;
     int i;
-    LiveData<Integer> leftTestedLiveData;
-    LiveData<Integer> rightTestedLiveData;
     MutableLiveData<Integer> volume;
     MutableLiveData<Integer> frequency;
     LiveData<EarTestRepository.Tested> tested;
@@ -41,6 +41,8 @@ public class EarViewModel extends AndroidViewModel {
         frequencies = application.getResources().getIntArray(R.array.frequency);
         tested = repository.getTestedLiveData();
         TEST_FINISH = repository.TEST_FINISH;
+        min = application.getResources().getInteger(R.integer.minear);
+        max = application.getResources().getInteger(R.integer.maxear);
         Log.d("asdfg", "EarViewModel() returned: " + TEST_FINISH);
     }
 
@@ -77,7 +79,7 @@ public class EarViewModel extends AndroidViewModel {
     }
 
     public void upVolume() {
-        if (sensitivities[i] < 85) {
+        if (sensitivities[i] < max) {
             sensitivities[i] += 1;
             int v = sensitivities[i];
             int f = frequencies[i];
@@ -88,7 +90,7 @@ public class EarViewModel extends AndroidViewModel {
     }
 
     public void downVolume() {
-        if (sensitivities[i] > 0) {
+        if (sensitivities[i] > min) {
             sensitivities[i] -= 1;
             int v = sensitivities[i];
             int f = frequencies[i];
@@ -127,7 +129,7 @@ public class EarViewModel extends AndroidViewModel {
     }
 
     public void setVolume(int v) {
-        if (v >= 0 && v <= 85) {
+        if (v >= min && v <= max) {
             sensitivities[i] = v;
             int f = frequencies[i];
             volume.setValue(v);

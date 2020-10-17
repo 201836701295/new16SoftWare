@@ -35,6 +35,6 @@
         android:id="@+id/test_result"
         android:name="edu.scut.acoustics.ui.ear_test.TestResultFragment"
         android:label="@string/test_result"
-        tools:layout="@layout/fragment_test_result"></fragment>
+        tools:layout="@layout/fragment_test_result" />
 
 </navigation>

@@ -19,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="耳朵灵敏度测试结果"
+                android:text="@string/ear_test_result"
                 android:textSize="20sp" />
 
             <com.github.mikephil.charting.charts.LineChart

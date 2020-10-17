@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.icu.text.DecimalFormat;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -20,6 +19,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -90,20 +90,12 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
                 binding.sourceType.setText(s);
             }
         });
-        /*
         viewModel.getDba().observe(this, new Observer<SLM.DBA>() {
             @Override
             public void onChanged(SLM.DBA dba) {
-                if(foo < 30){
-                    observeDBA(dba);
-                    ++foo;
-                    Log.d("chart observe", "onChanged() returned: ");
-                }
-
+                observeDBA(dba);
             }
         });
-
-         */
 
         timerTask = new TimerTask() {
             @Override
@@ -116,7 +108,7 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
                 dbaMutableLiveData.postValue(dba);
             }
         };
-        timer.schedule(timerTask, 0, 20);
+        //timer.schedule(timerTask, 0, 1000);
         dbaMutableLiveData.observe(this, new Observer<SLM.DBA>() {
             @Override
             public void onChanged(SLM.DBA dba) {
@@ -145,7 +137,7 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
         xAxis.setGranularity(1f); // only intervals of 1 day
         xAxis.setLabelCount(8);
         xAxis.setAxisMinimum(-0.5f);
-        xAxis.setAxisMaximum(8.5f);
+        xAxis.setAxisMaximum(7.5f);
 
         YAxis yAxis = chart.getAxisLeft();
         yAxis.setAxisMaximum(150f);
@@ -169,16 +161,16 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
         legend.setXEntrySpace(4f);
     }
 
-    void observeDBA(SLM.DBA dba) {
+    void observeDBA(final SLM.DBA dba) {
         BarChart chart = binding.dbChart;
         barEntries.clear();
-        /*
+
         if (xValueFormatter == null) {
             xValueFormatter = new ValueFormatter() {
                 @Override
                 public String getAxisLabel(float value, AxisBase axis) {
                     int index = (int) value;
-                    if(index < 0){
+                    if (index < 0) {
                         return "";
                     }
                     return (int) dba.xAxisValue[index] + "Hz";
@@ -189,10 +181,9 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
         else {
             chart.getXAxis().setValueFormatter(xValueFormatter);
         }
-         */
         for (int i = 0; i < dba.yValue.length; i++) {
-            barEntries.add(new BarEntry(i, dba.yValue[i]));
-            Log.i("barEntries", "BarEntry: " + i + " " + dba.yValue[i]);
+            barEntries.add(new BarEntry(i, dba.yValue[i] + baseline));
+            //Log.i("barEntries", "BarEntry: " + i + " " + dba.yValue[i]);
         }
         BarDataSet set;
         if (chart.getData() != null &&

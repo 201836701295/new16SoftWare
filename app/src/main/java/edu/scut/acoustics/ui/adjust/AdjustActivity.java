@@ -2,6 +2,7 @@ package edu.scut.acoustics.ui.adjust;
 
 import android.icu.text.DecimalFormat;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -55,12 +56,14 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
         super.onResume();
         baseline = getSharedPreferences(sharedpreferences, MODE_PRIVATE).getFloat(key, 0.0f);
         viewModel.start();
+        Log.i("AdjustActivity", "onResume: ");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         viewModel.stop();
+        Log.i("AdjustActivity", "onPause: ");
     }
 
     @Override

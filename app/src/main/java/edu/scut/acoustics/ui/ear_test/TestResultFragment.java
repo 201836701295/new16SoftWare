@@ -91,8 +91,8 @@ public class TestResultFragment extends Fragment {
         chart.getAxisRight().setEnabled(false);
 
         YAxis yAxis = chart.getAxisLeft();
-        yAxis.setAxisMaximum(90f);
-        yAxis.setAxisMinimum(-20f);
+        yAxis.setAxisMaximum(getResources().getInteger(R.integer.maxear) + 10);
+        yAxis.setAxisMinimum(getResources().getInteger(R.integer.minear));
         yAxis.setValueFormatter(yValueFormatter);
 
         XAxis xAxis = chart.getXAxis();

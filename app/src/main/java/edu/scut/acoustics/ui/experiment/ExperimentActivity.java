@@ -161,7 +161,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
     }
 
     //开始实验
-    private void start_experiment() {
+    void start_experiment() {
         viewModel.reset();
         //声音最大
         device.setVolume(device.getMaxVolume());
@@ -172,6 +172,11 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    void test_experiment() {
+        viewModel.reset();
+        viewModel.setAudioData2(application.sampleSignal);
     }
 
     //显示结果
@@ -197,5 +202,6 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         }
         //检查权限
         permission();
+        //test_experiment();
     }
 }

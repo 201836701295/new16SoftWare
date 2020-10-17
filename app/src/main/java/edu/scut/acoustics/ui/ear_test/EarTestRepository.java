@@ -25,8 +25,8 @@ public class EarTestRepository {
         frequencies = context.getResources().getIntArray(R.array.frequency);
         leftSensitivities = new int[frequencies.length];
         rightSensitivities = new int[frequencies.length];
-        Arrays.fill(leftSensitivities, 0);
-        Arrays.fill(rightSensitivities, 0);
+        Arrays.fill(leftSensitivities, context.getResources().getInteger(R.integer.minear));
+        Arrays.fill(rightSensitivities, context.getResources().getInteger(R.integer.minear));
         TEST_FINISH = (1 << frequencies.length) - 1;
 
         leftSensitivitiesLiveData = new MutableLiveData<>(leftSensitivities);

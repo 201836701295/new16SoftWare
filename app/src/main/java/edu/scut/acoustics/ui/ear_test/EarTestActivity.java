@@ -18,7 +18,7 @@ public class EarTestActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityEarTestBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_ear_test);
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.left_ear, R.id.right_ear).build();
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.left_ear, R.id.right_ear, R.id.test_result).build();
         NavController navController = Navigation.findNavController(this, R.id.fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navigation, navController);
