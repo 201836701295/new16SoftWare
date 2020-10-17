@@ -210,7 +210,7 @@ public class ChartRepository {
         powerChart.labelY = "功率/dB";
         powerChart.xUnit = "Hz";
         powerChart.yUnit = "dB";
-        powerChart.minX = (float) Math.log10(frequency[1]);
+        powerChart.minX = -1000f;
         powerChart.maxX = (float) Math.log10(frequency[frequency.length - 1]);
         Log.i("power chart", "powerChart.minX: " + powerChart.minX);
         Log.i("power chart", "powerChart.maxX: " + powerChart.maxX);
