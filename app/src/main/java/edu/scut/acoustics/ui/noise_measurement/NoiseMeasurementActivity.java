@@ -177,8 +177,7 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
                 }
             };
             chart.getXAxis().setValueFormatter(xValueFormatter);
-        }
-        else {
+        } else {
             chart.getXAxis().setValueFormatter(xValueFormatter);
         }
         for (int i = 0; i < dba.yValue.length; i++) {

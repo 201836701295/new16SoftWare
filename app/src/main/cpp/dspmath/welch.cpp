@@ -25,6 +25,7 @@
 
 // Function Declarations
 static int div_s32(int numerator, int denominator);
+
 static int div_s32_floor(int numerator, int denominator);
 
 // Function Definitions

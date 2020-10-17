@@ -21,10 +21,13 @@ import edu.scut.acoustics.utils.DSPMath;
 public class ChartRepository {
     //图表最大数据数
     public static final int MAX_ENTRY = 3000;
+    private final DSPMath dspMath = new DSPMath();
+    private final String waveLabel;
+    private final String phaseLabel;
+    private final String powerLabel;
     MutableLiveData<ChartInformation> waveChartLiveData;
     MutableLiveData<ChartInformation> phaseChartLiveData;
     MutableLiveData<ChartInformation> powerChartLiveData;
-    private final DSPMath dspMath = new DSPMath();
     private float[] convolutionData;
     private float[] tailorData;
     private float[] real;
@@ -32,9 +35,6 @@ public class ChartRepository {
     private float[] phase;
     private float[] power;
     private float[] frequency;
-    private final String waveLabel;
-    private final String phaseLabel;
-    private final String powerLabel;
     private ChartInformation waveChart;
     private ChartInformation phaseChart;
     private ChartInformation powerChart;

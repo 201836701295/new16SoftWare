@@ -10,6 +10,7 @@
 // Include Files
 #include "rtwtypes.h"
 #include "coder_array.h"
+
 #ifdef _MSC_VER
 
 #pragma warning(push)

@@ -15,6 +15,7 @@
 
 // Function Declarations
 extern double b_xnrm2(int n, const double x[3]);
+
 extern double xnrm2(int n, const double x[36], int ix0);
 
 #endif

@@ -7,7 +7,9 @@
 
 #ifndef RT_NONFINITE_H
 #define RT_NONFINITE_H
+
 #include "rtwtypes.h"
+
 #ifdef __cplusplus
 
 extern "C" {

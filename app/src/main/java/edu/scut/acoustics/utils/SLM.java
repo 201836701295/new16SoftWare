@@ -142,15 +142,15 @@ public class SLM {
         dba.postValue(dbaValue);
     }
 
-    public static class DBA {
-        public float[] yValue = new float[10];
-        public float[] xAxisValue = new float[10];
-    }
-
     public void refresh() {
         minValue = maxValue = realtimeValue;
         max.setValue(maxValue);
         min.setValue(minValue);
+    }
+
+    public static class DBA {
+        public float[] yValue = new float[10];
+        public float[] xAxisValue = new float[10];
     }
 
     private class Calculator implements Callable<Void> {

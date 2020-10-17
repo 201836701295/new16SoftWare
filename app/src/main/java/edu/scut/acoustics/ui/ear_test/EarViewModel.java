@@ -18,6 +18,8 @@ public class EarViewModel extends AndroidViewModel {
     public final static int LEFT = 0;
     public final static int RIGHT = 1;
     public final int TEST_FINISH;
+    final int min;
+    final int max;
     EarTestRepository repository;
     SinWavePlayer sinWavePlayer = new SinWavePlayer();
     ExecutorService service = Executors.newSingleThreadExecutor();
@@ -25,8 +27,6 @@ public class EarViewModel extends AndroidViewModel {
     Thread thread = new PlayThread();
     int[] frequencies;
     int[] sensitivities;
-    final int min;
-    final int max;
     int i;
     MutableLiveData<Integer> volume;
     MutableLiveData<Integer> frequency;

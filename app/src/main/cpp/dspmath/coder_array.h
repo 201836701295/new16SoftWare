@@ -57,9 +57,9 @@ namespace coder {
 #define CODER_DELETE(P) delete[](P)
 #endif
 
-typedef int32_T SizeType;
+    typedef int32_T SizeType;
 
-namespace detail {
+    namespace detail {
 
 #ifndef CODER_ARRAY_DATA_PTR_DEFINED
 
@@ -247,13 +247,13 @@ namespace detail {
         }
 
         array_iterator<T> operator++(int) {
-            array_iterator<T> cp(*this);
+            array_iterator <T> cp(*this);
             ++i_;
             return cp;
         }
 
         array_iterator<T> operator--(int) {
-            array_iterator<T> cp(*this);
+            array_iterator <T> cp(*this);
             --i_;
             return cp;
         }
@@ -288,7 +288,7 @@ namespace detail {
         }
 
         array_iterator<T> operator+(typename T::size_type _add) const {
-            array_iterator<T> cp(*this);
+            array_iterator <T> cp(*this);
             cp.i_ += _add;
             return cp;
         }
@@ -299,7 +299,7 @@ namespace detail {
         }
 
         array_iterator<T> operator-(typename T::size_type _subtract) const {
-            array_iterator<T> cp(*this);
+            array_iterator <T> cp(*this);
             cp.i_ -= _subtract;
             return cp;
         }
@@ -362,7 +362,7 @@ namespace detail {
         }
 
         const_array_iterator<T> operator++(int) {
-            const_array_iterator<T> copy(*this);
+            const_array_iterator <T> copy(*this);
             ++i_;
             return copy;
         }
@@ -403,7 +403,7 @@ namespace detail {
         }
 
         const_array_iterator<T> operator+(typename T::size_type _add) const {
-            const_array_iterator<T> cp(*this);
+            const_array_iterator <T> cp(*this);
             cp.i_ += _add;
             return cp;
         }
@@ -414,7 +414,7 @@ namespace detail {
         }
 
         const_array_iterator<T> operator-(typename T::size_type _subtract) const {
-            const_array_iterator<T> cp(*this);
+            const_array_iterator <T> cp(*this);
             cp.i_ -= _subtract;
             return cp;
         }
@@ -741,7 +741,7 @@ namespace detail {
 
         template<size_t N1>
         array_base<T, SZ, N1> reshape_n(const SZ (&_ns)[N1]) const {
-            array_base<T, SZ, N1> reshaped(const_cast<T *>(&data_[0]), _ns);
+            array_base <T, SZ, N1> reshaped(const_cast<T *>(&data_[0]), _ns);
             return reshaped;
         }
 
@@ -994,19 +994,19 @@ namespace detail {
         }
 
         array_iterator<array_base<T, SZ, N> > begin() {
-            return array_iterator<array_base<T, SZ, N> >(this, 0);
+            return array_iterator < array_base < T, SZ, N > > (this, 0);
         }
 
         array_iterator<array_base<T, SZ, N> > end() {
-            return array_iterator<array_base<T, SZ, N> >(this, this->numel());
+            return array_iterator < array_base < T, SZ, N > > (this, this->numel());
         }
 
         const_array_iterator<array_base<T, SZ, N> > begin() const {
-            return const_array_iterator<array_base<T, SZ, N> >(this, 0);
+            return const_array_iterator < array_base < T, SZ, N > > (this, 0);
         }
 
         const_array_iterator<array_base<T, SZ, N> > end() const {
-            return const_array_iterator<array_base<T, SZ, N> >(this, this->numel());
+            return const_array_iterator < array_base < T, SZ, N > > (this, this->numel());
         }
 
     protected:
