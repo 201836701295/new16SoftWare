@@ -108,11 +108,19 @@ public class EarViewModel extends AndroidViewModel {
         }
     }
 
-    public void resetTested() {
+    public void resetFinished() {
         if (side == LEFT) {
-            repository.resetLeftTested();
+            repository.resetLeftFinished();
         } else if (side == RIGHT) {
-            repository.resetRightTested();
+            repository.resetRightFinished();
+        }
+    }
+
+    public void setFinished() {
+        if (side == LEFT) {
+            repository.setLeftFinished();
+        } else if (side == RIGHT) {
+            repository.setRightFinished();
         }
     }
 

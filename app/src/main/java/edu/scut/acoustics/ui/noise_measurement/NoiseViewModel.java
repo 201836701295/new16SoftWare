@@ -89,7 +89,7 @@ public class NoiseViewModel extends ViewModel {
             }
         };
         timer = new Timer();
-        timer.schedule(timerTask, 0, 1000);
+        timer.schedule(timerTask, 500, 1000);
     }
 
     public void refresh() {

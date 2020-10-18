@@ -57,7 +57,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_baseline_arrow_drop_up_24" />
+                android:background="@drawable/shape_btn"
+                android:src="@drawable/ic_baseline_arrow_drop_up_24"
+                android:tint="@color/black" />
 
             <TextView
                 android:id="@+id/volume"
@@ -74,7 +76,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_baseline_arrow_drop_down_24" />
+                android:background="@drawable/shape_btn"
+                android:src="@drawable/ic_baseline_arrow_drop_down_24"
+                android:tint="@color/black" />
 
             <SeekBar
                 android:id="@+id/seekbar"
@@ -94,6 +98,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/unable_hear"
             app:layout_constraintRight_toLeftOf="@id/able_hear"
+            android:background="@drawable/shape_btn"
+            android:tint="@color/green"
             tools:ignore="ContentDescription" />
 
         <Button
@@ -113,6 +119,7 @@
             android:layout_marginBottom="10dp"
             android:text="@string/able_hear"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/shape_btn"
             app:layout_constraintRight_toRightOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

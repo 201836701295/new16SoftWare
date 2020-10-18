@@ -2,6 +2,8 @@ package edu.scut.acoustics.ui.adjust;
 
 import android.icu.text.DecimalFormat;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 
@@ -16,10 +18,11 @@ import java.util.Objects;
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.ActivityAdjustBinding;
 
-public class AdjustActivity extends AppCompatActivity implements View.OnClickListener {
+public class AdjustActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher {
     DecimalFormat format = new DecimalFormat("##0.00");
     float baseline;
     float realtime = 0.0f;
+    float target = 94f;
     AdjustViewModel viewModel;
     String sharedpreferences;
     String key;
@@ -36,6 +39,12 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
         key = getString(R.string.baseline);
 
         viewModel = new ViewModelProvider(this).get(AdjustViewModel.class);
+        viewModel.getTargetLiveData().observe(this, new Observer<Float>() {
+            @Override
+            public void onChanged(Float aFloat) {
+                binding.title.setText(getString(R.string.adjust_tip, aFloat.intValue()));
+            }
+        });
         viewModel.realtime.observe(this, new Observer<Float>() {
             @Override
             public void onChanged(Float aFloat) {
@@ -49,6 +58,7 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
                 binding.sourceType.setText(s);
             }
         });
+        binding.editTextNumberSigned.addTextChangedListener(this);
     }
 
     @Override
@@ -68,7 +78,26 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        baseline = (94f - realtime);
+        baseline = target - realtime;
         getSharedPreferences(sharedpreferences, MODE_PRIVATE).edit().putFloat(key, baseline).apply();
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        if (s.charAt(0) == '-' && s.length() == 1) {
+            return;
+        }
+        target = Float.parseFloat(s.toString());
+        viewModel.setTarget(target);
     }
 }

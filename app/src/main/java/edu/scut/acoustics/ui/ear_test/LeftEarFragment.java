@@ -27,7 +27,7 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
     EarViewModel viewModel;
     FragmentLeftEarBinding binding;
     Button[] hzs;
-    int current = 0;
+    static int current = 0;
     AudioDevice device;
 
     @Nullable
@@ -47,13 +47,15 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
             hzs[i] = new Button(requireContext());
             hzs[i].setText(getString(R.string.hzbtn, viewModel.getFrequencies()[i]));
             hzs[i].setOnClickListener(this);
+            hzs[i].setBackgroundResource(R.drawable.selector_frequency);
             if (i < 4) {
                 binding.earTest.freqcontainer1.addView(hzs[i], layoutParams);
             } else {
                 binding.earTest.freqcontainer2.addView(hzs[i], layoutParams);
             }
         }
-        hzs[current].setEnabled(false);
+        //hzs[current].setEnabled(false);
+        hzs[current].setActivated(true);
         viewModel.show(current);
 
         viewModel.getFrequency().observe(getViewLifecycleOwner(), new Observer<Integer>() {
@@ -94,31 +96,51 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
         viewModel.getTested().observe(getViewLifecycleOwner(), new Observer<EarTestRepository.Tested>() {
             @Override
             public void onChanged(EarTestRepository.Tested tested) {
-                Log.d("asdfg", "onChanged() returned: " + tested.left);
+                //Log.d("asdfg", "onChanged() returned: " + tested.left);
+                Log.d("testviewmodel", "left = " + tested.left + " right = " + tested.right);
                 if (tested.left == viewModel.TEST_FINISH + 1) {
+                    viewModel.resetFinished();
                     return;
                 }
-                if (tested.left != viewModel.TEST_FINISH) {
+                if (tested.left != viewModel.TEST_FINISH && tested.left != viewModel.TEST_FINISH + 1) {
+                    if (((tested.left >> current) & 1) == 0) {
+                        return;
+                    }
                     //寻找未测试项
-                    for (int i = 0; i < viewModel.getFrequencies().length; i++) {
+                    for (int i = current; i < viewModel.getFrequencies().length; i++) {
                         if (((tested.left >> i) & 1) == 0) {
-                            hzs[current].setEnabled(true);
+                            hzs[current].setActivated(false);
+                            //hzs[current].setEnabled(true);
                             current = i;
                             viewModel.show(current);
-                            hzs[current].setEnabled(false);
-                            break;
+                            //hzs[current].setEnabled(false);
+                            hzs[current].setActivated(true);
+                            return;
+                        }
+                    }
+                    for (int i = 0; i < viewModel.getFrequencies().length; i++) {
+                        if (((tested.left >> i) & 1) == 0) {
+                            hzs[current].setActivated(false);
+                            //hzs[current].setEnabled(true);
+                            current = i;
+                            viewModel.show(current);
+                            //hzs[current].setEnabled(false);
+                            hzs[current].setActivated(true);
+                            return;
                         }
                     }
                     return;
                 }
                 if (tested.right != viewModel.TEST_FINISH && tested.right != viewModel.TEST_FINISH + 1) {
-                    viewModel.resetTested();
                     //进入下一页面
                     Navigation.findNavController(binding.getRoot()).navigate(R.id.left_to_right);
+                    viewModel.getTested().removeObserver(this);
+                    viewModel.setFinished();
                     return;
                 }
                 //所有测试做完
-                viewModel.resetTested();
+                viewModel.getTested().removeObserver(this);
+                viewModel.setFinished();
                 Navigation.findNavController(binding.getRoot()).navigate(R.id.left_to_result);
             }
         });
@@ -133,14 +155,17 @@ public class LeftEarFragment extends Fragment implements View.OnClickListener {
         super.onPause();
     }
 
+
     @Override
     public void onClick(View view) {
         for (int i = 0; i < hzs.length; i++) {
             if (hzs[i] == view) {
                 viewModel.stop();
-                hzs[current].setEnabled(true);
+                hzs[current].setActivated(false);
+                //hzs[current].setEnabled(true);
                 current = i;
-                hzs[current].setEnabled(false);
+                //hzs[current].setEnabled(false);
+                hzs[current].setActivated(true);
                 viewModel.show(current);
                 return;
             }

@@ -74,14 +74,14 @@ public class EarTestRepository {
         rightSensitivitiesLiveData.setValue(rightSensitivities);
     }
 
-    public void resetLeftTested() {
+    public void setLeftFinished() {
         if (tested.left == TEST_FINISH) {
             tested.left = TEST_FINISH + 1;
             testedLiveData.setValue(tested);
         }
     }
 
-    public void resetRightTested() {
+    public void setRightFinished() {
         if (tested.right == TEST_FINISH) {
             tested.right = TEST_FINISH + 1;
             testedLiveData.setValue(tested);
@@ -119,6 +119,16 @@ public class EarTestRepository {
     protected void finalize() throws Throwable {
         super.finalize();
         repository = null;
+    }
+
+    public void resetLeftFinished() {
+        tested.left = 0;
+        testedLiveData.setValue(tested);
+    }
+
+    public void resetRightFinished() {
+        tested.right = 0;
+        testedLiveData.setValue(tested);
     }
 
     public static class Tested {

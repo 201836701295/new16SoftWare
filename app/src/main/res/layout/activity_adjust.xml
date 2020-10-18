@@ -46,6 +46,19 @@
             app:layout_constraintTop_toBottomOf="@id/real"
             tools:text="音源" />
 
+        <EditText
+            android:id="@+id/editTextNumberSigned"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/self_determine"
+            android:ems="6"
+            android:hint="@string/self_determine"
+            android:inputType="numberSigned"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sourceType"
+            tools:ignore="LabelFor" />
+
         <Button
             android:id="@+id/adjust"
             android:layout_width="wrap_content"
@@ -54,8 +67,8 @@
             android:text="@string/adjust"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
+            android:background="@drawable/shape_btn"
             app:layout_constraintRight_toRightOf="parent" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

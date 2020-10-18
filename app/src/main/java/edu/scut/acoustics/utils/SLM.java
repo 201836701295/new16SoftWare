@@ -26,7 +26,7 @@ public class SLM {
     public static final int CHANNEL = AudioFormat.CHANNEL_IN_MONO;
     public static final int FORMAT = AudioFormat.ENCODING_PCM_16BIT;
     public static final int MIN_BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL, FORMAT) * 8;
-    public static final int N = 8192;
+    public static final int N = MIN_BUFFER_SIZE / 2;
 
     float[] frequencies = new float[10];
     float[] dbas = new float[10];
@@ -54,6 +54,7 @@ public class SLM {
         min = new MutableLiveData<>(minValue);
         realtime = new MutableLiveData<>(realtimeValue);
         dba = new MutableLiveData<>(dbaValue);
+        Log.d("SLM info", "SLM: " + MIN_BUFFER_SIZE);
     }
 
     public LiveData<DBA> getDba() {
@@ -159,7 +160,6 @@ public class SLM {
             try {
                 DSPMath dspMath = new DSPMath();
                 int off, length, temp;
-                short tv1, tv2;
                 float result;
 
                 off = 0;

@@ -8,12 +8,12 @@
     <string name="right_ear">右耳</string>
     <string name="able_hear">听得到</string>
     <string name="unable_hear">听不到</string>
-    <string name="guidance">请将话筒靠近麦克风，点击下方播放按钮后进行播放样本音频，系统将会录下播放的音频，并生产卷积响应信号</string>
+    <string name="guidance">请将麦克风靠近音响，点击下方播放按钮后进行播放样本音频，系统将会录下播放的音频，并生产卷积响应信号</string>
     <string name="adjust">校准</string>
     <string name="noise_measure">噪声测量</string>
     <string name="test_signal">测试信号</string>
     <string name="inverse_signal">卷积逆信号</string>
-    <string name="adjust_tip">请将接收端放置在94dBA的噪声源10厘米处，待示数稳定后，按下校准按钮</string>
+    <string name="adjust_tip">请将录音头插入%ddB的校准筒，待示数稳定后，按下校准按钮</string>
     <string name="convolution_wave">卷积波形</string>
     <string name="phase_chart">相位谱</string>
     <string name="frequency_chart">振幅谱</string>
@@ -34,4 +34,5 @@
     <string name="test_result">测试结果</string>
     <string name="refresh">refresh</string>
     <string name="ear_test_result">耳朵灵敏度测试结果</string>
+    <string name="self_determine">自定义分贝值</string>
 </resources>

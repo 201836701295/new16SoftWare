@@ -18,6 +18,7 @@ import edu.scut.acoustics.utils.SLM;
 public class AdjustViewModel extends ViewModel {
     LiveData<Float> realtime;
     MutableLiveData<String> sourceType;
+    MutableLiveData<Float> targetLiveData;
     TimerTask timerTask;
     Timer timer = new Timer();
     SLM slm;
@@ -26,6 +27,15 @@ public class AdjustViewModel extends ViewModel {
         slm = new SLM();
         realtime = slm.getRealtime();
         sourceType = new MutableLiveData<>("");
+        targetLiveData = new MutableLiveData<>(94f);
+    }
+
+    public LiveData<Float> getTargetLiveData() {
+        return targetLiveData;
+    }
+
+    public void setTarget(float target) {
+        targetLiveData.setValue(target);
     }
 
     public LiveData<String> getSourceType() {

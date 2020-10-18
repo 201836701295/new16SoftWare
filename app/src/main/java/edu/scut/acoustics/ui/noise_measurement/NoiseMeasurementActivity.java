@@ -140,8 +140,8 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
         xAxis.setAxisMaximum(7.5f);
 
         YAxis yAxis = chart.getAxisLeft();
-        yAxis.setAxisMaximum(150f);
-        yAxis.setAxisMinimum(-30f);
+        yAxis.setAxisMaximum(110f);
+        yAxis.setAxisMinimum(-10f);
         yAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
