@@ -21,7 +21,7 @@
             tools:context=".ui.noise_measurement.NoiseMeasurementActivity">
 
             <LinearLayout
-                layout_margin="5dp"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -101,7 +101,22 @@
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/dbChart"
                 android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
                 android:layout_height="200dp" />
+
+            <com.visualizer.amplitude.AudioRecordView
+                android:id="@+id/audioRecordView"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="10dp"
+                app:chunkAlignTo="center"
+                app:chunkColor="@color/blue"
+                app:chunkMaxHeight="40dp"
+                app:chunkMinHeight="0dp"
+                app:chunkRoundedCorners="true"
+                app:chunkSoftTransition="true"
+                app:chunkSpace="0.5dp"
+                app:chunkWidth="2dp" />
 
         </LinearLayout>
 

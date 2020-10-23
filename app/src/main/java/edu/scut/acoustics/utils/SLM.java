@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -48,6 +49,7 @@ public class SLM {
     float realtimeValue;
     DB DBValue;
     Future<Void> future;
+    MutableLiveData<Integer> maxAmp;
 
     public SLM() {
         mode = new AtomicInteger(A_WEIGHTING);
@@ -59,7 +61,12 @@ public class SLM {
         min = new MutableLiveData<>(minValue);
         realtime = new MutableLiveData<>(realtimeValue);
         db = new MutableLiveData<>(DBValue);
+        maxAmp = new MutableLiveData<>(0);
         Log.d("SLM info", "SLM: " + MIN_BUFFER_SIZE);
+    }
+
+    public LiveData<Integer> getMaxAmp() {
+        return maxAmp;
     }
 
     public void setMode(int m) {
@@ -140,7 +147,7 @@ public class SLM {
             minValue = realtimeValue;
             this.min.postValue(minValue);
         }
-        if (maxValue < realtimeValue || Float.isNaN(minValue)) {
+        if (maxValue < realtimeValue || Float.isNaN(maxValue)) {
             maxValue = realtimeValue;
             this.max.postValue(maxValue);
         }
@@ -158,10 +165,17 @@ public class SLM {
     public static class DB {
         public float[] yValue = new float[8];
         public float[] xAxisValue = new float[8];
+
+        public DB() {
+            Arrays.fill(yValue, Float.NaN);
+        }
     }
 
     class Recorder implements Callable<Void> {
+        final int period = (int) (0.2f * SAMPLE_RATE);
         int off, length, temp;
+        int index = 0;
+        int max = 0;
         float result;
 
         @Override
@@ -175,6 +189,19 @@ public class SLM {
                         temp = recorder.read(buffer, off, length);
                         if (temp == 0) {
                             return null;
+                        }
+                        //找最大
+                        Log.d("SLM", "audio data length: " + temp);
+                        for (int i = off; i < temp + off; i++, ++index) {
+                            if (index >= period) {
+                                maxAmp.postValue(max);
+                                Log.d("SLM", "call: post max amp" + max);
+                                max = 0;
+                                index = 0;
+                            }
+                            if (Math.abs(buffer[i]) > max) {
+                                max = Math.abs(buffer[i]);
+                            }
                         }
                         off += temp;
                         length -= temp;

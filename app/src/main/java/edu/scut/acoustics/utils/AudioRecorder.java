@@ -181,23 +181,23 @@ public class AudioRecorder {
                 int length;
                 int index = 0;
                 short temp;
-                short max = 0;
+                int max = 0;
 
                 //写入音频数据到文件
                 while ((length = recorder.read(audioData, 0, audioData.length)) != 0) {
                     bos.flush();
                     audio_length += length;
-
+                    Log.d("AudioRecorder", "audio data length: " + length);
                     for (int i = 0; i < length; i += 2, index += 1) {
                         if (index >= period) {
-                            maxAmp.postValue((int) max);
+                            maxAmp.postValue(max);
                             index = 0;
                             max = 0;
                         }
                         temp = audioData[i];
                         temp |= (short) audioData[i + 1] << 8;
                         if (Math.abs(temp) > max) {
-                            max = (short) Math.abs(temp);
+                            max = Math.abs(temp);
                         }
                     }
                     bos.write(audioData, 0, length);

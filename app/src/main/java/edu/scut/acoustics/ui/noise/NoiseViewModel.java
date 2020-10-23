@@ -20,6 +20,7 @@ public class NoiseViewModel extends ViewModel {
     LiveData<Float> min;
     LiveData<Float> realtime;
     LiveData<SLM.DB> db;
+    LiveData<Integer> maxAmp;
     MutableLiveData<String> sourceType;
     TimerTask timerTask;
     Timer timer = new Timer();
@@ -32,7 +33,11 @@ public class NoiseViewModel extends ViewModel {
         realtime = slm.getRealtime();
         db = slm.getDb();
         sourceType = new MutableLiveData<>("");
+        maxAmp = slm.getMaxAmp();
+    }
 
+    public LiveData<Integer> getMaxAmp() {
+        return maxAmp;
     }
 
     public LiveData<String> getSourceType() {
@@ -71,22 +76,22 @@ public class NoiseViewModel extends ViewModel {
             public void run() {
                 try {
                     List<MicrophoneInfo> microphoneInfos = slm.getActiveMicrophones();
-                    StringBuilder string = new StringBuilder();
+                    StringBuilder builder = new StringBuilder();
                     for (MicrophoneInfo v : microphoneInfos) {
                         Log.i("micType", "micType: " + v.getType());
                         switch (v.getType()) {
                             case AudioDeviceInfo.TYPE_BUILTIN_MIC:
-                                string.append("内置麦克风\n");
+                                builder.append("音源：内置麦克风");
                                 break;
                             case AudioDeviceInfo.TYPE_WIRED_HEADSET:
-                                string.append("外接麦克风\n");
+                                builder.append("音源：外接麦克风");
                                 break;
                             case AudioDeviceInfo.TYPE_USB_HEADSET:
-                                string.append("外接USB麦克风\n");
+                                builder.append("音源：外接USB麦克风");
                                 break;
                         }
                     }
-                    sourceType.postValue(string.toString());
+                    sourceType.postValue(builder.toString());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -101,11 +106,11 @@ public class NoiseViewModel extends ViewModel {
     }
 
     public void stop() {
-        slm.stop();
         if (timer != null) {
             timer.cancel();
             timer = null;
             timerTask = null;
         }
+        slm.stop();
     }
 }

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.icu.text.DecimalFormat;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -115,6 +116,14 @@ public class NoiseActivity extends AppCompatActivity {
                 observeDB(DB);
             }
         });
+        viewModel.getMaxAmp().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                Log.d("audioRecordView", "onChanged: " + integer);
+                binding.audioRecordView.update(integer);
+            }
+        });
+
 
         binding.navView.setCheckedItem(R.id.a_weighting);
         binding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -168,6 +177,7 @@ public class NoiseActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_FOR_SLM);
         } else {
+            binding.audioRecordView.recreate();
             viewModel.start();
         }
     }
@@ -213,10 +223,10 @@ public class NoiseActivity extends AppCompatActivity {
                 @Override
                 public String getAxisLabel(float value, AxisBase axis) {
                     int index = (int) value;
-                    if (index < 0) {
+                    if (index < 0 || index >= 8) {
                         return "";
                     }
-                    return (int) db.xAxisValue[index] + "Hz";
+                    return frequencies[index] + "Hz";
                 }
             };
             chart.getXAxis().setValueFormatter(xValueFormatter);
