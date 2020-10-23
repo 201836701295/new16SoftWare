@@ -13,17 +13,17 @@
     <string name="noise_measure">噪声测量</string>
     <string name="test_signal">测试信号</string>
     <string name="inverse_signal">卷积逆信号</string>
-    <string name="adjust_tip">请将录音头插入%ddB的校准筒，待示数稳定后，按下校准按钮</string>
+    <string name="adjust_tip">请将录音头插入%ddB的校准筒，待示数稳定后，按下校准按钮，或调节下方数字选择器</string>
     <string name="convolution_wave">卷积波形</string>
     <string name="phase_chart">相位谱</string>
     <string name="frequency_chart">振幅谱</string>
     <string name="power_chart">频率响应</string>
     <string name="experiment_error">实验出错</string>
-    <string name="real_time_db">real = %s</string>
-    <string name="max_db">max = %s</string>
-    <string name="min_db">min = %s</string>
+    <string name="real_time_db">实时值 = %s</string>
+    <string name="max_db">最大值 = %s</string>
+    <string name="min_db">最小值 = %s</string>
     <string name="baseline">基准值</string>
-    <string name="sharedpreferencesAweight">edu.scut.acoustics.PREFERENCE_A_WEIGHT</string>
+    <string name="sharedpreferences">edu.scut.acoustics.PREFERENCE</string>
     <string name="you_refuse_authorize">你拒绝提供权限</string>
     <string name="start_to_play">开始播放音频</string>
     <string name="start_to_process">放音结束，开始处理数据</string>

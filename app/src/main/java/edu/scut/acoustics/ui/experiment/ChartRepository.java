@@ -229,10 +229,10 @@ public class ChartRepository {
             high = power[i];
             for (int j = i, k = 0; j < power.length && k < dpp; ++j, ++k) {
                 if (power[j] > powerChart.maxY) {
-                    powerChart.maxY = power[j];
+                    powerChart.maxY = power[j] + constant;
                 }
                 if (power[j] < powerChart.minY) {
-                    powerChart.minY = power[j];
+                    powerChart.minY = power[j] + constant;
                 }
                 if (power[j] < low) {
                     low = power[j];
@@ -241,8 +241,8 @@ public class ChartRepository {
                     high = power[j];
                 }
             }
-            values.add(new Entry((float) Math.log10(frequency[i]), low));
-            values.add(new Entry((float) Math.log10(frequency[i]), high));
+            values.add(new Entry((float) Math.log10(frequency[i]), low + constant));
+            values.add(new Entry((float) Math.log10(frequency[i]), high + constant));
             Log.i("power chart", "powerChart: " + (float) Math.log10(frequency[i]));
         }
         LineDataSet set = new LineDataSet(values, powerLabel);

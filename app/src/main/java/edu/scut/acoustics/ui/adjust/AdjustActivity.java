@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.NumberPicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +19,7 @@ import java.util.Objects;
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.ActivityAdjustBinding;
 
-public class AdjustActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher {
+public class AdjustActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher, NumberPicker.OnValueChangeListener {
     DecimalFormat format = new DecimalFormat("##0.00");
     float baseline;
     float realtime = 0.0f;
@@ -34,8 +35,12 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
 
         binding.adjust.setOnClickListener(this);
+        binding.numberPicker.setMaxValue(110);
+        binding.numberPicker.setMinValue(40);
+        binding.numberPicker.setValue(94);
+        binding.numberPicker.setOnValueChangedListener(this);
 
-        sharedpreferences = getString(R.string.sharedpreferencesAweight);
+        sharedpreferences = getString(R.string.sharedpreferences);
         key = getString(R.string.baseline);
 
         viewModel = new ViewModelProvider(this).get(AdjustViewModel.class);
@@ -49,7 +54,7 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onChanged(Float aFloat) {
                 realtime = aFloat;
-                binding.real.setText(getString(R.string.real_time_db, format.format(aFloat + baseline)));
+                binding.real.setText(getString(R.string.real_time_db, getString(R.string.dBA, format.format(aFloat + baseline))));
             }
         });
         viewModel.getSourceType().observe(this, new Observer<String>() {
@@ -94,10 +99,16 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (s.charAt(0) == '-' && s.length() == 1) {
+        if (s.length() == 1 && s.charAt(0) == '-') {
             return;
         }
         target = Float.parseFloat(s.toString());
+        viewModel.setTarget(target);
+    }
+
+    @Override
+    public void onValueChange(NumberPicker numberPicker, int oldValue, int newValue) {
+        target = newValue;
         viewModel.setTarget(target);
     }
 }

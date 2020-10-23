@@ -187,11 +187,12 @@ public class SLM {
                     length = buffer.length;
                     while (off < N) {
                         temp = recorder.read(buffer, off, length);
+                        Log.d("SLM", "audio data length: " + temp);
                         if (temp == 0) {
                             return null;
                         }
                         //找最大
-                        Log.d("SLM", "audio data length: " + temp);
+
                         for (int i = off; i < temp + off; i++, ++index) {
                             if (index >= period) {
                                 maxAmp.postValue(max);

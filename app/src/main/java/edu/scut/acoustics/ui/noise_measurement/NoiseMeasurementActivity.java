@@ -177,7 +177,7 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
     @Override
     protected void onResume() {
         super.onResume();
-        baseline = getSharedPreferences(getString(R.string.sharedpreferencesAweight), MODE_PRIVATE)
+        baseline = getSharedPreferences(getString(R.string.sharedpreferences), MODE_PRIVATE)
                 .getFloat(getString(R.string.baseline), 0.0f);
         viewModel.start();
     }
