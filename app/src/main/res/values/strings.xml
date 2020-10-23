@@ -19,11 +19,11 @@
     <string name="frequency_chart">振幅谱</string>
     <string name="power_chart">频率响应</string>
     <string name="experiment_error">实验出错</string>
-    <string name="real_time_db">实时分贝\n%sdBA</string>
-    <string name="max_db">最大分贝\n%sdBA</string>
-    <string name="min_db">最小分贝\n%sdBA</string>
+    <string name="real_time_db">real = %s</string>
+    <string name="max_db">max = %s</string>
+    <string name="min_db">min = %s</string>
     <string name="baseline">基准值</string>
-    <string name="sharedpreferences">edu.scut.acoustics.PREFERENCE_FILE_KEY</string>
+    <string name="sharedpreferencesAweight">edu.scut.acoustics.PREFERENCE_A_WEIGHT</string>
     <string name="you_refuse_authorize">你拒绝提供权限</string>
     <string name="start_to_play">开始播放音频</string>
     <string name="start_to_process">放音结束，开始处理数据</string>
@@ -32,7 +32,10 @@
     <string name="currentdb">当前分贝\n%ddb</string>
     <string name="currentfreq">当前频率\n%dHz</string>
     <string name="test_result">测试结果</string>
-    <string name="refresh">refresh</string>
+    <string name="refresh">刷新</string>
     <string name="ear_test_result">耳朵灵敏度测试结果</string>
     <string name="self_determine">自定义分贝值</string>
+    <string name="dBA">%sdBA</string>
+    <string name="frequency_dbUnit">%1$dHz = %2$s</string>
+    <string name="a_weighting">A计权</string>
 </resources>

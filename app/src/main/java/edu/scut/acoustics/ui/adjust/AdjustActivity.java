@@ -35,7 +35,7 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
 
         binding.adjust.setOnClickListener(this);
 
-        sharedpreferences = getString(R.string.sharedpreferences);
+        sharedpreferences = getString(R.string.sharedpreferencesAweight);
         key = getString(R.string.baseline);
 
         viewModel = new ViewModelProvider(this).get(AdjustViewModel.class);

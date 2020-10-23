@@ -6,6 +6,9 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,7 +28,7 @@ public class AudioRecorder {
     public static final int BIT_DEPTH = 16;
     public static final int BYTE_RATE = BIT_DEPTH * SAMPLE_RATE / 8;
 
-    private static final byte[] header = new byte[44];
+    static final byte[] header = new byte[44];
 
     //预先处理wav头
     static {
@@ -93,20 +96,22 @@ public class AudioRecorder {
         header[43] = 0;
     }
 
-    private boolean recording = false;
-    private byte[] audioData = new byte[MIN_BUFFER_SIZE];
-    private AudioRecord recorder = null;
-    private String filename;
-    private ExecutorService service = Executors.newSingleThreadExecutor();
-    private BufferedOutputStream bos = null;
-    private Future<Integer> future = null;
+    boolean recording = false;
+    byte[] audioData = new byte[MIN_BUFFER_SIZE];
+    AudioRecord recorder = null;
+    String filename;
+    ExecutorService service = Executors.newSingleThreadExecutor();
+    BufferedOutputStream bos = null;
+    Future<Integer> future = null;
+    MutableLiveData<Integer> maxAmp;
 
     public AudioRecorder(Context context) {
         filename = context.getCacheDir().getAbsolutePath() + "/testAudio.wav";
+        maxAmp = new MutableLiveData<>(0);
     }
 
-    public AudioRecorder(String f) {
-        filename = f;
+    public LiveData<Integer> getMaxAmp() {
+        return maxAmp;
     }
 
     public boolean isRecording() {
@@ -163,6 +168,7 @@ public class AudioRecorder {
     }
 
     class Writer implements Callable<Integer> {
+        final int period = (int) (0.2f * SAMPLE_RATE);
         RandomAccessFile raf = null;
         //音频长度
         long audio_length = 0;
@@ -172,11 +178,28 @@ public class AudioRecorder {
             try {
                 //先写入wav文件头
                 bos.write(header, 0, header.length);
-                int length = 0;
+                int length;
+                int index = 0;
+                short temp;
+                short max = 0;
+
                 //写入音频数据到文件
                 while ((length = recorder.read(audioData, 0, audioData.length)) != 0) {
                     bos.flush();
                     audio_length += length;
+
+                    for (int i = 0; i < length; i += 2, index += 1) {
+                        if (index >= period) {
+                            maxAmp.postValue((int) max);
+                            index = 0;
+                            max = 0;
+                        }
+                        temp = audioData[i];
+                        temp |= (short) audioData[i + 1] << 8;
+                        if (Math.abs(temp) > max) {
+                            max = (short) Math.abs(temp);
+                        }
+                    }
                     bos.write(audioData, 0, length);
                 }
                 //关闭文件流

@@ -63,6 +63,7 @@
             app:layout_constraintTop_toBottomOf="@id/test_wave" />
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
@@ -71,6 +72,23 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/description2"
             tools:ignore="ContentDescription" />
+
+        <com.visualizer.amplitude.AudioRecordView
+            android:id="@+id/audioRecordView"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
+            app:chunkAlignTo="center"
+            app:chunkColor="@color/blue"
+            app:chunkMaxHeight="40dp"
+            app:chunkMinHeight="0dp"
+            app:chunkRoundedCorners="true"
+            app:chunkSoftTransition="true"
+            app:chunkSpace="0.1dp"
+            app:chunkWidth="1dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/test_wave" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

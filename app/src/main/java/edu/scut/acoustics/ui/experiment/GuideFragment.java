@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Timer;
@@ -28,6 +29,12 @@ public class GuideFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_guide, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(ExperimentViewModel.class);
+        viewModel.getMaxAmp().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                binding.audioRecordView.update(integer);
+            }
+        });
         return binding.getRoot();
     }
 
@@ -44,6 +51,7 @@ public class GuideFragment extends Fragment {
 
     public void stopCountDown() {
         timer.cancel();
+        binding.audioRecordView.recreate();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package edu.scut.acoustics.ui.noise_measurement;
+package edu.scut.acoustics.ui.noise;
 
 import android.media.AudioDeviceInfo;
 import android.media.MicrophoneInfo;
@@ -19,7 +19,7 @@ public class NoiseViewModel extends ViewModel {
     LiveData<Float> max;
     LiveData<Float> min;
     LiveData<Float> realtime;
-    LiveData<SLM.DB> dba;
+    LiveData<SLM.DB> db;
     MutableLiveData<String> sourceType;
     TimerTask timerTask;
     Timer timer = new Timer();
@@ -30,7 +30,7 @@ public class NoiseViewModel extends ViewModel {
         max = slm.getMax();
         min = slm.getMin();
         realtime = slm.getRealtime();
-        dba = slm.getDb();
+        db = slm.getDb();
         sourceType = new MutableLiveData<>("");
 
     }
@@ -51,8 +51,12 @@ public class NoiseViewModel extends ViewModel {
         return realtime;
     }
 
-    public LiveData<SLM.DB> getDba() {
-        return dba;
+    public LiveData<SLM.DB> getDb() {
+        return db;
+    }
+
+    public void setMode(int mode) {
+        slm.setMode(mode);
     }
 
     public void start() {

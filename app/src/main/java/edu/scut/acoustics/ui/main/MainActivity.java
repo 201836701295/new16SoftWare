@@ -18,7 +18,7 @@ import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.ActivityMainBinding;
 import edu.scut.acoustics.ui.ear_test.EarTestActivity;
 import edu.scut.acoustics.ui.experiment.ExperimentActivity;
-import edu.scut.acoustics.ui.noise_measurement.NoiseMeasurementActivity;
+import edu.scut.acoustics.ui.noise.NoiseActivity;
 import edu.scut.acoustics.utils.AudioDevice;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -66,7 +66,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_FOR_DBA);
         } else {
-            startActivity(new Intent(this, NoiseMeasurementActivity.class));
+            //startActivity(new Intent(this, NoiseMeasurementActivity.class));
+            startActivity(new Intent(this, NoiseActivity.class));
         }
     }
 

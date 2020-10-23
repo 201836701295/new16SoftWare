@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -30,8 +29,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import edu.scut.acoustics.MyApplication;
 import edu.scut.acoustics.R;
@@ -49,12 +46,6 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
     MyApplication application;
     ValueFormatter xValueFormatter;
     ArrayList<BarEntry> barEntries;
-    int foo = 0;
-    int max = 150;
-    Timer timer = new Timer();
-    TimerTask timerTask;
-    SLM.DBA dba = new SLM.DBA();
-    MutableLiveData<SLM.DBA> dbaMutableLiveData = new MutableLiveData<>(dba);
 
 
     @Override
@@ -90,29 +81,10 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
                 binding.sourceType.setText(s);
             }
         });
-        viewModel.getDba().observe(this, new Observer<SLM.DBA>() {
+        viewModel.getDba().observe(this, new Observer<SLM.DB>() {
             @Override
-            public void onChanged(SLM.DBA dba) {
-                observeDBA(dba);
-            }
-        });
-
-        timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                for (int i = 0; i < dba.yValue.length; i++) {
-                    dba.yValue[i] = max;
-                    dba.xAxisValue[i] = 10 * i;
-                }
-                max -= 1;
-                dbaMutableLiveData.postValue(dba);
-            }
-        };
-        //timer.schedule(timerTask, 0, 1000);
-        dbaMutableLiveData.observe(this, new Observer<SLM.DBA>() {
-            @Override
-            public void onChanged(SLM.DBA dba) {
-                observeDBA(dba);
+            public void onChanged(SLM.DB DB) {
+                observeDBA(DB);
             }
         });
 
@@ -161,7 +133,7 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
         legend.setXEntrySpace(4f);
     }
 
-    void observeDBA(final SLM.DBA dba) {
+    void observeDBA(final SLM.DB DB) {
         BarChart chart = binding.dbChart;
         barEntries.clear();
 
@@ -173,15 +145,15 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
                     if (index < 0) {
                         return "";
                     }
-                    return (int) dba.xAxisValue[index] + "Hz";
+                    return (int) DB.xAxisValue[index] + "Hz";
                 }
             };
             chart.getXAxis().setValueFormatter(xValueFormatter);
         } else {
             chart.getXAxis().setValueFormatter(xValueFormatter);
         }
-        for (int i = 0; i < dba.yValue.length; i++) {
-            barEntries.add(new BarEntry(i, dba.yValue[i] + baseline));
+        for (int i = 0; i < DB.yValue.length; i++) {
+            barEntries.add(new BarEntry(i, DB.yValue[i] + baseline));
             //Log.i("barEntries", "BarEntry: " + i + " " + dba.yValue[i]);
         }
         BarDataSet set;
@@ -205,7 +177,7 @@ public class NoiseMeasurementActivity extends AppCompatActivity implements View.
     @Override
     protected void onResume() {
         super.onResume();
-        baseline = getSharedPreferences(getString(R.string.sharedpreferences), MODE_PRIVATE)
+        baseline = getSharedPreferences(getString(R.string.sharedpreferencesAweight), MODE_PRIVATE)
                 .getFloat(getString(R.string.baseline), 0.0f);
         viewModel.start();
     }

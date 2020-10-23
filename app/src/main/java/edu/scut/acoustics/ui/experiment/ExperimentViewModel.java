@@ -25,6 +25,7 @@ public class ExperimentViewModel extends AndroidViewModel {
     LiveData<ChartInformation> waveChart;
     LiveData<ChartInformation> phaseChart;
     LiveData<ChartInformation> powerChart;
+    LiveData<Integer> maxAmp;
     MutableLiveData<ExperimentState> experimentState;
     ExperimentState state = new ExperimentState();
     AudioPlayer player;
@@ -45,6 +46,11 @@ public class ExperimentViewModel extends AndroidViewModel {
         experimentState.setValue(state);
         player = new AudioPlayer();
         recorder = new AudioRecorder(application);
+        maxAmp = recorder.getMaxAmp();
+    }
+
+    public LiveData<Integer> getMaxAmp() {
+        return maxAmp;
     }
 
     public void setAudioData2(float[] audioData2) {

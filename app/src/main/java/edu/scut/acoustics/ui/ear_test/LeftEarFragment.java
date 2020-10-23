@@ -24,10 +24,10 @@ import edu.scut.acoustics.utils.AudioDevice;
 
 public class LeftEarFragment extends Fragment implements View.OnClickListener {
     public static final int PERMISSIONS_FOR_DETECT = 1;
+    static int current = 0;
     EarViewModel viewModel;
     FragmentLeftEarBinding binding;
     Button[] hzs;
-    static int current = 0;
     AudioDevice device;
 
     @Nullable

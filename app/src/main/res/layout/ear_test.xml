@@ -94,12 +94,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:background="@drawable/shape_btn"
             android:src="@drawable/ic_baseline_play_arrow_24"
+            android:tint="@color/green"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/unable_hear"
             app:layout_constraintRight_toLeftOf="@id/able_hear"
-            android:background="@drawable/shape_btn"
-            android:tint="@color/green"
             tools:ignore="ContentDescription" />
 
         <Button
@@ -117,9 +117,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:background="@drawable/shape_btn"
             android:text="@string/able_hear"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@drawable/shape_btn"
             app:layout_constraintRight_toRightOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
