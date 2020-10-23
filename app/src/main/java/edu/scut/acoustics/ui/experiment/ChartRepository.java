@@ -205,6 +205,7 @@ public class ChartRepository {
     }
 
     private void power_chart() {
+        final float constant = (float) Math.log10(32768 * 32768) * 10;
         powerChart = new ChartInformation();
         powerChart.labelX = "频率/Hz";
         powerChart.labelY = "功率/dB";
