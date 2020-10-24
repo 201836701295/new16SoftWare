@@ -123,7 +123,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
     }
 
     //检查权限并请求权限
-    private void permission() {
+    void permission() {
         Vector<String> vector = new Vector<>();
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
