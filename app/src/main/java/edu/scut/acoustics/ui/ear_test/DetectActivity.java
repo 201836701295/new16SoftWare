@@ -68,8 +68,8 @@ public class DetectActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
         viewModel.stop();
     }
 
