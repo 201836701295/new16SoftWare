@@ -55,6 +55,12 @@
             android:launchMode="singleTop"
             android:parentActivityName=".ui.main.MainActivity" />
 
+        <activity
+            android:name=".ui.ear_test.DetectActivity"
+            android:label="环境音量检测"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.main.MainActivity" />
+
     </application>
 
 </manifest>

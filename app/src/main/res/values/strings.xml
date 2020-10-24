@@ -38,4 +38,7 @@
     <string name="dBA">%sdBA</string>
     <string name="frequency_dbUnit">%1$dHz = %2$s</string>
     <string name="a_weighting">A计权</string>
+    <string name="env_normal">环境音量正常，开始测试</string>
+    <string name="env_loud">环境音量过大</string>
+    <string name="insist">坚持要测</string>
 </resources>

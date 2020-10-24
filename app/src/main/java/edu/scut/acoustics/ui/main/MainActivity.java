@@ -16,13 +16,14 @@ import androidx.databinding.DataBindingUtil;
 import edu.scut.acoustics.MyApplication;
 import edu.scut.acoustics.R;
 import edu.scut.acoustics.databinding.ActivityMainBinding;
-import edu.scut.acoustics.ui.ear_test.EarTestActivity;
+import edu.scut.acoustics.ui.ear_test.DetectActivity;
 import edu.scut.acoustics.ui.experiment.ExperimentActivity;
 import edu.scut.acoustics.ui.noise.NoiseActivity;
 import edu.scut.acoustics.utils.AudioDevice;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     final static int PERMISSIONS_FOR_DBA = 1;
+    final static int PERMISSIONS_FOR_DETECT = 2;
     MyApplication application;
     AudioDevice audioDevice;
 
@@ -58,7 +59,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void start_ear_test() {
-        startActivity(new Intent(this, EarTestActivity.class));
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_FOR_DETECT);
+        } else {
+            //startActivity(new Intent(this, EarTestActivity.class));
+            startActivity(new Intent(this, DetectActivity.class));
+        }
     }
 
     public void start_noise_measurement() {
@@ -81,6 +88,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
             start_noise_measurement();
+        }
+        if (requestCode == PERMISSIONS_FOR_DETECT) {
+            for (int i : grantResults) {
+                if (i != PackageManager.PERMISSION_GRANTED) {
+                    application.show_toast(R.string.you_refuse_authorize);
+                    return;
+                }
+            }
+            start_ear_test();
         }
     }
 }

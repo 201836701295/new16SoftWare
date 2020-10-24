@@ -74,12 +74,14 @@ public class NoiseActivity extends AppCompatActivity {
         for (int i = 0; i < textViews.length; i++) {
             textViews[i] = new TextView(this);
             textViews[i].setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-            if (i < 3) {
+            if (i < 2) {
                 binding.linearLayout1.addView(textViews[i], layoutParams);
-            } else if (i < 6) {
+            } else if (i < 4) {
                 binding.linearLayout2.addView(textViews[i], layoutParams);
-            } else {
+            } else if (i < 6) {
                 binding.linearLayout3.addView(textViews[i], layoutParams);
+            } else {
+                binding.linearLayout4.addView(textViews[i], layoutParams);
             }
         }
 
