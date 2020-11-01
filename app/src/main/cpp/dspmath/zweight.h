@@ -1,11 +1,11 @@
 //
-// File: slmfunc.h
+// File: zweight.h
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 16-Oct-2020 18:58:30
+// C/C++ source code generated on  : 01-Nov-2020 22:40:16
 //
-#ifndef SLMFUNC_H
-#define SLMFUNC_H
+#ifndef ZWEIGHT_H
+#define ZWEIGHT_H
 
 // Include Files
 #include <cstddef>
@@ -14,13 +14,13 @@
 #include "dspmath_types.h"
 
 // Function Declarations
-extern void slmfunc(const coder::array<short, 2U> &x, float p[8], float ff[8],
+extern void zweight(const coder::array<short, 2U> &x, float p[8], float ff[8],
                     float *Lp);
 
 #endif
 
 //
-// File trailer for slmfunc.h
+// File trailer for zweight.h
 //
 // [EOF]
 //

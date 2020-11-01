@@ -2,7 +2,7 @@
 // File: dspmath_types.h
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 16-Oct-2020 18:58:30
+// C/C++ source code generated on  : 01-Nov-2020 22:40:16
 //
 #ifndef DSPMATH_TYPES_H
 #define DSPMATH_TYPES_H
@@ -10,7 +10,6 @@
 // Include Files
 #include "rtwtypes.h"
 #include "coder_array.h"
-
 #ifdef _MSC_VER
 
 #pragma warning(push)
@@ -44,6 +43,19 @@ protected:
             creal32_T, 1U> &wwc, const coder::array<float, 2U> &costab, const coder::
     array<float, 2U> &sintab, const coder::array<float, 2U> &costabinv, const
                                       coder::array<float, 2U> &sintabinv);
+};
+
+struct struct_T {
+    double nfft;
+    double Fs;
+    double conflevel;
+    boolean_T average;
+    boolean_T maxhold;
+    boolean_T minhold;
+    boolean_T MIMO;
+    boolean_T isNFFTSingle;
+    boolean_T centerdc;
+    char range[8];
 };
 
 #ifdef _MSC_VER

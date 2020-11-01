@@ -50,5 +50,9 @@ public class DSPMath {
      * @param ff 频率
      * @return 总分压
      */
-    public native float slmfunc(short[] x, float[] l8, float[] ff);
+    public native float aweight(short[] x, float[] l8, float[] ff);
+
+    public native float zweight(short[] x, float[] l8, float[] ff);
+
+    public native float cweight(short[] x, float[] l8, float[] ff);
 }

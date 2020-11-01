@@ -79,7 +79,13 @@ public class SLM {
     float calculate(short[] x, float[] l8, float[] ff) {
         int m = mode.get();
         if (m == A_WEIGHTING) {
-            return dspMath.slmfunc(x, l8, ff);
+            return dspMath.aweight(x, l8, ff);
+        }
+        if (m == C_WEIGHTING) {
+            return dspMath.cweight(x, l8, ff);
+        }
+        if (m == Z_WEIGHTING) {
+            return dspMath.zweight(x, l8, ff);
         }
         return Float.NaN;
     }

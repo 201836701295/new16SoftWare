@@ -2,7 +2,7 @@
 // File: dspmath_rtwutil.h
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 16-Oct-2020 18:58:30
+// C/C++ source code generated on  : 01-Nov-2020 22:40:16
 //
 #ifndef DSPMATH_RTWUTIL_H
 #define DSPMATH_RTWUTIL_H
@@ -15,6 +15,8 @@
 
 // Function Declarations
 extern double rt_hypotd_snf(double u0, double u1);
+
+extern double rt_powd_snf(double u0, double u1);
 
 #endif
 

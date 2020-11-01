@@ -2,17 +2,19 @@
 // File: xnrm2.cpp
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 16-Oct-2020 18:58:30
+// C/C++ source code generated on  : 01-Nov-2020 22:40:16
 //
 
 // Include Files
 #include "xnrm2.h"
+#include "aweight.h"
+#include "cweight.h"
 #include "mconv.h"
 #include "mfft.h"
 #include "mifft.h"
 #include "mywelch.h"
 #include "rt_nonfinite.h"
-#include "slmfunc.h"
+#include "zweight.h"
 #include <cmath>
 #include <string.h>
 

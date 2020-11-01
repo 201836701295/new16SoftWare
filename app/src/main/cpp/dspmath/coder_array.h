@@ -57,7 +57,7 @@ namespace coder {
 #define CODER_DELETE(P) delete[](P)
 #endif
 
-    typedef int32_T SizeType;
+typedef int32_T SizeType;
 
     namespace detail {
 

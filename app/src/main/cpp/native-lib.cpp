@@ -6,7 +6,9 @@
 #include "dspmath/mfft.h"
 #include "dspmath/mifft.h"
 #include "dspmath/mywelch.h"
-#include "dspmath/slmfunc.h"
+#include "dspmath/aweight.h"
+#include "dspmath/zweight.h"
+#include "dspmath/cweight.h"
 #include <android/log.h>
 
 #define LOG_TAG  "C_TAG"
@@ -165,7 +167,7 @@ Java_edu_scut_acoustics_utils_DSPMath_phase(JNIEnv *env, jobject thiz, jfloatArr
 
 extern "C"
 JNIEXPORT jfloat JNICALL
-Java_edu_scut_acoustics_utils_DSPMath_slmfunc(JNIEnv *env, jobject thiz, jshortArray x,
+Java_edu_scut_acoustics_utils_DSPMath_aweight(JNIEnv *env, jobject thiz, jshortArray x,
                                               jfloatArray l8, jfloatArray ff) {
     const int n = env->GetArrayLength(x);
     jshort *xArr = env->GetShortArrayElements(x, nullptr);
@@ -177,7 +179,53 @@ Java_edu_scut_acoustics_utils_DSPMath_slmfunc(JNIEnv *env, jobject thiz, jshortA
 
     jfloat temp;
 
-    slmfunc(xx, l8Arr, ffArr, &temp);
+    aweight(xx, l8Arr, ffArr, &temp);
+
+    env->ReleaseShortArrayElements(x, xArr, JNI_ABORT);
+    env->ReleaseFloatArrayElements(l8, l8Arr, JNI_OK);
+    env->ReleaseFloatArrayElements(ff, ffArr, JNI_OK);
+
+    return temp;
+}
+
+extern "C"
+JNIEXPORT jfloat JNICALL
+Java_edu_scut_acoustics_utils_DSPMath_zweight(JNIEnv *env, jobject thiz, jshortArray x,
+                                              jfloatArray l8, jfloatArray ff) {
+    const int n = env->GetArrayLength(x);
+    jshort *xArr = env->GetShortArrayElements(x, nullptr);
+    jfloat *l8Arr = env->GetFloatArrayElements(l8, nullptr);
+    jfloat *ffArr = env->GetFloatArrayElements(ff, nullptr);
+
+    coder::array<short, 2U> xx;
+    xx.set(xArr, 1, n);
+
+    jfloat temp;
+
+    zweight(xx, l8Arr, ffArr, &temp);
+
+    env->ReleaseShortArrayElements(x, xArr, JNI_ABORT);
+    env->ReleaseFloatArrayElements(l8, l8Arr, JNI_OK);
+    env->ReleaseFloatArrayElements(ff, ffArr, JNI_OK);
+
+    return temp;
+}
+
+extern "C"
+JNIEXPORT jfloat JNICALL
+Java_edu_scut_acoustics_utils_DSPMath_cweight(JNIEnv *env, jobject thiz, jshortArray x,
+                                              jfloatArray l8, jfloatArray ff) {
+    const int n = env->GetArrayLength(x);
+    jshort *xArr = env->GetShortArrayElements(x, nullptr);
+    jfloat *l8Arr = env->GetFloatArrayElements(l8, nullptr);
+    jfloat *ffArr = env->GetFloatArrayElements(ff, nullptr);
+
+    coder::array<short, 2U> xx;
+    xx.set(xArr, 1, n);
+
+    jfloat temp;
+
+    cweight(xx, l8Arr, ffArr, &temp);
 
     env->ReleaseShortArrayElements(x, xArr, JNI_ABORT);
     env->ReleaseFloatArrayElements(l8, l8Arr, JNI_OK);

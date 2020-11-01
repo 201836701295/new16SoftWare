@@ -1,99 +1,56 @@
 //
-// File: slmfunc.cpp
+// File: octbank.cpp
 //
 // MATLAB Coder version            : 5.0
-// C/C++ source code generated on  : 16-Oct-2020 18:58:30
+// C/C++ source code generated on  : 01-Nov-2020 22:40:16
 //
 
 // Include Files
-#include "slmfunc.h"
+#include "octbank.h"
+#include "aweight.h"
 #include "butter.h"
-#include "computepsd.h"
-#include "dspmath_data.h"
-#include "dspmath_initialize.h"
+#include "cweight.h"
+#include "dspmath_rtwutil.h"
 #include "mconv.h"
 #include "mfft.h"
 #include "mifft.h"
 #include "mywelch.h"
 #include "rt_nonfinite.h"
-#include "welch.h"
+#include "zweight.h"
 #include <cmath>
-#include <math.h>
 #include <string.h>
-
-// Function Declarations
-static double rt_powd_snf(double u0, double u1);
 
 // Function Definitions
 
 //
-// Arguments    : double u0
-//                double u1
-// Return Type  : double
+// OCT3BANK Simple one-third-octave filter bank.
+//     OCT3BANK(X) plots one-third-octave power spectra of signal vector X.
+//     Implementation based on ANSI S1.11-1986 Order-3 filters.
+//     Sampling frequency Fs = 44100 Hz. Restricted one-third-octave-band
+//     range (from 100 Hz to 5000 Hz). RMS power is computed in each band
+//     and expressed in dB with 1 as reference level.
 //
-static double rt_powd_snf(double u0, double u1) {
-    double y;
-    if (rtIsNaN(u0) || rtIsNaN(u1)) {
-        y = rtNaN;
-    } else {
-        double d;
-        double d1;
-        d = std::abs(u0);
-        d1 = std::abs(u1);
-        if (rtIsInf(u1)) {
-            if (d == 1.0) {
-                y = 1.0;
-            } else if (d > 1.0) {
-                if (u1 > 0.0) {
-                    y = rtInf;
-                } else {
-                    y = 0.0;
-                }
-            } else if (u1 > 0.0) {
-                y = 0.0;
-            } else {
-                y = rtInf;
-            }
-        } else if (d1 == 0.0) {
-            y = 1.0;
-        } else if (d1 == 1.0) {
-            if (u1 > 0.0) {
-                y = u0;
-            } else {
-                y = 1.0 / u0;
-            }
-        } else if (u1 == 2.0) {
-            y = u0 * u0;
-        } else if ((u1 == 0.5) && (u0 >= 0.0)) {
-            y = std::sqrt(u0);
-        } else if ((u0 < 0.0) && (u1 > std::floor(u1))) {
-            y = rtNaN;
-        } else {
-            y = pow(u0, u1);
-        }
-    }
-
-    return y;
-}
-
+//     [P,F] = OCT3BANK(X) returns two length-18 row-vectors with
+//     the RMS power (in dB) in P and the corresponding preferred labeling
+//     frequencies (ANSI S1.6-1984) in F.
 //
+//     See also OCT3DSGN, OCT3SPEC, OCTDSGN, OCTSPEC.
 // Arguments    : const coder::array<short, 2U> *x
-//                float p[8]
-//                float ff[8]
-//                float *Lp
+//                double p[8]
+//                double f[8]
 // Return Type  : void
 //
-void slmfunc(const coder::array<short, 2U> &x, float p[8], float ff[8], float
-*Lp) {
+void octbank(const coder::array<short, 2U> &x, double p[8], double f[8]) {
+    int y1_tmp;
+    static const short iv[8] = {63, 125, 250, 500, 1000, 2000, 4000, 8000};
+
     int loop_ub;
     int i;
     int naxpy;
     int b_loop_ub;
-    int y1_tmp;
     boolean_T idx[8];
-    double b_p[8];
     int k;
-    double LA[8];
+    double x_data[8];
     signed char tmp_data[8];
     double as;
     static const double dv[8] = {62.5, 125.0, 250.0, 500.0, 1000.0, 2000.0,
@@ -105,27 +62,10 @@ void slmfunc(const coder::array<short, 2U> &x, float p[8], float ff[8], float
     double A[7];
     coder::array<double, 1U> b;
     coder::array<double, 1U> b_y1;
-    static const double Aweight[8] = {-26.2, -16.1, -8.6, -3.2, 0.0, 1.2, 1.0,
-                                      -1.1};
-
-    static const short F[8] = {63, 125, 250, 500, 1000, 2000, 4000, 8000};
-
-    if (!isInitialized_dspmath) {
-        dspmath_initialize();
+    for (y1_tmp = 0; y1_tmp < 8; y1_tmp++) {
+        f[y1_tmp] = iv[y1_tmp];
     }
 
-    //  OCT3BANK Simple one-third-octave filter bank.
-    //     OCT3BANK(X) plots one-third-octave power spectra of signal vector X.
-    //     Implementation based on ANSI S1.11-1986 Order-3 filters.
-    //     Sampling frequency Fs = 44100 Hz. Restricted one-third-octave-band
-    //     range (from 100 Hz to 5000 Hz). RMS power is computed in each band
-    //     and expressed in dB with 1 as reference level.
-    //
-    //     [P,F] = OCT3BANK(X) returns two length-18 row-vectors with
-    //     the RMS power (in dB) in P and the corresponding preferred labeling
-    //     frequencies (ANSI S1.6-1984) in F.
-    //
-    //     See also OCT3DSGN, OCT3SPEC, OCTDSGN, OCTSPEC.
     //  Author: Christophe Couvreur, Faculte Polytechnique de Mons (Belgium)
     //          couvreur@thor.fpms.ac.be
     //  Last modification: Aug. 23, 1997, 10:30pm.
@@ -226,7 +166,7 @@ void slmfunc(const coder::array<short, 2U> &x, float p[8], float ff[8], float
             }
         }
 
-        b_p[7 - i] = as / static_cast<double>(x.size(1));
+        p[7 - i] = as / static_cast<double>(x.size(1));
     }
 
     //  1250 Hz to 100 Hz, multirate filter implementation (see [2]).
@@ -248,8 +188,8 @@ void slmfunc(const coder::array<short, 2U> &x, float p[8], float ff[8], float
     naxpy = 0;
     b_loop_ub = 0;
     for (i = 0; i < 8; i++) {
-        idx[i] = (b_p[i] > 0.0);
-        if (b_p[i] > 0.0) {
+        idx[i] = (p[i] > 0.0);
+        if (p[i] > 0.0) {
             naxpy++;
             tmp_data[b_loop_ub] = static_cast<signed char>(i + 1);
             b_loop_ub++;
@@ -257,54 +197,35 @@ void slmfunc(const coder::array<short, 2U> &x, float p[8], float ff[8], float
     }
 
     for (y1_tmp = 0; y1_tmp < naxpy; y1_tmp++) {
-        LA[y1_tmp] = b_p[tmp_data[y1_tmp] - 1];
+        x_data[y1_tmp] = p[tmp_data[y1_tmp] - 1];
     }
 
     for (k = 0; k < naxpy; k++) {
-        LA[k] = std::log10(LA[k]);
+        x_data[k] = std::log10(x_data[k]);
     }
 
     z1.set_size(1, naxpy);
     for (y1_tmp = 0; y1_tmp < naxpy; y1_tmp++) {
-        z1[y1_tmp] = 10.0 * LA[y1_tmp];
+        z1[y1_tmp] = 10.0 * x_data[y1_tmp];
     }
 
     b_loop_ub = 0;
-
-    //  Generate the plot
-    for (k = 0; k < 8; k++) {
-        as = b_p[k];
-        if (b_p[k] > 0.0) {
-            double d;
-            as = z1[b_loop_ub];
-            d = z1[b_loop_ub];
-            b_p[k] = d;
+    for (i = 0; i < 8; i++) {
+        if (p[i] > 0.0) {
+            p[i] = z1[b_loop_ub];
             b_loop_ub++;
         }
 
-        if (!idx[k]) {
-            as = rtNaN;
-            b_p[k] = rtNaN;
+        if (!idx[i]) {
+            p[i] = rtNaN;
         }
-
-        LA[k] = rt_powd_snf(10.0, 0.1 * (as + Aweight[k]));
     }
 
-    as = LA[0];
-    for (k = 0; k < 7; k++) {
-        as += LA[k + 1];
-    }
-
-    for (y1_tmp = 0; y1_tmp < 8; y1_tmp++) {
-        p[y1_tmp] = static_cast<float>(b_p[y1_tmp]);
-        ff[y1_tmp] = F[y1_tmp];
-    }
-
-    *Lp = static_cast<float>(10.0 * std::log10(as));
+    //  Generate the plot
 }
 
 //
-// File trailer for slmfunc.cpp
+// File trailer for octbank.cpp
 //
 // [EOF]
 //
