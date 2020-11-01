@@ -20,7 +20,7 @@ public class SinWave {
         this.hz = hz;
         double temp = (double) db / 10;
         temp = Math.pow(10, temp) * 2;
-        height = Math.sqrt(temp);
+        height = Math.sqrt(temp) / 32768;
     }
 
     public SinWave() {
@@ -29,7 +29,7 @@ public class SinWave {
     }
 
     public void generate(float[] wave, int offset, int step) throws Exception {
-        if (hz == -1f || height == -1.0) {
+        if (hz == -1 || height == -1.0) {
             throw new Exception("hz and height not initialized");
         }
         //求波长

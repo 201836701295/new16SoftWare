@@ -50,6 +50,7 @@ public class SLM {
     DB DBValue;
     Future<Void> future;
     MutableLiveData<Integer> maxAmp;
+    boolean recording = false;
 
     public SLM() {
         mode = new AtomicInteger(A_WEIGHTING);
@@ -93,25 +94,21 @@ public class SLM {
     }
 
     public void start() {
-        if (recorder != null) {
-            recorder.stop();
-            try {
-                future.get();
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-            future = null;
-            recorder.release();
-            recorder = null;
+        if (!recording) {
+            recorder = new AudioRecord(SOURCE, SAMPLE_RATE, CHANNEL, FORMAT, MIN_BUFFER_SIZE);
+            recorder.startRecording();
+            Log.d("SLM", "start: ");
+            future = service.submit(new Recorder());
+            recording = true;
         }
-        recorder = new AudioRecord(SOURCE, SAMPLE_RATE, CHANNEL, FORMAT, MIN_BUFFER_SIZE);
-        recorder.startRecording();
-        Log.d("SLM", "start: ");
-        future = service.submit(new Recorder());
+    }
+
+    public boolean isRecording() {
+        return recording;
     }
 
     public void stop() {
-        if (recorder != null) {
+        if (recording) {
             recorder.stop();
             try {
                 future.get();
@@ -121,6 +118,7 @@ public class SLM {
             recorder.release();
             recorder = null;
             future = null;
+            recording = false;
         }
     }
 

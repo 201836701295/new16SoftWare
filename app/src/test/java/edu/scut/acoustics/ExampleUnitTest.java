@@ -19,11 +19,11 @@ public class ExampleUnitTest {
 
     @Test
     public void audio() {
-        int length = SinWave.SAMPLE_RATE * 100;
+        int length = SinWave.SAMPLE_RATE;
         System.out.println(length);
         float[] data = new float[length];
         int[] freq_list = {250, 500, 1000, 2000, 4000, 8000};
-        int[] db_list = {0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70};
+        int[] db_list = {0, -1, -2, -3, -4, -5};
         SinWave sinWave = new SinWave(25, 40);
 
         for (int f : freq_list) {
@@ -33,7 +33,7 @@ public class ExampleUnitTest {
                 sinWave.doFinal(data);
                 double sum = 0;
                 for (float v : data) {
-                    sum += (double) v * v;
+                    sum += (double) v * v * 32768 * 32768;
                 }
                 sum /= data.length;
                 System.out.println("    " + d + "db: " + 10.0 * Math.log10(sum));

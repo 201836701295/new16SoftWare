@@ -62,12 +62,13 @@ public class ExampleInstrumentedTest {
         float[] re = new float[a.length];
         float[] im = new float[a.length];
         SinWave sinWave = new SinWave();
-        sinWave.set(200, 100);
+        sinWave.set(500, -2);
         sinWave.generate(a, 0, 1);
         DSPMath dspMath = new DSPMath();
         dspMath.fft(a, a.length, re, im);
         for (int i = 0; i < re.length; i++) {
-            System.out.println(re[i] + " " + im[i] + "j");
+            if (Math.sqrt(re[i] * re[i] + im[i] * im[i]) > 1e-9)
+                System.out.println(i + " " + re[i] + " " + im[i] + "j");
         }
     }
 }
