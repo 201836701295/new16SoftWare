@@ -30,6 +30,8 @@ public class SLM {
     public static final int MIN_BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL, FORMAT) * 8;
     public static final int N = MIN_BUFFER_SIZE / 2;
     public static final int A_WEIGHTING = 1;
+    public static final int C_WEIGHTING = 2;
+    public static final int Z_WEIGHTING = 3;
 
     float[] frequencies = new float[8];
     float[] dbas = new float[8];

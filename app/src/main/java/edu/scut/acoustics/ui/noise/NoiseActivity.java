@@ -1,7 +1,6 @@
 package edu.scut.acoustics.ui.noise;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -11,16 +10,17 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -49,6 +49,7 @@ public class NoiseActivity extends AppCompatActivity {
     final static int PERMISSIONS_FOR_ADJUST = 2;
     ActivityNoiseBinding binding;
     NoiseViewModel viewModel;
+    ActionBarDrawerToggle toggle;
     DecimalFormat format = new DecimalFormat("###0.00");
     float baseline;
     MyApplication application;
@@ -62,6 +63,9 @@ public class NoiseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_noise);
+        setSupportActionBar(binding.toolbar);
+        toggle = new ActionBarDrawerToggle(this, binding.drawer, binding.toolbar, R.string.open, R.string.close);
+        toggle.syncState();
         //Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
         barEntries = new ArrayList<>(8);
         //初始化图表
@@ -137,8 +141,37 @@ public class NoiseActivity extends AppCompatActivity {
                     unit = R.string.dBA;
                     binding.weighting.setText(R.string.a_weighting);
                 }
+                if (item.getItemId() == R.id.c_weighting) {
+                    viewModel.setMode(SLM.C_WEIGHTING);
+                    unit = R.string.dBC;
+                    binding.weighting.setText(R.string.c_weighting);
+                }
+                if (item.getItemId() == R.id.z_weighting) {
+                    viewModel.setMode(SLM.Z_WEIGHTING);
+                    unit = R.string.dBZ;
+                    binding.weighting.setText(R.string.z_weighting);
+                }
+                if (item.getItemId() == R.id.adjust) {
+                    startAdjust();
+                }
+                if (item.getItemId() == R.id.quit) {
+                    finish();
+                }
                 binding.drawer.closeDrawers();
                 return false;
+            }
+        });
+
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (viewModel.isRecording()) {
+                    viewModel.stop();
+                    binding.fab.setImageResource(R.drawable.ic_baseline_play_arrow_24);
+                } else {
+                    startSLM();
+                    binding.fab.setImageResource(R.drawable.ic_baseline_stop_24);
+                }
             }
         });
 
@@ -151,25 +184,11 @@ public class NoiseActivity extends AppCompatActivity {
         return true;
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.start:
-                startSLM();
-                return true;
-            case R.id.stop:
-                viewModel.stop();
-                return true;
-            case R.id.refresh:
-                viewModel.refresh();
-                return true;
-            case R.id.adjust:
-                startAdjust();
-                return true;
-            case R.id.weight:
-                binding.drawer.openDrawer(GravityCompat.START);
-                return true;
+        if (item.getItemId() == R.id.refresh) {
+            viewModel.refresh();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

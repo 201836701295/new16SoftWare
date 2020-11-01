@@ -6,7 +6,30 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/a_weighting"
-            android:title="A计权" />
+            android:icon="@drawable/ic_baseline_alpha_a_24"
+            android:title="@string/a_weighting" />
+
+        <item
+            android:id="@+id/c_weighting"
+            android:icon="@drawable/ic_baseline_alpha_c_24"
+            android:title="@string/c_weighting" />
+
+        <item
+            android:id="@+id/z_weighting"
+            android:icon="@drawable/ic_baseline_alpha_z_24"
+            android:title="@string/z_weighting" />
+    </group>
+
+    <group>
+        <item
+            android:id="@+id/adjust"
+            android:icon="@drawable/ic_baseline_handyman_24"
+            android:title="@string/adjust" />
+
+        <item
+            android:id="@+id/quit"
+            android:icon="@drawable/ic_baseline_close_24"
+            android:title="@string/quit" />
     </group>
 
 </menu>

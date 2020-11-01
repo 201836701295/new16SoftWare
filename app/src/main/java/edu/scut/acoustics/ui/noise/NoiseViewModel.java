@@ -36,6 +36,10 @@ public class NoiseViewModel extends ViewModel {
         maxAmp = slm.getMaxAmp();
     }
 
+    public boolean isRecording() {
+        return slm.isRecording();
+    }
+
     public LiveData<Integer> getMaxAmp() {
         return maxAmp;
     }

@@ -36,9 +36,19 @@
     <string name="ear_test_result">双耳听阈测量</string>
     <string name="self_determine">自定义分贝值</string>
     <string name="dBA">%sdBA</string>
+    <string name="dBC">%sdBC</string>
+    <string name="dBZ">%sdBZ</string>
     <string name="frequency_dbUnit">%1$dHz = %2$s</string>
-    <string name="a_weighting">A计权</string>
     <string name="env_normal">环境音量正常，开始测试</string>
     <string name="env_loud">环境音量过大</string>
     <string name="insist">坚持要测</string>
+    <string name="experiment_description">测量麦克风和扬声器的频率响应</string>
+    <string name="noise_measurement_description">多种计权的倍频带噪声声压级测量</string>
+    <string name="ear_test_description">测量双耳的倍频带的听阈</string>
+    <string name="a_weighting">A计权</string>
+    <string name="c_weighting">C计权</string>
+    <string name="z_weighting">Z计权</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="quit">退出</string>
 </resources>

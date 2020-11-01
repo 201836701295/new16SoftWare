@@ -1,37 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <item
-        android:id="@+id/start"
-        android:icon="@drawable/ic_baseline_play_arrow_24"
-        android:title="开始"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/stop"
-        android:icon="@drawable/ic_baseline_stop_24"
-        android:title="停止"
-        app:showAsAction="always"
-        tools:ignore="AlwaysShowAction" />
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/refresh"
         android:icon="@drawable/ic_baseline_sync_24"
-        android:title="刷新"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/adjust"
-        android:icon="@drawable/ic_baseline_handyman_24"
-        android:title="@string/adjust"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/weight"
-        android:icon="@drawable/ic_baseline_weight_24"
-        android:title="计权"
+        android:title="@string/refresh"
         app:showAsAction="always" />
 
 </menu>

@@ -19,7 +19,6 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_analyze);
-        binding.play.setOnClickListener(this);
     }
 
     @Override
