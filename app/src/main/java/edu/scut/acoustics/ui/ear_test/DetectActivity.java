@@ -1,6 +1,7 @@
 package edu.scut.acoustics.ui.ear_test;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.icu.text.DecimalFormat;
 import android.os.Bundle;
 import android.view.View;
@@ -37,6 +38,12 @@ public class DetectActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onChanged(Float aFloat) {
                 binding.slmText.setText(getString(R.string.real_time_db, getString(unit, format.format(aFloat + baseline))));
+                if (aFloat > 40) {
+                    binding.slmText.setTextColor(Color.RED);
+                } else {
+                    binding.slmText.setTextColor(Color.GREEN);
+                }
+
                 if (aFloat + baseline > 40f) {
                     binding.btnEnter.setEnabled(false);
                     binding.btnEnter.setText(R.string.env_loud);

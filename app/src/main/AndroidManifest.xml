@@ -33,12 +33,6 @@
             android:parentActivityName=".ui.main.MainActivity" />
 
         <activity
-            android:name=".ui.noise_measurement.NoiseMeasurementActivity"
-            android:label="@string/noise_measurement"
-            android:launchMode="singleTop"
-            android:parentActivityName=".ui.main.MainActivity" />
-
-        <activity
             android:name=".ui.noise.NoiseActivity"
             android:label="@string/noise_measurement"
             android:launchMode="singleTop"

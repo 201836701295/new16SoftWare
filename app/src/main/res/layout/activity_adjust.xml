@@ -31,6 +31,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:textSize="25sp"
+            android:textColor="@color/black"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
@@ -69,12 +70,12 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/sourceType" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/adjust"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            android:background="@drawable/shape_btn"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:text="@string/adjust"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

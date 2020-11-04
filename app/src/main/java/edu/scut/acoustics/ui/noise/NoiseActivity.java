@@ -140,16 +140,19 @@ public class NoiseActivity extends AppCompatActivity {
                     viewModel.setMode(SLM.A_WEIGHTING);
                     unit = R.string.dBA;
                     binding.weighting.setText(R.string.a_weighting);
+                    viewModel.refresh();
                 }
                 if (item.getItemId() == R.id.c_weighting) {
                     viewModel.setMode(SLM.C_WEIGHTING);
                     unit = R.string.dBC;
                     binding.weighting.setText(R.string.c_weighting);
+                    viewModel.refresh();
                 }
                 if (item.getItemId() == R.id.z_weighting) {
                     viewModel.setMode(SLM.Z_WEIGHTING);
                     unit = R.string.dBZ;
                     binding.weighting.setText(R.string.z_weighting);
+                    viewModel.refresh();
                 }
                 if (item.getItemId() == R.id.adjust) {
                     startAdjust();
