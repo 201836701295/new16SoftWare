@@ -2,7 +2,6 @@ package edu.scut.acoustics.ui.experiment;
 
 import android.app.Application;
 import android.content.res.AssetFileDescriptor;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -26,8 +25,7 @@ public class ExperimentViewModel extends AndroidViewModel {
     LiveData<ChartInformation> phaseChart;
     LiveData<ChartInformation> powerChart;
     LiveData<Integer> maxAmp;
-    MutableLiveData<ExperimentState> experimentState;
-    ExperimentState state = new ExperimentState();
+    MutableLiveData<Integer> experimentState;
     AudioPlayer player;
     AudioRecorder recorder;
     ChartRepository repository;
@@ -42,8 +40,7 @@ public class ExperimentViewModel extends AndroidViewModel {
         waveChart = repository.getWaveChartLiveData();
         phaseChart = repository.getPhaseChartLiveData();
         powerChart = repository.getPowerChartLiveData();
-        experimentState = new MutableLiveData<>();
-        experimentState.setValue(state);
+        experimentState = new MutableLiveData<>(ExperimentState.IDLE);
         player = new AudioPlayer();
         recorder = new AudioRecorder(application);
         maxAmp = recorder.getMaxAmp();
@@ -54,21 +51,16 @@ public class ExperimentViewModel extends AndroidViewModel {
     }
 
     public void setAudioData2(float[] audioData2) {
-        state.state = ExperimentState.PROCESSING;
-        experimentState.setValue(state);
         repository.setAudioData2(audioData2);
         service.execute(new Runnable() {
             @Override
             public void run() {
                 try {
                     repository.doFinal();
-                    state.state = ExperimentState.FINISH;
+                    experimentState.postValue(ExperimentState.FINISH);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    state.state = ExperimentState.ERROR;
-                } finally {
-                    experimentState.postValue(state);
-                    Log.i("data process", "run: finish");
+                    experimentState.postValue(ExperimentState.ERROR);
                 }
             }
         });
@@ -80,8 +72,6 @@ public class ExperimentViewModel extends AndroidViewModel {
 
     public void startPlay(AssetFileDescriptor assetFileDescriptor) throws IOException {
         player.play(assetFileDescriptor);
-        state.state = ExperimentState.PLAYING;
-        experimentState.setValue(state);
     }
 
     public void stopPlay() {
@@ -101,8 +91,6 @@ public class ExperimentViewModel extends AndroidViewModel {
     }
 
     public void dataProcess() {
-        state.state = ExperimentState.PROCESSING;
-        experimentState.setValue(state);
         service.execute(new Runnable() {
             @Override
             public void run() {
@@ -128,13 +116,10 @@ public class ExperimentViewModel extends AndroidViewModel {
                     }
                     repository.setAudioData2(recordData);
                     repository.doFinal();
-                    state.state = ExperimentState.FINISH;
+                    experimentState.postValue(ExperimentState.FINISH);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    state.state = ExperimentState.ERROR;
-                } finally {
-                    experimentState.postValue(state);
-                    Log.i("data process", "run: finish");
+                    experimentState.postValue(ExperimentState.ERROR);
                 }
             }
         });
@@ -142,31 +127,26 @@ public class ExperimentViewModel extends AndroidViewModel {
 
     public void shutdown() {
         service.shutdownNow();
+        experimentState.setValue(ExperimentState.IDLE);
     }
 
-    public void reset() {
-        state.state = ExperimentState.IDLE;
-        experimentState.setValue(state);
-    }
-
-    public void setError() {
-        state.state = ExperimentState.ERROR;
-        experimentState.setValue(state);
-    }
-
-    public LiveData<ExperimentState> getExperimentState() {
+    public LiveData<Integer> getExperimentState() {
         return experimentState;
+    }
+
+    public void setExperimentState(int s) {
+        experimentState.setValue(s);
     }
 
     public LiveData<ChartInformation> getWaveChart() {
         return waveChart;
     }
 
-    public LiveData<ChartInformation> getPhaseChart() {
-        return phaseChart;
-    }
-
     public LiveData<ChartInformation> getPowerChart() {
         return powerChart;
+    }
+
+    public int getDuration() {
+        return player.getDuration();
     }
 }

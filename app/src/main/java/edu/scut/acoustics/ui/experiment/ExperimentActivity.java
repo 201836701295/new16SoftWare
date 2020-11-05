@@ -3,6 +3,7 @@ package edu.scut.acoustics.ui.experiment;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -30,8 +31,6 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
     AudioDevice device;
     ActivityExperimentBinding binding;
     ExperimentViewModel viewModel;
-    OutcomeFragment outcomeFragment;
-    GuideFragment guideFragment;
     MyApplication application;
 
     @Override
@@ -39,8 +38,6 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         //UI初始化
         binding = DataBindingUtil.setContentView(this, R.layout.activity_experiment);
-        guideFragment = new GuideFragment();
-        getSupportFragmentManager().beginTransaction().add(binding.frame.getId(), guideFragment).commit();
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
         //设置点击监听
         binding.button.setOnClickListener(this);
@@ -49,12 +46,13 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         viewModel = new ViewModelProvider(this).get(ExperimentViewModel.class);
         viewModel.setListener(new AudioPlayer.Listener() {
             @Override
-            public void prepare_finished(int duration) {
+            public void prepare_finished() {
                 try {
-                    guideFragment.startCountDown(duration);
+                    viewModel.setExperimentState(ExperimentState.PLAYING);
+                    Log.d("ExperimentState", "prepare_finished: ");
                     viewModel.startRecord();
                 } catch (IOException e) {
-                    viewModel.setError();
+                    viewModel.setExperimentState(ExperimentState.ERROR);
                     e.printStackTrace();
                 }
             }
@@ -63,34 +61,35 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
             public void media_finished() {
                 try {
                     viewModel.stopRecord();
-                    guideFragment.stopCountDown();
+                    viewModel.setExperimentState(ExperimentState.PROCESSING);
                     viewModel.dataProcess();
                 } catch (ExecutionException | InterruptedException e) {
-                    viewModel.setError();
+                    viewModel.setExperimentState(ExperimentState.ERROR);
                     e.printStackTrace();
                 }
             }
         });
 
-        viewModel.getExperimentState().observe(this, new Observer<ExperimentState>() {
+        viewModel.getExperimentState().observe(this, new Observer<Integer>() {
             @Override
-            public void onChanged(ExperimentState experimentState) {
-                switch (experimentState.state) {
+            public void onChanged(Integer i) {
+                switch (i) {
                     case ExperimentState.IDLE:
+                    case ExperimentState.FINISH:
                         binding.button.setEnabled(true);
+                        binding.progress.setVisibility(View.INVISIBLE);
                         break;
                     case ExperimentState.ERROR:
                         binding.button.setEnabled(true);
                         application.show_toast(R.string.experiment_error);
-                        break;
-                    case ExperimentState.FINISH:
-                        binding.button.setEnabled(true);
                         binding.progress.setVisibility(View.INVISIBLE);
-                        show_outcome();
                         break;
+                    case ExperimentState.PREPARING:
+                        binding.button.setEnabled(false);
                     case ExperimentState.PLAYING:
                         binding.button.setEnabled(false);
                         application.show_toast(R.string.start_to_play);
+                        binding.progress.setVisibility(View.INVISIBLE);
                         break;
                     case ExperimentState.PROCESSING:
                         binding.button.setEnabled(false);
@@ -113,6 +112,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+        viewModel.setExperimentState(ExperimentState.IDLE);
         binding.button.setEnabled(true);
     }
 
@@ -137,12 +137,13 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
                 != PackageManager.PERMISSION_GRANTED) {
             vector.add(Manifest.permission.RECORD_AUDIO);
         }
+
         if (vector.size() > 0) {
             String[] permissions = vector.toArray(new String[vector.size()]);
             ActivityCompat.requestPermissions(this, permissions, PERMISSIONS);
-            return;
+        } else {
+            start_experiment();
         }
-        start_experiment();
     }
 
     //检查权限申请情况
@@ -162,7 +163,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
 
     //开始实验
     void start_experiment() {
-        viewModel.reset();
+        viewModel.setExperimentState(ExperimentState.PREPARING);
         //声音最大
         device.setVolume(device.getMaxVolume());
         //设置播放事件接口
@@ -170,36 +171,23 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
             //开始播放
             viewModel.startPlay(getResources().openRawResourceFd(R.raw.sample_signal));
         } catch (IOException e) {
+            viewModel.setExperimentState(ExperimentState.ERROR);
             e.printStackTrace();
         }
     }
 
     void test_experiment() {
-        viewModel.reset();
+        viewModel.setExperimentState(ExperimentState.PROCESSING);
         viewModel.setAudioData2(application.sampleSignal);
     }
 
-    //显示结果
-    public void show_outcome() {
-        outcomeFragment = new OutcomeFragment();
-        getSupportFragmentManager().beginTransaction().replace(binding.frame.getId(), outcomeFragment)
-                .addToBackStack(null).commit();
-        guideFragment = null;
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
+    //@Override
+    //public void onBackPressed() {
+    //    finish();
+    //}
 
     @Override
     public void onClick(final View view) {
-        if (outcomeFragment != null) {
-            getSupportFragmentManager().beginTransaction().remove(outcomeFragment).commit();
-            outcomeFragment = null;
-            guideFragment = new GuideFragment();
-            getSupportFragmentManager().beginTransaction().add(binding.frame.getId(), guideFragment).commit();
-        }
         //检查权限
         permission();
         //test_experiment();

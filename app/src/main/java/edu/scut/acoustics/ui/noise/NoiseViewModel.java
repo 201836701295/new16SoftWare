@@ -22,6 +22,7 @@ public class NoiseViewModel extends ViewModel {
     LiveData<SLM.DB> db;
     LiveData<Integer> maxAmp;
     MutableLiveData<String> sourceType;
+    MutableLiveData<Boolean> running;
     TimerTask timerTask;
     Timer timer = new Timer();
     SLM slm;
@@ -34,6 +35,11 @@ public class NoiseViewModel extends ViewModel {
         db = slm.getDb();
         sourceType = new MutableLiveData<>("");
         maxAmp = slm.getMaxAmp();
+        running = new MutableLiveData<>(false);
+    }
+
+    public LiveData<Boolean> isRunning() {
+        return running;
     }
 
     public boolean isRecording() {
@@ -69,40 +75,38 @@ public class NoiseViewModel extends ViewModel {
     }
 
     public void start() {
-        slm.start();
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-            timerTask = null;
-        }
-        timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    List<MicrophoneInfo> microphoneInfos = slm.getActiveMicrophones();
-                    StringBuilder builder = new StringBuilder();
-                    for (MicrophoneInfo v : microphoneInfos) {
-                        Log.i("micType", "micType: " + v.getType());
-                        switch (v.getType()) {
-                            case AudioDeviceInfo.TYPE_BUILTIN_MIC:
-                                builder.append("音源：内置麦克风");
-                                break;
-                            case AudioDeviceInfo.TYPE_WIRED_HEADSET:
-                                builder.append("音源：外接麦克风");
-                                break;
-                            case AudioDeviceInfo.TYPE_USB_HEADSET:
-                                builder.append("音源：外接USB麦克风");
-                                break;
+        if (timer == null) {
+            slm.start();
+            running.setValue(true);
+            timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    try {
+                        List<MicrophoneInfo> microphoneInfos = slm.getActiveMicrophones();
+                        StringBuilder builder = new StringBuilder();
+                        for (MicrophoneInfo v : microphoneInfos) {
+                            Log.i("micType", "micType: " + v.getType());
+                            switch (v.getType()) {
+                                case AudioDeviceInfo.TYPE_BUILTIN_MIC:
+                                    builder.append("音源：内置麦克风");
+                                    break;
+                                case AudioDeviceInfo.TYPE_WIRED_HEADSET:
+                                    builder.append("音源：外接麦克风");
+                                    break;
+                                case AudioDeviceInfo.TYPE_USB_HEADSET:
+                                    builder.append("音源：外接USB麦克风");
+                                    break;
+                            }
                         }
+                        sourceType.postValue(builder.toString());
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    sourceType.postValue(builder.toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
-            }
-        };
-        timer = new Timer();
-        timer.schedule(timerTask, 500, 1000);
+            };
+            timer = new Timer();
+            timer.schedule(timerTask, 500, 1000);
+        }
     }
 
     public void refresh() {
@@ -114,7 +118,9 @@ public class NoiseViewModel extends ViewModel {
             timer.cancel();
             timer = null;
             timerTask = null;
+            sourceType.setValue("");
+            slm.stop();
+            running.setValue(false);
         }
-        slm.stop();
     }
 }

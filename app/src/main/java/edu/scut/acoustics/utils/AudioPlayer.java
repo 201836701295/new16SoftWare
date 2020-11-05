@@ -8,8 +8,8 @@ import android.util.Log;
 import java.io.IOException;
 
 public class AudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
-    MediaPlayer player = null;
-    Listener listener = null;
+    MediaPlayer player;
+    Listener listener;
 
     public void setListener(Listener listener) {
         this.listener = listener;
@@ -18,10 +18,17 @@ public class AudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         if (listener != null) {
-            listener.prepare_finished(player.getDuration());
+            listener.prepare_finished();
         }
         player.start();
         Log.d("player start", "onPrepared: ");
+    }
+
+    public int getDuration() {
+        if (player != null) {
+            return player.getDuration();
+        }
+        return 0;
     }
 
     @Override
@@ -29,12 +36,10 @@ public class AudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
         if (listener != null) {
             listener.media_finished();
         }
-        player.release();
-        player = null;
+        stop();
     }
 
     public void stop() {
-        listener = null;
         if (player != null) {
             player.stop();
             player.release();
@@ -66,7 +71,7 @@ public class AudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
     }
 
     public interface Listener {
-        void prepare_finished(int duration);
+        void prepare_finished();
 
         void media_finished();
     }

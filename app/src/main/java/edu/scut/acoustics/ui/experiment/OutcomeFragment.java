@@ -14,6 +14,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -81,21 +82,25 @@ public class OutcomeFragment extends Fragment {
                 }
             }
         });
-        viewModel.getPhaseChart().observe(getViewLifecycleOwner(), new Observer<ChartInformation>() {
-            @Override
-            public void onChanged(ChartInformation chartInformation) {
-                if (chartInformation != null) {
-                    observeChart(binding.phaseChart, chartInformation);
-                    binding.phaseChart.notifyDataSetChanged();
-                }
-            }
-        });
         viewModel.getPowerChart().observe(getViewLifecycleOwner(), new Observer<ChartInformation>() {
             @Override
             public void onChanged(ChartInformation chartInformation) {
                 if (chartInformation != null) {
                     observeChart(binding.powerChart, chartInformation);
                     binding.powerChart.notifyDataSetChanged();
+                }
+            }
+        });
+        viewModel.getExperimentState().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer i) {
+                switch (i) {
+                    case ExperimentState.ERROR:
+                    case ExperimentState.PREPARING:
+                    case ExperimentState.PLAYING:
+                    case ExperimentState.IDLE:
+                        Navigation.findNavController(binding.getRoot()).navigate(R.id.rerun);
+                        break;
                 }
             }
         });

@@ -97,7 +97,7 @@ public class AudioRecorder {
     }
 
     boolean recording = false;
-    byte[] audioData = new byte[MIN_BUFFER_SIZE];
+    byte[] audioData = new byte[8820 * 2];
     AudioRecord recorder = null;
     String filename;
     ExecutorService service = Executors.newSingleThreadExecutor();

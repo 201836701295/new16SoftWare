@@ -84,8 +84,8 @@
             app:chunkMinHeight="0dp"
             app:chunkRoundedCorners="true"
             app:chunkSoftTransition="true"
-            app:chunkSpace="0.1dp"
-            app:chunkWidth="1dp"
+            app:chunkSpace="1dp"
+            app:chunkWidth="2dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/test_wave" />

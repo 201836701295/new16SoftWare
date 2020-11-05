@@ -129,6 +129,16 @@ public class NoiseActivity extends AppCompatActivity {
                 binding.audioRecordView.update(integer);
             }
         });
+        viewModel.isRunning().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (!aBoolean) {
+                    binding.fab.setImageResource(R.drawable.ic_baseline_play_arrow_24);
+                } else {
+                    binding.fab.setImageResource(R.drawable.ic_baseline_stop_24);
+                }
+            }
+        });
 
 
         binding.navView.setCheckedItem(R.id.a_weighting);
@@ -170,10 +180,8 @@ public class NoiseActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (viewModel.isRecording()) {
                     viewModel.stop();
-                    binding.fab.setImageResource(R.drawable.ic_baseline_play_arrow_24);
                 } else {
                     startSLM();
-                    binding.fab.setImageResource(R.drawable.ic_baseline_stop_24);
                 }
             }
         });

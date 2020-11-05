@@ -98,7 +98,7 @@ public class ChartRepository {
         dspMath.fft(tailorData, tailorData.length, real, imagine);
         //作求相位
         phase = new float[(tailorData.length + 1) / 2];
-        dspMath.phase(real, imagine, phase);
+        //dspMath.phase(real, imagine, phase);
         //求功率
         power = new float[(tailorData.length + 1) / 2];
         frequency = new float[(tailorData.length + 1) / 2];
@@ -123,7 +123,7 @@ public class ChartRepository {
         }
         //截取峰值前0.1s和峰值后0.05s
         lmost = (int) (index - 44100 * 0.01f);
-        rmost = (int) (index + 44100 * 0.05f);
+        rmost = (int) (index + 44100 * 0.05f) - 1;
         //检查是否超越边界
         if (lmost < 0) {
             lmost = 0;
@@ -156,37 +156,20 @@ public class ChartRepository {
         waveChart.minX = 0;
         waveChart.maxY = 0;
         waveChart.minY = 0;
-        //设置采样区间
-        int dpp = tailorData.length / MAX_ENTRY;
-        if (dpp == 0) {
-            dpp = 1;
-        }
         //数据点数据
-        List<Entry> values = new ArrayList<>(tailorData.length / dpp + 1);
-        //区间最值
-        float low, high;
-        for (int i = 0; i < tailorData.length; i += dpp) {
-            low = tailorData[i];
-            high = tailorData[i];
+        List<Entry> values = new ArrayList<>(tailorData.length);
+        for (int i = 0; i < tailorData.length; ++i) {
             //更新Y轴范围，取区间最值
-            for (int j = i, k = 0; j < tailorData.length && k < dpp; ++j, ++k) {
-                if (tailorData[j] > waveChart.maxY) {
-                    waveChart.maxY = tailorData[j];
-                }
-                if (tailorData[j] < waveChart.minY) {
-                    waveChart.minY = tailorData[j];
-                }
-                if (tailorData[j] < low) {
-                    low = tailorData[j];
-                }
-                if (tailorData[j] > high) {
-                    high = tailorData[j];
-                }
+            if (tailorData[i] > waveChart.maxY) {
+                waveChart.maxY = tailorData[i];
             }
-            //将最值采样
-            values.add(new Entry(i / 44100f, low));
-            values.add(new Entry(i / 44100f, high));
+            if (tailorData[i] < waveChart.minY) {
+                waveChart.minY = tailorData[i];
+            }
+            values.add(new Entry(i / 44100f, tailorData[i]));
         }
+        waveChart.maxY *= 1.1f;
+        waveChart.minY *= 1.1f;
         //设置图线绘制方法
         LineDataSet set = new LineDataSet(values, waveLabel);
         set.setDrawIcons(false);
@@ -218,33 +201,23 @@ public class ChartRepository {
         powerChart.maxY = 0;
         powerChart.minY = 0;
 
-        int dpp = power.length / MAX_ENTRY;
-        if (dpp == 0) {
-            dpp = 1;
-        }
-        List<Entry> values = new ArrayList<>(power.length / dpp + 1);
-        float low, high;
-        for (int i = 1; i < power.length; i += dpp) {
-            low = power[i];
-            high = power[i];
-            for (int j = i, k = 0; j < power.length && k < dpp; ++j, ++k) {
-                if (power[j] > powerChart.maxY) {
-                    powerChart.maxY = power[j] + constant;
-                }
-                if (power[j] < powerChart.minY) {
-                    powerChart.minY = power[j] + constant;
-                }
-                if (power[j] < low) {
-                    low = power[j];
-                }
-                if (power[j] > high) {
-                    high = power[j];
-                }
+        List<Entry> values = new ArrayList<>(power.length);
+        for (int i = 1; i < power.length; ++i) {
+            if (power[i] > powerChart.maxY) {
+                powerChart.maxY = power[i];
             }
-            values.add(new Entry((float) Math.log10(frequency[i]), low + constant));
-            values.add(new Entry((float) Math.log10(frequency[i]), high + constant));
+            if (power[i] < powerChart.minY) {
+                powerChart.minY = power[i];
+            }
+            values.add(new Entry((float) Math.log10(frequency[i]), power[i] + constant));
             Log.i("power chart", "powerChart: " + (float) Math.log10(frequency[i]));
         }
+        float temp = (powerChart.maxY - powerChart.minY) * 0.2f;
+        powerChart.maxY += temp;
+        powerChart.minY -= temp;
+        powerChart.maxY += constant;
+        powerChart.minY += constant;
+
         LineDataSet set = new LineDataSet(values, powerLabel);
         set.setDrawIcons(false);
         set.setColor(Color.BLACK);
