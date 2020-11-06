@@ -21,39 +21,45 @@ import edu.scut.acoustics.utils.DSPMath;
 public class ChartRepository {
     //图表最大数据数
     public static final int MAX_ENTRY = 3000;
-    private final DSPMath dspMath = new DSPMath();
-    private final String waveLabel;
-    private final String phaseLabel;
-    private final String powerLabel;
+    final DSPMath dspMath = new DSPMath();
+    final String waveLabel;
+    final String phaseLabel;
+    final String powerLabel;
+    final String audioLabel;
     MutableLiveData<ChartInformation> waveChartLiveData;
     MutableLiveData<ChartInformation> phaseChartLiveData;
     MutableLiveData<ChartInformation> powerChartLiveData;
-    private float[] convolutionData;
-    private float[] tailorData;
-    private float[] real;
-    private float[] imagine;
-    private float[] phase;
-    private float[] power;
-    private float[] frequency;
-    private ChartInformation waveChart;
-    private ChartInformation phaseChart;
-    private ChartInformation powerChart;
-    private float[] audioData1;
-    private float[] audioData2;
+    MutableLiveData<ChartInformation> audioChartLiveData;
+    float[] convolutionData;
+    float[] tailorData;
+    float[] real;
+    float[] imagine;
+    float[] phase;
+    float[] power;
+    float[] frequency;
+    ChartInformation waveChart;
+    ChartInformation phaseChart;
+    ChartInformation powerChart;
+    ChartInformation audioChart;
+    float[] audioData1;
+    float[] audioData2;
 
     public ChartRepository(Context context) {
         waveLabel = context.getResources().getString(R.string.convolution_wave);
         phaseLabel = context.getResources().getString(R.string.phase_chart);
         powerLabel = context.getResources().getString(R.string.power_chart);
+        audioLabel = "接受波形";
         waveChartLiveData = new MutableLiveData<>();
         phaseChartLiveData = new MutableLiveData<>();
         powerChartLiveData = new MutableLiveData<>();
+        audioChartLiveData = new MutableLiveData<>();
     }
 
     public ChartRepository(Context context, float[] a1, float[] a2) {
         waveLabel = context.getResources().getString(R.string.convolution_wave);
         phaseLabel = context.getResources().getString(R.string.phase_chart);
         powerLabel = context.getResources().getString(R.string.power_chart);
+        audioLabel = "接受波形";
         audioData1 = a1;
         audioData2 = a2;
     }
@@ -68,6 +74,10 @@ public class ChartRepository {
 
     public LiveData<ChartInformation> getPowerChartLiveData() {
         return powerChartLiveData;
+    }
+
+    public LiveData<ChartInformation> getAudioChartLiveData() {
+        return audioChartLiveData;
     }
 
     public void setAudioData1(float[] audioData1) {
@@ -141,6 +151,57 @@ public class ChartRepository {
         wave_chart();
         power_chart();
         phase_chart();
+        audio_chart();
+    }
+
+    void audio_chart() {
+        ChartInformation chartInformation = audioChart = new ChartInformation();
+        //设置坐标轴标签
+        chartInformation.labelX = "时间/s";
+        chartInformation.labelY = "振幅";
+        chartInformation.xUnit = "s";
+        chartInformation.yUnit = "";
+        //设置坐标轴显示范围
+        chartInformation.maxX = audioData2.length / 44100f;
+        chartInformation.minX = 0;
+        chartInformation.maxY = Short.MAX_VALUE * 1.1f;
+        chartInformation.minY = -Short.MAX_VALUE * 1.1f;
+        int dpp = audioData2.length / MAX_ENTRY;
+        if (dpp == 0) {
+            dpp = 1;
+        }
+        //数据点数据
+        List<Entry> values = new ArrayList<>(audioData2.length / dpp + 1);
+        float low, high;
+        for (int i = 0; i < audioData2.length; i += dpp) {
+            low = audioData2[i];
+            high = audioData2[i];
+            for (int j = i, k = 0; j < audioData2.length && k < dpp; ++j, ++k) {
+                if (audioData2[j] < low) {
+                    low = audioData2[j];
+                }
+                if (audioData2[j] > high) {
+                    high = audioData2[j];
+                }
+            }
+            values.add(new Entry(i / 44100f, low));
+            values.add(new Entry(i / 44100f, high));
+        }
+        //设置图线绘制方法
+        LineDataSet set = new LineDataSet(values, waveLabel);
+        set.setDrawIcons(false);
+        set.setColor(Color.BLACK);
+        set.setLineWidth(1f);
+        set.setDrawCircles(false);
+        set.setDrawCircleHole(false);
+        set.setDrawFilled(false);
+        set.setFormLineWidth(1f);
+        set.setFormSize(15.f);
+        set.setValueTextSize(9f);
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set);
+        chartInformation.lineData = new LineData(dataSets);
+        audioChartLiveData.postValue(audioChart);
     }
 
     //生成波形图表

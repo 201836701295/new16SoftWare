@@ -91,6 +91,15 @@ public class OutcomeFragment extends Fragment {
                 }
             }
         });
+        viewModel.getAudioChart().observe(getViewLifecycleOwner(), new Observer<ChartInformation>() {
+            @Override
+            public void onChanged(ChartInformation chartInformation) {
+                if (chartInformation != null) {
+                    observeChart(binding.audioChart, chartInformation);
+                    binding.audioChart.notifyDataSetChanged();
+                }
+            }
+        });
         viewModel.getExperimentState().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer i) {

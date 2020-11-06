@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(20, 10, 20, 10);
+        layoutParams.setMargins(20, 20, 20, 20);
 
         ItemMainBinding binding1 = DataBindingUtil.inflate(getLayoutInflater(), R.layout.item_main, binding.linearLayout, false);
         binding1.imageView.setImageResource(R.drawable.frequency_response);

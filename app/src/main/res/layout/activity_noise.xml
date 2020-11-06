@@ -134,7 +134,7 @@
                 <com.visualizer.amplitude.AudioRecordView
                     android:id="@+id/audioRecordView"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="120dp"
                     android:layout_marginTop="10dp"
                     app:chunkAlignTo="center"
                     app:chunkColor="@color/blue"
@@ -142,8 +142,8 @@
                     app:chunkMinHeight="0dp"
                     app:chunkRoundedCorners="true"
                     app:chunkSoftTransition="true"
-                    app:chunkSpace="0.5dp"
-                    app:chunkWidth="2dp" />
+                    app:chunkSpace="1dp"
+                    app:chunkWidth="3dp" />
 
             </LinearLayout>
 

@@ -178,11 +178,13 @@ public class NoiseActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("binding.fab", "onClick: " + viewModel.isRecording());
                 if (viewModel.isRecording()) {
                     viewModel.stop();
                 } else {
                     startSLM();
                 }
+                Log.d("binding.fab", "onClick: " + viewModel.isRecording());
             }
         });
 
@@ -211,6 +213,7 @@ public class NoiseActivity extends AppCompatActivity {
         } else {
             binding.audioRecordView.recreate();
             viewModel.start();
+            Log.d("viewModel.start", "startSLM: ");
         }
     }
 

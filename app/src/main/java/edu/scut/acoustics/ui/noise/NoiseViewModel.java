@@ -24,7 +24,7 @@ public class NoiseViewModel extends ViewModel {
     MutableLiveData<String> sourceType;
     MutableLiveData<Boolean> running;
     TimerTask timerTask;
-    Timer timer = new Timer();
+    Timer timer;
     SLM slm;
 
     public NoiseViewModel() {

@@ -36,7 +36,7 @@ public class SLM {
     float[] frequencies = new float[8];
     float[] dbas = new float[8];
     //short[] audioData = new short[N];
-    short[] buffer = new short[N];
+    short[] buffer = new short[(int) (0.2f * SAMPLE_RATE)];
     AudioRecord recorder = null;
     ExecutorService service = Executors.newCachedThreadPool();
     AtomicInteger mode;
@@ -189,29 +189,22 @@ public class SLM {
             delay();
             try {
                 while (true) {
-                    off = 0;
-                    length = buffer.length;
-                    while (off < N) {
-                        temp = recorder.read(buffer, off, length);
-                        Log.d("SLM", "audio data length: " + temp);
+                    temp = recorder.read(buffer, 0, buffer.length);
+                    Log.d("SLM", "audio data length: " + temp);
                         if (temp == 0) {
                             return null;
                         }
                         //找最大
-
-                        for (int i = off; i < temp + off; i++, ++index) {
-                            if (index >= period) {
-                                maxAmp.postValue(max);
-                                Log.d("SLM", "call: post max amp" + max);
-                                max = 0;
-                                index = 0;
-                            }
-                            if (Math.abs(buffer[i]) > max) {
-                                max = Math.abs(buffer[i]);
-                            }
+                    for (int i = 0; i < buffer.length; i++, ++index) {
+                        if (index >= period) {
+                            maxAmp.postValue(max);
+                            Log.d("SLM", "call: post max amp" + max);
+                            max = 0;
+                            index = 0;
                         }
-                        off += temp;
-                        length -= temp;
+                        if (Math.abs(buffer[i]) > max) {
+                            max = Math.abs(buffer[i]);
+                        }
                     }
                     result = calculate(buffer, dbas, frequencies);
                     postRealtime(result, dbas);
