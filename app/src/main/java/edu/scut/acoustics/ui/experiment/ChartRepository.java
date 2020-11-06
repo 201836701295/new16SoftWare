@@ -2,7 +2,6 @@ package edu.scut.acoustics.ui.experiment;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -48,7 +47,7 @@ public class ChartRepository {
         waveLabel = context.getResources().getString(R.string.convolution_wave);
         phaseLabel = context.getResources().getString(R.string.phase_chart);
         powerLabel = context.getResources().getString(R.string.power_chart);
-        audioLabel = "接受波形";
+        audioLabel = "接收波形";
         waveChartLiveData = new MutableLiveData<>();
         phaseChartLiveData = new MutableLiveData<>();
         powerChartLiveData = new MutableLiveData<>();
@@ -59,7 +58,7 @@ public class ChartRepository {
         waveLabel = context.getResources().getString(R.string.convolution_wave);
         phaseLabel = context.getResources().getString(R.string.phase_chart);
         powerLabel = context.getResources().getString(R.string.power_chart);
-        audioLabel = "接受波形";
+        audioLabel = "接收波形";
         audioData1 = a1;
         audioData2 = a2;
     }
@@ -166,6 +165,7 @@ public class ChartRepository {
         chartInformation.minX = 0;
         chartInformation.maxY = Short.MAX_VALUE * 1.1f;
         chartInformation.minY = -Short.MAX_VALUE * 1.1f;
+        float max = 32768;
         int dpp = audioData2.length / MAX_ENTRY;
         if (dpp == 0) {
             dpp = 1;
@@ -184,11 +184,11 @@ public class ChartRepository {
                     high = audioData2[j];
                 }
             }
-            values.add(new Entry(i / 44100f, low));
-            values.add(new Entry(i / 44100f, high));
+            values.add(new Entry(i / 44100f, low * max));
+            values.add(new Entry(i / 44100f, high * max));
         }
         //设置图线绘制方法
-        LineDataSet set = new LineDataSet(values, waveLabel);
+        LineDataSet set = new LineDataSet(values, audioLabel);
         set.setDrawIcons(false);
         set.setColor(Color.BLACK);
         set.setLineWidth(1f);
@@ -257,8 +257,6 @@ public class ChartRepository {
         powerChart.yUnit = "dB";
         powerChart.minX = (float) Math.log10(frequency[1]);
         powerChart.maxX = (float) Math.log10(frequency[frequency.length - 1]);
-        Log.i("power chart", "powerChart.minX: " + powerChart.minX);
-        Log.i("power chart", "powerChart.maxX: " + powerChart.maxX);
         powerChart.maxY = 0;
         powerChart.minY = 0;
 
@@ -271,7 +269,6 @@ public class ChartRepository {
                 powerChart.minY = power[i];
             }
             values.add(new Entry((float) Math.log10(frequency[i]), power[i] + constant));
-            Log.i("power chart", "powerChart: " + (float) Math.log10(frequency[i]));
         }
         float temp = (powerChart.maxY - powerChart.minY) * 0.2f;
         powerChart.maxY += temp;

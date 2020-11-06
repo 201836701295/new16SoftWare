@@ -108,6 +108,7 @@ public class OutcomeFragment extends Fragment {
                     case ExperimentState.PREPARING:
                     case ExperimentState.PLAYING:
                     case ExperimentState.IDLE:
+                    case ExperimentState.PROCESSING:
                         Navigation.findNavController(binding.getRoot()).navigate(R.id.rerun);
                         break;
                 }
@@ -117,7 +118,7 @@ public class OutcomeFragment extends Fragment {
     }
 
     void initialLineChar() {
-        LineChart[] charts = {binding.phaseChart, binding.powerChart, binding.waveChart};
+        LineChart[] charts = {binding.phaseChart, binding.powerChart, binding.waveChart, binding.audioChart};
         for (LineChart chart : charts) {
             chart.setBackgroundColor(Color.WHITE);
             chart.getDescription().setEnabled(false);

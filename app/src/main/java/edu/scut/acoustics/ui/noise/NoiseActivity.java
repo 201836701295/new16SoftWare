@@ -126,7 +126,7 @@ public class NoiseActivity extends AppCompatActivity {
             @Override
             public void onChanged(Integer integer) {
                 Log.d("audioRecordView", "onChanged: " + integer);
-                binding.audioRecordView.update(integer);
+                binding.audioRecordView.update(integer * 4);
             }
         });
         viewModel.isRunning().observe(this, new Observer<Boolean>() {
