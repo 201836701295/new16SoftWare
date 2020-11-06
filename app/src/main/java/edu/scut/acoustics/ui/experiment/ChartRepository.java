@@ -54,15 +54,6 @@ public class ChartRepository {
         audioChartLiveData = new MutableLiveData<>();
     }
 
-    public ChartRepository(Context context, float[] a1, float[] a2) {
-        waveLabel = context.getResources().getString(R.string.convolution_wave);
-        phaseLabel = context.getResources().getString(R.string.phase_chart);
-        powerLabel = context.getResources().getString(R.string.power_chart);
-        audioLabel = "接收波形";
-        audioData1 = a1;
-        audioData2 = a2;
-    }
-
     public LiveData<ChartInformation> getPhaseChartLiveData() {
         return phaseChartLiveData;
     }
