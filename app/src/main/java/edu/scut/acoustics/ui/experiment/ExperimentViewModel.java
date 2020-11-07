@@ -26,6 +26,7 @@ public class ExperimentViewModel extends AndroidViewModel {
     LiveData<ChartInformation> powerChart;
     LiveData<ChartInformation> audioChart;
     LiveData<Integer> maxAmp;
+    LiveData<Bandwidth> bandwidth;
     MutableLiveData<Integer> experimentState;
     AudioPlayer player;
     AudioRecorder recorder;
@@ -46,6 +47,7 @@ public class ExperimentViewModel extends AndroidViewModel {
         player = new AudioPlayer();
         recorder = new AudioRecorder(application);
         maxAmp = recorder.getMaxAmp();
+        bandwidth = repository.getBandwidthLiveData();
     }
 
     public LiveData<Integer> getMaxAmp() {
@@ -150,6 +152,10 @@ public class ExperimentViewModel extends AndroidViewModel {
 
     public LiveData<ChartInformation> getAudioChart() {
         return audioChart;
+    }
+
+    public LiveData<Bandwidth> getBandwidth() {
+        return bandwidth;
     }
 
     public int getDuration() {

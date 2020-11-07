@@ -29,6 +29,7 @@ public class ChartRepository {
     MutableLiveData<ChartInformation> phaseChartLiveData;
     MutableLiveData<ChartInformation> powerChartLiveData;
     MutableLiveData<ChartInformation> audioChartLiveData;
+    MutableLiveData<Bandwidth> bandwidthLiveData;
     float[] convolutionData;
     float[] tailorData;
     float[] real;
@@ -42,6 +43,7 @@ public class ChartRepository {
     ChartInformation audioChart;
     float[] audioData1;
     float[] audioData2;
+    Bandwidth bandwidth = new Bandwidth();
 
     public ChartRepository(Context context) {
         waveLabel = context.getResources().getString(R.string.convolution_wave);
@@ -52,6 +54,7 @@ public class ChartRepository {
         phaseChartLiveData = new MutableLiveData<>();
         powerChartLiveData = new MutableLiveData<>();
         audioChartLiveData = new MutableLiveData<>();
+        bandwidthLiveData = new MutableLiveData<>(bandwidth);
     }
 
     public LiveData<ChartInformation> getPhaseChartLiveData() {
@@ -68,6 +71,10 @@ public class ChartRepository {
 
     public LiveData<ChartInformation> getAudioChartLiveData() {
         return audioChartLiveData;
+    }
+
+    public LiveData<Bandwidth> getBandwidthLiveData() {
+        return bandwidthLiveData;
     }
 
     public void setAudioData1(float[] audioData1) {
@@ -104,7 +111,36 @@ public class ChartRepository {
         frequency = new float[(tailorData.length + 1) / 2];
         dspMath.welch(tailorData, tailorData.length, 44100, power, frequency);
 
-
+        int index = 0;
+        float max = power[index];
+        for (int i = 0; i < power.length; i++) {
+            if (power[i] > max) {
+                max = power[i];
+                index = i;
+            }
+        }
+        int i;
+        for (i = index; i < power.length; i++) {
+            if (max - power[i] > 20f) {
+                break;
+            }
+        }
+        if (i >= power.length) {
+            bandwidth.max = frequency[frequency.length - 1];
+        } else {
+            bandwidth.max = frequency[i - 1];
+        }
+        for (i = index; i >= 0; i--) {
+            if (max - power[i] > 20f) {
+                break;
+            }
+        }
+        if (i < 0) {
+            bandwidth.min = frequency[0];
+        } else {
+            bandwidth.min = frequency[i + 1];
+        }
+        bandwidthLiveData.postValue(bandwidth);
         //生成图像数据
         produce_chart();
     }

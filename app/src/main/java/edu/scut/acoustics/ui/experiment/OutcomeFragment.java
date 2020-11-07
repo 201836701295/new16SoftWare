@@ -114,6 +114,12 @@ public class OutcomeFragment extends Fragment {
                 }
             }
         });
+        viewModel.getBandwidth().observe(getViewLifecycleOwner(), new Observer<Bandwidth>() {
+            @Override
+            public void onChanged(Bandwidth bandwidth) {
+                binding.textview.setText(getString(R.string.bandwidth, format.format(bandwidth.min), format.format(bandwidth.max)));
+            }
+        });
         return binding.getRoot();
     }
 

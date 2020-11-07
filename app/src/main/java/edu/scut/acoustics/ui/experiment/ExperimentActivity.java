@@ -188,9 +188,9 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(final View view) {
-        viewModel.setExperimentState(ExperimentState.IDLE);
+
         //检查权限
-        //permission();
-        test_experiment();
+        permission();
+        //test_experiment();
     }
 }

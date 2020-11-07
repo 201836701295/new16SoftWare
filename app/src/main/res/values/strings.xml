@@ -8,7 +8,7 @@
     <string name="right_ear">右耳</string>
     <string name="able_hear">听得到</string>
     <string name="unable_hear">听不到</string>
-    <string name="guidance">请将麦克风靠近音响，点击下方播放按钮后进行播放样本音频，系统将会录下播放的音频，并生产卷积响应信号</string>
+    <string name="guidance">请将麦克风置于扬声器的正上方一定距离（根据扬声器口径而定，一般大于扬声器直径的3倍，但不宜过大），点击下方“开始实验”按钮播放测试信号，系统接收测试信号处理后将显示扬声器系统的频率响应。</string>
     <string name="adjust">校准</string>
     <string name="noise_measure">噪声测量</string>
     <string name="test_signal">测试信号</string>
@@ -51,4 +51,5 @@
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="quit">退出</string>
+    <string name="bandwidth">正负10dB带宽: %1$sHz-%2$sHz</string>
 </resources>
