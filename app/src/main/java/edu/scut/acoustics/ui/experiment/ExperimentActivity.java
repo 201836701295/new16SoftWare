@@ -104,21 +104,14 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         viewModel.stopPlay();
         try {
             viewModel.stopRecord();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        viewModel.setExperimentState(ExperimentState.IDLE);
-        binding.button.setEnabled(true);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
         viewModel.shutdown();
     }
 

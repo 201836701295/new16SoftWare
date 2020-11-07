@@ -51,7 +51,7 @@
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="quit">退出</string>
-    <string name="bandwidth">正负10dB带宽: %1$sHz-%2$sHz</string>
+    <string name="bandwidth">正负10dB带宽: %1$sHz - %2$sHz</string>
     <string name="comparison_adjust">对比校准</string>
     <string name="calibrator_adjust">校准器校准</string>
 </resources>
