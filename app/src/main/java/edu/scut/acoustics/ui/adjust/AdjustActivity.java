@@ -47,7 +47,7 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
         viewModel.getTargetLiveData().observe(this, new Observer<Float>() {
             @Override
             public void onChanged(Float aFloat) {
-                binding.title.setText(getString(R.string.adjust_tip, aFloat.intValue()));
+                binding.title.setText(getString(R.string.adjust_tip, format.format(aFloat)));
             }
         });
         viewModel.realtime.observe(this, new Observer<Float>() {
@@ -99,6 +99,9 @@ public class AdjustActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void afterTextChanged(Editable s) {
+        if (s.length() == 0) {
+            return;
+        }
         if (s.length() == 1 && s.charAt(0) == '-') {
             return;
         }

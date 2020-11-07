@@ -55,14 +55,14 @@
             android:autofillHints="@string/self_determine"
             android:ems="6"
             android:hint="@string/self_determine"
-            android:inputType="numberSigned"
-            android:visibility="gone"
+            android:inputType="numberSigned|numberDecimal"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/sourceType"
             tools:ignore="LabelFor" />
 
         <NumberPicker
+            android:visibility="gone"
             android:id="@+id/numberPicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

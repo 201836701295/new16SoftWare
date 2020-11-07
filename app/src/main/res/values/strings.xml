@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Acoustics</string>
+    <string name="app_name">Acoustics measurement</string>
     <string name="experiment">扬声器频率响应测量</string>
     <string name="noise_measurement">噪声波测量与分析</string>
     <string name="ear_test">听力测量</string>
@@ -13,7 +13,7 @@
     <string name="noise_measure">噪声测量</string>
     <string name="test_signal">测试信号</string>
     <string name="inverse_signal">卷积逆信号</string>
-    <string name="adjust_tip">请将录音头插入%ddB的校准筒，待示数稳定后，按下校准按钮，或调节下方数字选择器</string>
+    <string name="adjust_tip">请将录音头插入%sdB的校准筒，待示数稳定后，按下校准按钮，或调节下方数字选择器</string>
     <string name="convolution_wave">卷积波形</string>
     <string name="phase_chart">相位谱</string>
     <string name="frequency_chart">振幅谱</string>
@@ -52,4 +52,6 @@
     <string name="close">close</string>
     <string name="quit">退出</string>
     <string name="bandwidth">正负10dB带宽: %1$sHz-%2$sHz</string>
+    <string name="comparison_adjust">对比校准</string>
+    <string name="calibrator_adjust">校准器校准</string>
 </resources>
