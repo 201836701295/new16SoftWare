@@ -18,6 +18,7 @@ import androidx.navigation.Navigation;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.formatter.ValueFormatter;
@@ -53,6 +54,7 @@ public class OutcomeFragment extends Fragment {
                     return format.format(Math.pow(10, value)) + chartInformation.xUnit;
                 }
             });
+            LimitLine yLimitLine = new LimitLine(chartInformation.maxY - 20);
         } else {
             xAxis.setValueFormatter(new ValueFormatter() {
                 @Override

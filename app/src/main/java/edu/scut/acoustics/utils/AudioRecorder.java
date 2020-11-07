@@ -106,7 +106,8 @@ public class AudioRecorder {
     MutableLiveData<Integer> maxAmp;
 
     public AudioRecorder(Context context) {
-        filename = context.getCacheDir().getAbsolutePath() + "/testAudio.wav";
+        filename = context.getExternalCacheDir().getAbsolutePath() + "/testAudio.wav";
+        Log.d("filename", "AudioRecorder: " + filename);
         maxAmp = new MutableLiveData<>(0);
     }
 
@@ -185,12 +186,12 @@ public class AudioRecorder {
 
                 //写入音频数据到文件
                 while ((length = recorder.read(audioData, 0, audioData.length)) != 0) {
-                    bos.flush();
                     audio_length += length;
                     Log.d("AudioRecorder", "audio data length: " + length);
                     for (int i = 0; i < length; i += 2, index += 1) {
                         if (index >= period) {
                             maxAmp.postValue(max);
+                            Log.d("Writer", "maxAmp: " + max);
                             index = 0;
                             max = 0;
                         }
