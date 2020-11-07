@@ -7,8 +7,10 @@
 
 #ifndef RTGETINF_H
 #define RTGETINF_H
+
 #include "rtwtypes.h"
 #include "rt_nonfinite.h"
+
 #ifdef __cplusplus
 
 extern "C" {

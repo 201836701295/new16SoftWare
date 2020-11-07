@@ -191,10 +191,10 @@ public class SLM {
                 while (true) {
                     temp = recorder.read(buffer, 0, buffer.length);
                     Log.d("SLM", "audio data length: " + temp);
-                        if (temp == 0) {
-                            return null;
-                        }
-                        //找最大
+                    if (temp == 0) {
+                        return null;
+                    }
+                    //找最大
                     for (int i = 0; i < buffer.length; i++, ++index) {
                         if (index >= period) {
                             maxAmp.postValue(max);

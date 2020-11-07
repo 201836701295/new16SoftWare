@@ -6,6 +6,7 @@
 //
 #ifndef RT_DEFINES_H
 #define RT_DEFINES_H
+
 #include "rtwtypes.h"
 
 static const real_T RT_PI = 3.14159265358979323846;

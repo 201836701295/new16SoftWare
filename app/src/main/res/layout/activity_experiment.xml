@@ -38,10 +38,10 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:text="开始实验"
             app:icon="@drawable/ic_baseline_play_arrow_24"
             app:layout_constraintBottom_toBottomOf="parent"

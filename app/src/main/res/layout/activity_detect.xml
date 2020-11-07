@@ -16,8 +16,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:textSize="20sp"
             android:textColor="@color/black"
+            android:textSize="20sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -51,27 +51,27 @@
             app:layout_constraintRight_toRightOf="parent" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:id="@+id/btnEnter"
-            android:lines="2"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="200dp"
-            android:layout_marginBottom="20dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:lines="2"
             android:text="@string/env_normal"
             app:layout_constraintBottom_toTopOf="@id/insist"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:id="@+id/insist"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:enabled="false"
+            android:text="@string/insist"
             android:textColor="@color/red"
             android:visibility="invisible"
-            android:text="@string/insist"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />

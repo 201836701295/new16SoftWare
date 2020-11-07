@@ -19,8 +19,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textColor="@color/black"
                 android:text="@string/ear_test_result"
+                android:textColor="@color/black"
                 android:textSize="20sp" />
 
             <com.github.mikephil.charting.charts.LineChart
