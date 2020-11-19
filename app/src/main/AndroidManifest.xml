@@ -17,44 +17,53 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.splash.SplashActivity">
+        <activity
+            android:name=".ui.splash.SplashActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.main.MainActivity" />
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.experiment.ExperimentActivity"
             android:label="@string/experiment"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.main.MainActivity" />
+            android:parentActivityName=".ui.main.MainActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.noise.NoiseActivity"
             android:label="@string/noise_measurement"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.main.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".ui.adjust.AdjustActivity"
             android:label="@string/adjust"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.ear_test.EarTestActivity"
             android:label="@string/ear_test"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.main.MainActivity" />
+            android:parentActivityName=".ui.main.MainActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.ear_test.DetectActivity"
             android:label="环境音量检测"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.main.MainActivity" />
+            android:parentActivityName=".ui.main.MainActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 
