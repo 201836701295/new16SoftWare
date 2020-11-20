@@ -158,7 +158,7 @@ public class ExperimentActivity extends AppCompatActivity implements View.OnClic
     void start_experiment() {
         viewModel.setExperimentState(ExperimentState.PREPARING);
         //声音最大
-        device.setVolume(device.getMaxVolume());
+        //device.setVolume(device.getMaxVolume());
         //设置播放事件接口
         try {
             //开始播放
